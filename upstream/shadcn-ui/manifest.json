@@ -1,0 +1,96 @@
+{
+  "style": "new-york",
+  "retrieved": "2026-10-25T17:05:02.292Z",
+  "components": [
+    {
+      "name": "button",
+      "url": "https://ui.shadcn.com/r/styles/new-york/button.json",
+      "sha256": "693a319cfb8e0c5fc02d0f50c344cfab0319722844fc72e78bd1b5a7f7786197",
+      "dependencies": [
+        "@radix-ui/react-slot"
+      ]
+    },
+    {
+      "name": "input",
+      "url": "https://ui.shadcn.com/r/styles/new-york/input.json",
+      "sha256": "432ba23533631368fec7bb5dbab79f411e6286a8b68e8752da1991809c002d26",
+      "dependencies": []
+    },
+    {
+      "name": "textarea",
+      "url": "https://ui.shadcn.com/r/styles/new-york/textarea.json",
+      "sha256": "aa9716bea5c37db5061656e699d868c7331502de6df5ceb562a28114535d26cd",
+      "dependencies": []
+    },
+    {
+      "name": "label",
+      "url": "https://ui.shadcn.com/r/styles/new-york/label.json",
+      "sha256": "4df677c63fea4ea24d08e6b02541d28f2f69808a04025a3449976f110cee4d77",
+      "dependencies": [
+        "@radix-ui/react-label"
+      ]
+    },
+    {
+      "name": "select",
+      "url": "https://ui.shadcn.com/r/styles/new-york/select.json",
+      "sha256": "27c0bdfe81c5ce6496392e899fccdb38f929bcea566ab405bedb06feb8d34699",
+      "dependencies": [
+        "@radix-ui/react-select"
+      ]
+    },
+    {
+      "name": "dialog",
+      "url": "https://ui.shadcn.com/r/styles/new-york/dialog.json",
+      "sha256": "149c3243e707d110e92122784c17571845275bd174896c6f8fdea63980e49323",
+      "dependencies": [
+        "@radix-ui/react-dialog"
+      ]
+    },
+    {
+      "name": "card",
+      "url": "https://ui.shadcn.com/r/styles/new-york/card.json",
+      "sha256": "456fb52c626ae3fc37cd2c3f3594a5bfe10250e3a9a369151c0bc6222d576528",
+      "dependencies": []
+    },
+    {
+      "name": "badge",
+      "url": "https://ui.shadcn.com/r/styles/new-york/badge.json",
+      "sha256": "8e1f0697a92469be325bfc86d2655ddfc671ee43e56ba5215f2260212688d1a4",
+      "dependencies": [
+        "@radix-ui/react-slot"
+      ]
+    },
+    {
+      "name": "checkbox",
+      "url": "https://ui.shadcn.com/r/styles/new-york/checkbox.json",
+      "sha256": "0c29a891b629472a1d71df4d06fe14bfab4de9d83207f7c0442d161decf15243",
+      "dependencies": [
+        "@radix-ui/react-checkbox"
+      ]
+    },
+    {
+      "name": "tabs",
+      "url": "https://ui.shadcn.com/r/styles/new-york/tabs.json",
+      "sha256": "1d3da034342fb655aaa7fa0583a2c337966acacc1965032521ac8c797fa8f50a",
+      "dependencies": [
+        "@radix-ui/react-tabs"
+      ]
+    },
+    {
+      "name": "toast",
+      "url": "https://ui.shadcn.com/r/styles/new-york/toast.json",
+      "sha256": "2ad7ccd179767624a0122fd3c48c94140375503f893e485502616610791b9bcc",
+      "dependencies": [
+        "@radix-ui/react-toast"
+      ]
+    },
+    {
+      "name": "tooltip",
+      "url": "https://ui.shadcn.com/r/styles/new-york/tooltip.json",
+      "sha256": "6350659c3e70f72d04f1b17c0a2f1d5fe9ec9b516b668778462c6bd9c5eea507",
+      "dependencies": [
+        "@radix-ui/react-tooltip"
+      ]
+    }
+  ]
+}

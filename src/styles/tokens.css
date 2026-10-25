@@ -1,0 +1,102 @@
+/* Colors are space-separated HSL channels. All other tokens use CSS values.
+   Low-specificity defaults let consumer :root rules win in either import order. */
+:where(:root) {
+  color-scheme: light;
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --accent: 220 20% 94%;
+  --accent-foreground: 222 35% 20%;
+  --primary: 220 80% 45%;
+  --primary-foreground: 0 0% 100%;
+  --primary-hover: 220 80% 38%;
+  --secondary: 220 20% 94%;
+  --secondary-foreground: 222 35% 20%;
+  --muted: 220 15% 96%;
+  --muted-foreground: 220 10% 42%;
+  --border: 220 15% 82%;
+  --input: 220 15% 82%;
+  --ring: 220 80% 45%;
+  --destructive: 0 72% 43%;
+  --destructive-foreground: 0 0% 100%;
+  --overlay: 222 47% 11% / 0.4;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --font-heading: var(--font-sans);
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.8125rem;
+  --font-size-md: 0.875rem;
+  --font-size-lg: 1.25rem;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --line-height: 1.5;
+  --spacing-unit: 0.25rem;
+  --space-0: calc(var(--spacing-unit) * 0);
+  --space-0-5: calc(var(--spacing-unit) * 0.5);
+  --space-1: calc(var(--spacing-unit) * 1);
+  --space-1-5: calc(var(--spacing-unit) * 1.5);
+  --space-2: calc(var(--spacing-unit) * 2);
+  --space-2-5: calc(var(--spacing-unit) * 2.5);
+  --space-3: calc(var(--spacing-unit) * 3);
+  --space-3-5: calc(var(--spacing-unit) * 3.5);
+  --space-4: calc(var(--spacing-unit) * 4);
+  --space-5: calc(var(--spacing-unit) * 5);
+  --space-6: calc(var(--spacing-unit) * 6);
+  --space-8: calc(var(--spacing-unit) * 8);
+  --space-9: calc(var(--spacing-unit) * 9);
+  --space-10: calc(var(--spacing-unit) * 10);
+  --space-12: calc(var(--spacing-unit) * 12);
+  --space-16: calc(var(--spacing-unit) * 16);
+  --space-20: calc(var(--spacing-unit) * 20);
+  --space-24: calc(var(--spacing-unit) * 24);
+  --space-32: calc(var(--spacing-unit) * 32);
+  --radius: 0.5rem;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-full: 9999px;
+  --radius-lg: calc(var(--radius) * 1.5);
+  --border-width: 1px;
+  --dialog-width: 32.5rem;
+  --tooltip-width: 20rem;
+  --toast-width: 24rem;
+  --shadow-sm: 0 1px 2px hsl(222 47% 11% / 0.08);
+  --shadow: 0 8px 24px hsl(222 47% 11% / 0.12);
+  --shadow-dialog: 0 24px 70px hsl(222 47% 11% / 0.24);
+  --focus-width: 2px;
+  --focus-offset: 2px;
+  --disabled-opacity: 0.5;
+  --duration: 150ms;
+  --z-overlay: 50;
+  --z-popover: 60;
+  --z-toast: 70;
+}
+:where([data-color-scheme="light"]) {
+  color-scheme: light;
+}
+/* Opt in independently of the consumer's brand theme. */
+:where([data-color-scheme="dark"]) {
+  color-scheme: dark;
+  --background: 222 30% 9%;
+  --foreground: 220 20% 96%;
+  --card: 222 25% 13%;
+  --card-foreground: 220 20% 96%;
+  --popover: 222 25% 13%;
+  --popover-foreground: 220 20% 96%;
+  --accent: 222 20% 22%;
+  --accent-foreground: 220 20% 96%;
+  --primary: 217 90% 70%;
+  --primary-foreground: 222 47% 11%;
+  --primary-hover: 217 90% 78%;
+  --secondary: 222 20% 22%;
+  --secondary-foreground: 220 20% 96%;
+  --muted: 222 20% 18%;
+  --muted-foreground: 220 15% 72%;
+  --border: 220 15% 36%;
+  --input: 220 15% 36%;
+  --ring: 217 90% 70%;
+  --destructive: 0 80% 72%;
+  --destructive-foreground: 222 47% 11%;
+  --overlay: 222 47% 3% / 0.7;
+}

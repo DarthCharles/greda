@@ -1,0 +1,255 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import * as OverviewStories from "./Overview.stories";
+
+<Meta of={OverviewStories} name="Theming" />
+
+# Set up a theme
+
+The package supplies a complete neutral base theme. Your application owns its
+brand theme: you override CSS variables, and every shared component uses those
+values. No Tailwind setup or component edits are needed in the consuming app.
+
+Use **Design Tokens** in the sidebar to explore the available tokens and their
+visual results. This guide shows how to connect those tokens to an application.
+
+## 1. Load the package stylesheet
+
+Import the compiled stylesheet once in your application's entry point, followed
+by the theme and your application styles:
+
+```tsx
+// src/main.tsx
+import "@comal/design-system/styles.css";
+import "./comal-theme.css";
+import "./app.css";
+
+import { Button } from "@comal/design-system";
+```
+
+The package stylesheet already includes the base tokens. You do not need to
+import `tokens.css` separately. It styles components without resetting your
+application's page layout. Components continue to use normal package imports.
+
+## 2. Create the brand theme
+
+Create `src/comal-theme.css`. Override only the values your brand needs; the rest
+retain their base defaults. Define related background and foreground colors
+together so labels remain readable.
+
+This example takes Comal's warm canvas, paper surfaces, terracotta, and sage from
+Meal Planner. It uses Meal Planner's darker terracotta for actions and a darker
+muted text shade to improve contrast at small sizes.
+
+```css
+/* src/comal-theme.css */
+[data-theme="comal"] {
+  color-scheme: light;
+  --background: 40 60% 96.078%; /* cream: #fbf7ef */
+  --foreground: 37.5 10.256% 15.294%; /* ink: #2b2823 */
+  --card: 42.857 100% 98.627%; /* paper: #fffdf8 */
+  --card-foreground: 37.5 10.256% 15.294%;
+  --popover: 42.857 100% 98.627%;
+  --popover-foreground: 37.5 10.256% 15.294%;
+
+  --primary: 9.5 55.556% 42.353%; /* dark terracotta: #a84330 */
+  --primary-hover: 9.714 56.15% 36.667%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 9.5 55.556% 42.353%;
+
+  --secondary: 25.385 56.522% 90.98%;
+  --secondary-foreground: 9.5 55.556% 42.353%;
+  --accent: 85.714 29.167% 90.588%; /* soft sage: #e8eee0 */
+  --accent-foreground: 37.5 10.256% 15.294%;
+  --muted: 36.923 37.143% 93.137%;
+  --muted-foreground: 41.25 7.273% 43.137%;
+  --border: 38.824 27.869% 88.039%;
+  --input: 38.824 27.869% 88.039%;
+
+  --font-sans: "DM Sans Variable", "DM Sans", sans-serif;
+  --font-heading: "Fraunces Variable", "Fraunces", serif;
+  --radius: 0.75rem;
+  --radius-sm: 0.375rem;
+  --radius-lg: 1.5rem;
+  --shadow: 0 16px 45px rgba(71, 49, 30, 0.08);
+}
+```
+
+Colors accept **space-separated HSL channels**. For example, use
+`--primary: 9.5 55.556% 42.353%`, rather than a hex value or a full `hsl()` call.
+Typography, dimensions, and shadows accept ordinary CSS values. The overlay
+color also includes an alpha channel, such as `37.5 10.256% 15.294% / 0.34`.
+
+The complete working Comal example lives in `.storybook/themes/comal.css`.
+It is a consumer example, excluded from the published package. Copy its overrides
+into your application to start your theme.
+
+## 3. Load your fonts and style the page
+
+Declaring a font family does not download its font files. Load fonts yourself,
+or keep the base system fonts. Storybook hosts DM Sans and Fraunces locally using
+Fontsource. To use the same setup in an application:
+
+```bash
+npm install @fontsource-variable/dm-sans @fontsource-variable/fraunces
+```
+
+```tsx
+// src/main.tsx, before your theme and app styles
+import "@comal/design-system/styles.css";
+import "@fontsource-variable/dm-sans";
+import "@fontsource-variable/fraunces";
+import "./comal-theme.css";
+import "./app.css";
+```
+
+Apply your chosen canvas and typography to the application page:
+
+```css
+/* src/app.css */
+body {
+  margin: 0;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
+  line-height: var(--line-height);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+}
+```
+
+The package uses its heading token on component headings; your own page headings
+need their own rule. The base theme never requires these external font packages.
+
+## 4. Activate the theme at the document root
+
+Set the attributes on `<html>`, rather than just the React application wrapper:
+
+```html
+<!-- index.html -->
+<html lang="en" data-theme="comal" data-color-scheme="light">
+  <!-- Your existing head and body -->
+</html>
+```
+
+This lets dialogs, selects, tooltips, and other portaled content inherit the same
+variables as your application. The initial HTML attributes also select the theme
+before React mounts.
+
+You can change the selection at runtime without replacing components:
+
+```ts
+function applyAppearance(theme: "base" | "comal", scheme: "light" | "dark") {
+  document.documentElement.dataset.theme = theme;
+  document.documentElement.dataset.colorScheme = scheme;
+}
+
+applyAppearance("comal", "light");
+```
+
+Using `base` removes Comal's selector match and restores the package defaults.
+For an application with a single permanent brand, you can put the overrides in
+`:root` instead and omit `data-theme`. Keep `data-color-scheme` if you offer dark mode.
+
+## 5. Define the brand's dark palette
+
+Brand and color scheme are independent. A base dark palette is available through
+`data-color-scheme="dark"`. Because your brand selectors override those defaults,
+provide matching dark overrides for the colors your brand sets.
+
+Meal Planner currently defines a light theme only. Storybook's Comal dark option
+is a complementary warm dark palette, rather than an existing Meal Planner theme.
+For example:
+
+```css
+[data-theme="comal"][data-color-scheme="dark"] {
+  color-scheme: dark;
+  --background: 30 17.857% 10.98%;
+  --foreground: 34.286 51.22% 91.961%;
+  --card: 30 16.216% 14.51%;
+  --card-foreground: 34.286 51.22% 91.961%;
+  --popover: 30 16.216% 14.51%;
+  --popover-foreground: 34.286 51.22% 91.961%;
+  --primary: 15.625 75% 74.902%;
+  --primary-hover: 15.789 77.551% 80.784%;
+  --primary-foreground: 37.5 10.256% 15.294%;
+  --ring: 15.625 75% 74.902%;
+  --secondary: 22.5 24.49% 19.216%;
+  --secondary-foreground: 17.015 70.526% 81.373%;
+  --muted: 32.308 15.663% 16.275%;
+  --muted-foreground: 33.103 19.205% 70.392%;
+  --accent: 108 14.286% 20.588%;
+  --accent-foreground: 102.857 28% 90.196%;
+  --border: 30 15.476% 32.941%;
+  --input: 30 15.476% 32.941%;
+  --destructive: 7.174 79.31% 77.255%;
+  --destructive-foreground: 37.5 10.256% 15.294%;
+  --overlay: 30 20% 5% / 0.7;
+}
+```
+
+You can initialize the scheme from `prefers-color-scheme` and persist a user's
+choice in your application's settings. Set the resolved attribute before mounting
+the UI so the correct palette is present on first render.
+
+## 6. Adjust spacing and individual components
+
+Override the base spacing unit to scale the spacing system, or a named step for
+a more targeted change:
+
+```css
+[data-theme="comal"] {
+  --spacing-unit: 0.25rem;
+  --space-4: 1.25rem; /* Adjust the step used by p-4, px-4, and similar utilities. */
+}
+```
+
+Keep structural changes, such as a wider page layout, in application CSS. For a
+single control, scope a token override using a consumer class:
+
+```tsx
+<Button className="compact-action">Save changes</Button>
+```
+
+```css
+.compact-action {
+  --radius: 0.375rem;
+}
+```
+
+Use named spacing steps when adjusting a scoped section. Derived tokens such as
+`--space-4` are computed where they are declared; changing `--spacing-unit` on a
+nested wrapper alone will not recalculate inherited root declarations.
+
+## Scoped previews and portals
+
+A document-wide theme is the easiest setup for an application. If you need a
+separate theme inside one subtree, set both attributes on that container and pass
+its element to the relevant content component's `container` prop. This keeps
+portaled content inside the themed subtree:
+
+```tsx
+const [container, setContainer] = useState<HTMLDivElement | null>(null);
+
+return (
+  <div ref={setContainer} data-theme="comal" data-color-scheme="light">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Edit profile</Button>
+      </DialogTrigger>
+      <DialogContent container={container}>
+        <DialogTitle>Edit profile</DialogTitle>
+        <DialogDescription>Update your public information.</DialogDescription>
+      </DialogContent>
+    </Dialog>
+  </div>
+);
+```
+
+`DialogContent`, `SelectContent`, and `TooltipContent` support this container prop.
+Test hover, focus, invalid, disabled, and loading states in both palettes. Use the
+Storybook **base / comal** and **light / dark** toolbar options to review the same
+components and visual tokens under each theme.

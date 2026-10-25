@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* A scoped baseline replaces Tailwind's global preflight reset. */
+@layer base {
+  :where(.comal-ui) {
+    box-sizing: border-box;
+    margin: 0;
+    border: 0 solid hsl(var(--border));
+    font-family: var(--font-sans);
+    font-size: var(--font-size-md);
+    line-height: var(--line-height);
+    color: inherit;
+  }
+  :where(button.comal-ui) {
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0;
+  }
+  :where(button.comal-ui:disabled) {
+    cursor: not-allowed;
+  }
+  :where(input.comal-ui, textarea.comal-ui) {
+    color: hsl(var(--foreground));
+  }
+  :where(input.comal-ui, textarea.comal-ui)::placeholder {
+    opacity: 1;
+  }
+  /* Browser focus defaults remain available on links and primitive close buttons. */
+}
+@layer components {
+  .comal-heading {
+    font-family: var(--font-heading);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(.comal-ui) {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+[data-slot="checkbox-indicator"][data-state="indeterminate"]
+  > [data-check-icon],
+[data-slot="checkbox-indicator"]:not([data-state="indeterminate"])
+  > [data-mixed-icon] {
+  display: none;
+}
