@@ -1,4 +1,4 @@
-# @comal/design-system
+# @darthcharles/greda
 
 A reusable React/TypeScript package built from **shadcn/ui component source**,
 with a complete neutral base theme and consumer-owned token overrides.
@@ -7,8 +7,8 @@ Storybook documents each component in its own `*.stories.tsx` file.
 ## Quick start
 
 ```tsx
-import { Button, Input, Label } from "@comal/design-system";
-import "@comal/design-system/styles.css";
+import { Button, Input, Label } from "@darthcharles/greda";
+import "@darthcharles/greda/styles.css";
 import "./theme.css";
 
 export function Example() {
@@ -65,7 +65,7 @@ mode using `:root[data-color-scheme="dark"]` overrides.
 
 Apply themes on `<html>` so portaled dialogs, selects, and tooltips inherit them.
 For themes scoped to a subtree, pass the themed element to the content component's
-`container` prop. `@comal/design-system/tokens.css` exports just the tokens;
+`container` prop. `@darthcharles/greda/tokens.css` exports just the tokens;
 `styles.css` already includes them.
 
 ### Base token reference
@@ -215,7 +215,7 @@ The public API follows shadcn's composition model:
 
 Radix remains a dependency of the shadcn components and supplies their keyboard
 and ARIA behavior. Give icon buttons accessible names and keep critical errors
-inline. `cn` is exported from the root and `@comal/design-system/utils`; it combines
+inline. `cn` is exported from the root and `@darthcharles/greda/utils`; it combines
 conditional classes and merges conflicting `ds-` Tailwind utilities.
 
 ## Development

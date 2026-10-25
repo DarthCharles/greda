@@ -27,7 +27,7 @@ export const Components: Story = {
   render: () => (
     <div className="catalog-stack" style={{ maxWidth: 900 }}>
       <header>
-        <Badge variant="outline">@comal/design-system · 0.1</Badge>
+        <Badge variant="outline">@darthcharles/greda · 0.1</Badge>
         <h1>One foundation. Your identity.</h1>
         <p className="catalog-muted">
           Generic components, accessible behavior, and tokens you control.

@@ -1,5 +1,5 @@
 {
-  "name": "@comal/design-system",
+  "name": "@darthcharles/greda",
   "version": "0.1.0",
   "description": "Generic React components with a complete, overridable base theme.",
   "type": "module",
