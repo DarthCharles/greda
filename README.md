@@ -230,6 +230,23 @@ Google Chrome; CI installs Playwright Chromium.
 | `npm run build-storybook` | Build the catalog into `storybook-static/` |
 | `npm pack` | Build and create a local package archive |
 
+### Hosting on Netlify
+
+The hosted website is the Storybook catalog. [netlify.toml](netlify.toml)
+configures Netlify to build it with `npm run build-storybook` and publish
+`storybook-static` from the repository root. The `dist/` directory contains
+the installable library rather than the website.
+
+Connect this repository in Netlify and select `main` as the production branch.
+Netlify reads Node 24 from `.nvmrc`. Keep development dependencies enabled:
+Storybook, Vite, and the example fonts are needed at build time. No application
+secrets or environment variables are required for the catalog.
+
+For an existing project, check that its base directory is the repository root
+and that the deploy log uses the command and publish directory above. After
+pushing configuration changes, trigger a new deploy. File-based build settings
+override corresponding Netlify UI settings.
+
 ### Upstream sources
 
 Greda maintains customized React 18-compatible copies of shadcn/ui New York
