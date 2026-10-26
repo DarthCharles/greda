@@ -30,7 +30,7 @@ const TooltipContent = React.forwardRef<
       sideOffset={sideOffset}
       className={cn(
         "comal-ui",
-        "ds-z-popover ds-max-w-[var(--tooltip-width)] ds-overflow-hidden ds-rounded-md ds-bg-primary ds-px-3 ds-py-1.5 ds-text-xs ds-text-primary-foreground ds-animate-in ds-fade-in-0 ds-zoom-in-95 data-[state=closed]:ds-animate-out data-[state=closed]:ds-fade-out-0 data-[state=closed]:ds-zoom-out-95 data-[side=bottom]:ds-slide-in-from-top-2 data-[side=left]:ds-slide-in-from-right-2 data-[side=right]:ds-slide-in-from-left-2 data-[side=top]:ds-slide-in-from-bottom-2 ds-origin-[--radix-tooltip-content-transform-origin]",
+        "z-popover max-w-[var(--tooltip-width)] overflow-hidden rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-tooltip-content-transform-origin]",
         className
       )}
       {...props}

@@ -13,7 +13,7 @@ Tailwind 3.4. Radix dependencies remain because they are used by those shadcn
 components. The upstream Toast is maintained here as the explicit primitive API
 requested for the initial component set.
 
-Local adaptations: relative imports; `ds-` utility prefixes; a scoped CSS baseline;
+Local adaptations: relative imports; shared semantic color utilities; a scoped CSS baseline;
 consumer token mapping; optional portal containers; button loading, 1px press feedback from the current Nova style, and a default
 non-submit type; viewport bounds on dialogs; invalid-field styles; an accessible
 toast close name; and a distinct indeterminate checkbox icon.

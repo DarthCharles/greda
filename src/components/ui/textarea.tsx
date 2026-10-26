@@ -11,7 +11,7 @@ const Textarea = React.forwardRef<
     <textarea
       className={cn(
         "comal-ui",
-        "ds-flex ds-min-h-[60px] ds-w-full ds-rounded-md ds-border ds-border-input ds-bg-transparent ds-px-3 ds-py-2 ds-text-base ds-shadow-sm placeholder:ds-text-muted-foreground focus-visible:ds-outline-none focus-visible:ds-ring-1 focus-visible:ds-ring-ring disabled:ds-cursor-not-allowed disabled:ds-opacity-disabled aria-[invalid=true]:ds-border-destructive md:ds-text-sm",
+        "flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-disabled aria-[invalid=true]:border-destructive md:text-sm",
         className
       )}
       ref={ref}

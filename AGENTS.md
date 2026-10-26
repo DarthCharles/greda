@@ -15,10 +15,12 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
 | --- | --- |
 | `src/components/ui/` | Public components and their variants |
 | `src/index.ts` | Public package exports |
-| `src/lib/utils.ts` | `cn`: conditional classes and `ds-` conflict resolution |
+| `src/lib/utils.ts` | `cn`: conditional classes and Tailwind conflict resolution |
 | `src/styles/tokens.css` | Source of truth for tokens and base palettes |
 | `src/styles/styles.css` | Scoped baseline, utilities, and reduced motion |
 | `tailwind.config.ts` | Mapping tokens to compiled utilities |
+| `src/styles/tailwind-theme.ts` | Shared token mappings for package CSS and Tailwind 4 consumers |
+| `scripts/tailwind-theme.mjs` | Generating Tailwind 4 theme directives for `tokens.css` |
 | `src/stories/` | Examples, documentation, and token catalog |
 | `.storybook/` | Configuration, catalog styles, and example Comal theme |
 | `src/components/behavior.test.tsx` | Interaction tests with Testing Library |
@@ -65,17 +67,25 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
 
 ## Styles and tokens
 
-- Use utilities with the `ds-` prefix, including modifiers such as
-  `hover:ds-bg-primary`. Keep class names complete and static so Tailwind can
+- Use unprefixed utilities, including modifiers such as
+  `hover:bg-primary`. Keep class names complete and static so Tailwind can
   detect them; avoid building utility names through interpolation.
-- The package build scans `src/components/ui/`. Catalog-only styles belong in
-  Storybook CSS; a class used only in a story is not guaranteed to appear in the
+- The package build scans `src/components/ui/` and derives its public semantic
+  background, text, and border color safelist from the shared theme mapping,
+  including hover, focus, and focus-visible variants. Other catalog-only styles
+  belong in Storybook CSS; a class used only in a story is not guaranteed to appear in the
   published CSS.
+- `tokens.css` includes runtime variables and Tailwind 4 theme directives. Test
+  the actual CSS imports through the consumer compiler in `tests/tailwind-consumer.ts`.
+  Keep the development-only Tailwind 4 alias separate from the package's Tailwind
+  3 build. With Tailwind 4, import component styles in `layer(components)` so app
+  utilities can override them; do not reintroduce an unlayered duplicate.
 - Keep `.comal-ui` on elements that need the baseline, including overlays, portaled
   content, and public variant helpers.
 - Preserve `preflight: false` and the scoping of `--tw-*` initializers in
   `scripts/scope-tailwind-defaults.cjs`, shared by the package and Storybook.
-  Importing the CSS must not alter elements outside the library.
+  Importing the CSS must not reset unrelated elements. Unprefixed utilities are
+  shared with consumers and apply globally to elements using those class names.
 - Use semantic tokens for colors, typography, spacing, and states. Prefer extending
   an existing token over introducing repeated fixed visual values.
 - Define colors as space-separated HSL channels without an `hsl()` wrapper;

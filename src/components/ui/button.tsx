@@ -6,26 +6,26 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "comal-ui ds-inline-flex ds-items-center ds-justify-center ds-gap-2 ds-whitespace-nowrap ds-rounded-md ds-text-sm ds-font-medium ds-transition-all active:[&:not([aria-haspopup])]:ds-translate-y-px motion-reduce:active:[&:not([aria-haspopup])]:ds-transform-none focus-visible:ds-outline-none focus-visible:ds-ring-1 focus-visible:ds-ring-ring disabled:ds-pointer-events-none disabled:ds-opacity-disabled [&_svg]:ds-pointer-events-none [&_svg]:ds-size-4 [&_svg]:ds-shrink-0",
+  "comal-ui inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all active:[&:not([aria-haspopup])]:translate-y-px motion-reduce:active:[&:not([aria-haspopup])]:transform-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-disabled [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "ds-bg-primary ds-text-primary-foreground ds-shadow hover:ds-bg-primary-hover",
+          "bg-primary text-primary-foreground shadow hover:bg-primary-hover",
         destructive:
-          "ds-bg-destructive ds-text-destructive-foreground ds-shadow-sm hover:ds-bg-destructive/90",
+          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
-          "ds-border ds-border-input ds-bg-background ds-shadow-sm hover:ds-bg-accent hover:ds-text-accent-foreground",
+          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
-          "ds-bg-secondary ds-text-secondary-foreground ds-shadow-sm hover:ds-bg-secondary/80",
-        ghost: "hover:ds-bg-accent hover:ds-text-accent-foreground",
-        link: "ds-text-primary ds-underline-offset-4 hover:ds-underline",
+          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "ds-h-9 ds-px-4 ds-py-2",
-        sm: "ds-h-8 ds-rounded-md ds-px-3 ds-text-xs",
-        lg: "ds-h-10 ds-rounded-md ds-px-8",
-        icon: "ds-h-9 ds-w-9",
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-md px-3 text-xs",
+        lg: "h-10 rounded-md px-8",
+        icon: "h-9 w-9",
       },
     },
     defaultVariants: {

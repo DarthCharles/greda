@@ -15,7 +15,7 @@ const Checkbox = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-grid ds-place-content-center ds-peer ds-h-4 ds-w-4 ds-shrink-0 ds-rounded-sm ds-border ds-border-primary ds-shadow focus-visible:ds-outline-none focus-visible:ds-ring-1 focus-visible:ds-ring-ring disabled:ds-cursor-not-allowed disabled:ds-opacity-disabled aria-[invalid=true]:ds-border-destructive data-[state=checked]:ds-bg-primary data-[state=checked]:ds-text-primary-foreground data-[state=indeterminate]:ds-bg-primary data-[state=indeterminate]:ds-text-primary-foreground",
+      "grid place-content-center peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-disabled aria-[invalid=true]:border-destructive data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-primary-foreground",
       className
     )}
     {...props}
@@ -24,11 +24,11 @@ const Checkbox = React.forwardRef<
       data-slot="checkbox-indicator"
       className={cn(
         "comal-ui",
-        "ds-grid ds-place-content-center ds-text-current"
+        "grid place-content-center text-current"
       )}
     >
-      <Check className="ds-h-4 ds-w-4" data-check-icon="" />
-      <Minus className="ds-h-4 ds-w-4" data-mixed-icon="" />
+      <Check className="h-4 w-4" data-check-icon="" />
+      <Minus className="h-4 w-4" data-mixed-icon="" />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));

@@ -21,14 +21,14 @@ const SelectTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-flex ds-h-9 ds-w-full ds-items-center ds-justify-between ds-whitespace-nowrap ds-rounded-md ds-border ds-border-input ds-bg-transparent ds-px-3 ds-py-2 ds-text-sm ds-shadow-sm ds-ring-offset-background data-[placeholder]:ds-text-muted-foreground focus:ds-outline-none focus:ds-ring-1 focus:ds-ring-ring disabled:ds-cursor-not-allowed disabled:ds-opacity-disabled aria-[invalid=true]:ds-border-destructive [&>span]:ds-line-clamp-1",
+      "flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-disabled aria-[invalid=true]:border-destructive [&>span]:line-clamp-1",
       className
     )}
     {...props}
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDown className="ds-h-4 ds-w-4 ds-opacity-50" />
+      <ChevronDown className="h-4 w-4 opacity-50" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
@@ -42,12 +42,12 @@ const SelectScrollUpButton = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-flex ds-cursor-default ds-items-center ds-justify-center ds-py-1",
+      "flex cursor-default items-center justify-center py-1",
       className
     )}
     {...props}
   >
-    <ChevronUp className="ds-h-4 ds-w-4" />
+    <ChevronUp className="h-4 w-4" />
   </SelectPrimitive.ScrollUpButton>
 ));
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -60,12 +60,12 @@ const SelectScrollDownButton = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-flex ds-cursor-default ds-items-center ds-justify-center ds-py-1",
+      "flex cursor-default items-center justify-center py-1",
       className
     )}
     {...props}
   >
-    <ChevronDown className="ds-h-4 ds-w-4" />
+    <ChevronDown className="h-4 w-4" />
   </SelectPrimitive.ScrollDownButton>
 ));
 SelectScrollDownButton.displayName =
@@ -88,9 +88,9 @@ const SelectContent = React.forwardRef<
       ref={ref}
       className={cn(
         "comal-ui",
-        "ds-relative ds-z-popover ds-max-h-[--radix-select-content-available-height] ds-min-w-[8rem] ds-overflow-y-auto ds-overflow-x-hidden ds-rounded-md ds-border ds-bg-popover ds-text-popover-foreground ds-shadow-md data-[state=open]:ds-animate-in data-[state=closed]:ds-animate-out data-[state=closed]:ds-fade-out-0 data-[state=open]:ds-fade-in-0 data-[state=closed]:ds-zoom-out-95 data-[state=open]:ds-zoom-in-95 data-[side=bottom]:ds-slide-in-from-top-2 data-[side=left]:ds-slide-in-from-right-2 data-[side=right]:ds-slide-in-from-left-2 data-[side=top]:ds-slide-in-from-bottom-2 ds-origin-[--radix-select-content-transform-origin]",
+        "relative z-popover max-h-[--radix-select-content-available-height] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-select-content-transform-origin]",
         position === "popper" &&
-          "data-[side=bottom]:ds-translate-y-1 data-[side=left]:-ds-translate-x-1 data-[side=right]:ds-translate-x-1 data-[side=top]:-ds-translate-y-1",
+          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className
       )}
       position={position}
@@ -100,9 +100,9 @@ const SelectContent = React.forwardRef<
       <SelectPrimitive.Viewport
         className={cn(
           "comal-ui",
-          "ds-p-1",
+          "p-1",
           position === "popper" &&
-            "ds-h-[var(--radix-select-trigger-height)] ds-w-full ds-min-w-[var(--radix-select-trigger-width)]"
+            "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
         )}
       >
         {children}
@@ -121,7 +121,7 @@ const SelectLabel = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-px-2 ds-py-1.5 ds-text-sm ds-font-semibold",
+      "px-2 py-1.5 text-sm font-semibold",
       className
     )}
     {...props}
@@ -137,14 +137,14 @@ const SelectItem = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-relative ds-flex ds-w-full ds-cursor-default ds-select-none ds-items-center ds-rounded-sm ds-py-1.5 ds-pl-2 ds-pr-8 ds-text-sm ds-outline-none focus:ds-bg-accent focus:ds-text-accent-foreground data-[disabled]:ds-pointer-events-none data-[disabled]:ds-opacity-50",
+      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
     {...props}
   >
-    <span className="ds-absolute ds-right-2 ds-flex ds-h-3.5 ds-w-3.5 ds-items-center ds-justify-center">
+    <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="ds-h-4 ds-w-4" />
+        <Check className="h-4 w-4" />
       </SelectPrimitive.ItemIndicator>
     </span>
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
@@ -160,7 +160,7 @@ const SelectSeparator = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "-ds-mx-1 ds-my-1 ds-h-px ds-bg-muted",
+      "-mx-1 my-1 h-px bg-muted",
       className
     )}
     {...props}

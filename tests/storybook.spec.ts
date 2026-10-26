@@ -1,6 +1,9 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFileSync } from "node:fs";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { buildConsumerCss } from "./tailwind-consumer";
 
 const index = JSON.parse(readFileSync("storybook-static/index.json", "utf8"));
 const stories = Object.values(index.entries) as { id: string; type: string }[];
@@ -181,6 +184,239 @@ test("package CSS preserves unrelated layered consumer utilities", async ({
   await page.addStyleTag({ content: css });
   await expect(consumer).toHaveCSS("transform", before.transform);
   await expect(consumer).toHaveCSS("box-shadow", before.shadow);
+});
+
+test("package CSS shares unprefixed color utilities with consumer markup", async ({
+  page,
+}) => {
+  const api = await import(new URL("../dist/index.js", import.meta.url).href);
+  const css = readFileSync("dist/styles.css", "utf8");
+  const comal = readFileSync(".storybook/themes/comal.css", "utf8");
+  for (const theme of ["base", "comal"]) {
+    for (const scheme of ["light", "dark"]) {
+      await page.setContent(`<!doctype html>
+        <html data-theme="${theme}" data-color-scheme="${scheme}">
+          <body>
+            <button id="component">Component action</button>
+            <div id="consumer" class="comal-ui border border-primary bg-primary text-primary-foreground">
+              Application content
+            </div>
+            <div id="accent" class="bg-accent text-foreground">Accent content</div>
+          </body>
+        </html>`);
+      await page.locator("#component").evaluate((element, classes) => {
+        element.setAttribute("class", classes);
+      }, api.buttonVariants());
+      await page.addStyleTag({ content: css });
+      await page.addStyleTag({ content: comal });
+      const primary =
+        theme === "comal"
+          ? scheme === "dark"
+            ? "rgb(239, 168, 143)"
+            : "rgb(168, 67, 48)"
+          : scheme === "dark"
+          ? "rgb(110, 162, 247)"
+          : "rgb(23, 84, 207)";
+      await expect(page.locator("#component")).toHaveClass(/\bbg-primary\b/);
+      await expect(page.locator("#component")).not.toHaveClass(/ds-/);
+      await expect(page.locator("#component")).toHaveCSS(
+        "background-color",
+        primary
+      );
+      await expect(page.locator("#consumer")).toHaveCSS(
+        "background-color",
+        primary
+      );
+      await expect(page.locator("#consumer")).toHaveCSS("border-color", primary);
+      await expect(page.locator("#consumer")).toHaveCSS("border-style", "solid");
+      await page.evaluate(() => {
+        document.documentElement.style.setProperty("--primary", "120 100% 25%");
+        document.documentElement.style.setProperty(
+          "--primary-foreground",
+          "0 0% 100%"
+        );
+        document.documentElement.style.setProperty("--accent", "240 100% 50%");
+        document.documentElement.style.setProperty("--foreground", "0 0% 100%");
+      });
+      for (const selector of ["#component", "#consumer"]) {
+        await expect(page.locator(selector)).toHaveCSS(
+          "background-color",
+          "rgb(0, 128, 0)"
+        );
+        await expect(page.locator(selector)).toHaveCSS(
+          "color",
+          "rgb(255, 255, 255)"
+        );
+      }
+      await expect(page.locator("#accent")).toHaveCSS(
+        "background-color",
+        "rgb(0, 0, 255)"
+      );
+      await expect(page.locator("#accent")).toHaveCSS(
+        "color",
+        "rgb(255, 255, 255)"
+      );
+    }
+  }
+});
+
+test("consumer className overrides component colors and hover states", async ({
+  page,
+}) => {
+  await page.goto(
+    "/iframe.html?id=components-button--shared-utilities&viewMode=story"
+  );
+  const button = page.getByRole("button", { name: "Custom action" });
+  await expect(button).toHaveCSS("background-color", "rgb(237, 239, 243)");
+  await expect(button).toHaveCSS("color", "rgb(33, 44, 69)");
+  await button.hover();
+  await page.evaluate(() => {
+    document.documentElement.style.setProperty("--accent", "120 100% 25%");
+    document.documentElement.style.setProperty(
+      "--accent-foreground",
+      "0 0% 100%"
+    );
+  });
+  await expect(button).toHaveCSS("background-color", "rgb(0, 128, 0)");
+  await expect(button).toHaveCSS("color", "rgb(255, 255, 255)");
+});
+
+test("Tailwind 4 consumers get token utilities from one CSS import", async ({
+  page,
+}) => {
+  const css = await buildConsumerCss([
+    "bg-primary",
+    "text-primary-foreground",
+    "border",
+    "border-primary",
+    "grid",
+    "p-4",
+    "m-4",
+    "gap-4",
+    "p-0.5",
+    "p-7",
+    "rounded-md",
+    "font-sans",
+    "font-heading",
+    "text-sm",
+    "font-medium",
+    "shadow",
+    "ring-1",
+    "ring-ring",
+    "ring-offset-2",
+    "z-overlay",
+    "opacity-disabled",
+    "hover:bg-accent",
+    "focus:text-accent-foreground",
+    "dark:bg-muted",
+  ]);
+  await page.setContent(`<!doctype html>
+    <div id="scope">
+      <section id="panel" class="bg-primary text-primary-foreground border border-primary grid p-4 m-4 gap-4 rounded-md font-sans text-sm font-medium shadow">
+        <span class="font-heading">Token-based layout</span>
+      </section>
+      <button id="state" class="bg-primary dark:bg-muted hover:bg-accent focus:text-accent-foreground">State colors</button>
+      <div id="fraction" class="p-0.5">Fractional spacing</div>
+      <div id="dynamic" class="p-7">Numeric spacing</div>
+      <div id="ring" class="ring-1 ring-ring ring-offset-2">Focus ring</div>
+      <div id="layer" class="z-overlay opacity-disabled">Layer and opacity</div>
+    </div>`);
+  await page.addStyleTag({ content: css });
+  const panel = page.locator("#panel");
+  await expect(panel).toHaveCSS("background-color", "rgb(23, 84, 207)");
+  await expect(panel).toHaveCSS("color", "rgb(255, 255, 255)");
+  await expect(panel).toHaveCSS("border-color", "rgb(23, 84, 207)");
+  await expect(panel).toHaveCSS("border-width", "1px");
+  for (const property of ["padding", "margin", "gap"]) {
+    await expect(panel).toHaveCSS(property, "16px");
+  }
+  await expect(panel).toHaveCSS("border-radius", "8px");
+  await expect(panel).toHaveCSS("font-family", /system-ui/);
+  await expect(panel.locator("span")).toHaveCSS("font-family", /system-ui/);
+  await expect(panel).toHaveCSS("font-size", "13px");
+  await expect(panel).toHaveCSS("font-weight", "500");
+  await expect(panel).toHaveCSS(
+    "box-shadow",
+    /rgba\(15, 23, 41, 0\.12\) 0px 8px 24px 0px$/
+  );
+  await expect(page.locator("#fraction")).toHaveCSS("padding", "2px");
+  await expect(page.locator("#dynamic")).toHaveCSS("padding", "28px");
+  await expect(page.locator("#layer")).toHaveCSS("z-index", "50");
+  await expect(page.locator("#layer")).toHaveCSS("opacity", "0.5");
+  await page.evaluate(() => {
+    document.documentElement.dataset.colorScheme = "dark";
+  });
+  await expect(panel).toHaveCSS("background-color", "rgb(110, 162, 247)");
+  await expect(page.locator("#state")).toHaveCSS(
+    "background-color",
+    "rgb(37, 42, 55)"
+  );
+  await page.locator("#state").hover();
+  await expect(page.locator("#state")).toHaveCSS(
+    "background-color",
+    "rgb(45, 52, 67)"
+  );
+  await page.locator("#state").focus();
+  await expect(page.locator("#state")).toHaveCSS("color", "rgb(243, 244, 247)");
+  await page.locator("#scope").evaluate((element) => {
+    element.setAttribute("style", `
+      --primary: 120 100% 25%;
+      --space-4: 28px;
+      --spacing-unit: 6px;
+      --radius: 12px;
+      --border-width: 3px;
+      --focus-width: 4px;
+      --focus-offset: 3px;
+    `);
+  });
+  await expect(panel).toHaveCSS("background-color", "rgb(0, 128, 0)");
+  await expect(panel).toHaveCSS("border-width", "3px");
+  await expect(panel).toHaveCSS("border-radius", "12px");
+  for (const property of ["padding", "margin", "gap"]) {
+    await expect(panel).toHaveCSS(property, "28px");
+  }
+  await expect(page.locator("#ring")).toHaveCSS("--tw-ring-offset-width", "3px");
+  await expect(page.locator("#ring")).toHaveCSS("box-shadow", /0px 0px 0px 7px/);
+  await expect(page.locator("#dynamic")).toHaveCSS("padding", "42px");
+});
+
+test("Tailwind 4 app variants override Greda components through CSS layers", async ({
+  page,
+}) => {
+  const api = await import(new URL("../dist/index.js", import.meta.url).href);
+  const css = await buildConsumerCss(["md:bg-secondary", "bg-primary/50"], true);
+  await page.setContent(
+    "<!doctype html>" +
+      renderToStaticMarkup(
+        createElement(api.Button, { className: "md:bg-secondary" }, "Responsive action")
+      ) +
+      renderToStaticMarkup(
+        createElement(api.Button, { className: "bg-primary/50" }, "Transparent action")
+      )
+  );
+  await page.addStyleTag({ content: css });
+  const button = page.getByRole("button", { name: "Responsive action" });
+  await page.setViewportSize({ width: 600, height: 800 });
+  await expect(button).toHaveCSS("background-color", "rgb(23, 84, 207)");
+  await page.setViewportSize({ width: 1100, height: 800 });
+  await expect(button).toHaveCSS("background-color", "rgb(237, 239, 243)");
+  await expect(button).toHaveCSS("padding-left", "16px");
+  await expect(page.getByRole("button", { name: "Transparent action" })).toHaveCSS(
+    "background-color",
+    /0\.5\)$/
+  );
+});
+
+test("tokens.css still supplies ordinary CSS variables without Tailwind", async ({
+  page,
+}) => {
+  await page.setContent(
+    '<!doctype html><div id="plain" style="color: hsl(var(--primary)); padding: var(--space-4); font-family: var(--font-sans)">Plain CSS tokens</div>'
+  );
+  await page.addStyleTag({ content: readFileSync("dist/tokens.css", "utf8") });
+  await expect(page.locator("#plain")).toHaveCSS("color", "rgb(23, 84, 207)");
+  await expect(page.locator("#plain")).toHaveCSS("padding", "16px");
+  await expect(page.locator("#plain")).toHaveCSS("font-family", /system-ui/);
 });
 
 test("indeterminate icons remain visible inside cards and dialogs", async ({

@@ -16,7 +16,7 @@ const TabsList = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-inline-flex ds-h-9 ds-items-center ds-justify-center ds-rounded-lg ds-bg-muted ds-p-1 ds-text-muted-foreground data-[orientation=vertical]:ds-h-auto data-[orientation=vertical]:ds-flex-col",
+      "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground data-[orientation=vertical]:h-auto data-[orientation=vertical]:flex-col",
       className
     )}
     {...props}
@@ -32,7 +32,7 @@ const TabsTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-inline-flex ds-items-center ds-justify-center ds-whitespace-nowrap ds-rounded-md ds-px-3 ds-py-1 ds-text-sm ds-font-medium ds-ring-offset-background ds-transition-all focus-visible:ds-outline-none focus-visible:ds-ring-2 focus-visible:ds-ring-ring focus-visible:ds-ring-offset-2 disabled:ds-pointer-events-none disabled:ds-opacity-50 data-[state=active]:ds-bg-background data-[state=active]:ds-text-foreground data-[state=active]:ds-shadow",
+      "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow",
       className
     )}
     {...props}
@@ -48,7 +48,7 @@ const TabsContent = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-mt-2 ds-ring-offset-background focus-visible:ds-outline-none focus-visible:ds-ring-2 focus-visible:ds-ring-ring focus-visible:ds-ring-offset-2",
+      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       className
     )}
     {...props}

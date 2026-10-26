@@ -8,7 +8,7 @@
     "css": "src/styles/styles.css",
     "baseColor": "neutral",
     "cssVariables": true,
-    "prefix": "ds-"
+    "prefix": ""
   },
   "aliases": {
     "components": "@/components",

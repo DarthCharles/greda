@@ -11,7 +11,7 @@ const Card = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-rounded-xl ds-border ds-bg-card ds-text-card-foreground ds-shadow",
+      "rounded-xl border bg-card text-card-foreground shadow",
       className
     )}
     {...props}
@@ -27,7 +27,7 @@ const CardHeader = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-flex ds-flex-col ds-space-y-1.5 ds-p-6",
+      "flex flex-col space-y-1.5 p-6",
       className
     )}
     {...props}
@@ -43,7 +43,7 @@ const CardTitle = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "comal-heading ds-font-semibold ds-leading-none ds-tracking-tight",
+      "comal-heading font-semibold leading-none tracking-tight",
       className
     )}
     {...props}
@@ -57,7 +57,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("comal-ui", "ds-text-sm ds-text-muted-foreground", className)}
+    className={cn("comal-ui", "text-sm text-muted-foreground", className)}
     {...props}
   />
 ));
@@ -69,7 +69,7 @@ const CardContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("comal-ui", "ds-p-6 ds-pt-0", className)}
+    className={cn("comal-ui", "p-6 pt-0", className)}
     {...props}
   />
 ));
@@ -83,7 +83,7 @@ const CardFooter = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-flex ds-items-center ds-p-6 ds-pt-0",
+      "flex items-center p-6 pt-0",
       className
     )}
     {...props}

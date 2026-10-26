@@ -32,9 +32,27 @@ import {
 
 describe("accessible component behavior", () => {
   it("lets consumer utility overrides replace conflicting defaults", () => {
-    expect(cn("ds-px-3 ds-text-sm", false, "ds-px-6")).toBe(
-      "ds-text-sm ds-px-6"
+    expect(cn("px-3 text-sm", false, "px-6")).toBe("text-sm px-6");
+    expect(
+      cn("bg-primary hover:bg-primary-hover", "bg-accent hover:bg-secondary")
+    ).toBe("bg-accent hover:bg-secondary");
+  });
+
+  it("uses the same unprefixed utilities for components and consumer overrides", () => {
+    render(
+      <Button className="bg-accent text-accent-foreground hover:bg-secondary">
+        Custom action
+      </Button>
     );
+    const button = screen.getByRole("button", { name: "Custom action" });
+    expect(button).toHaveClass(
+      "bg-accent",
+      "text-accent-foreground",
+      "hover:bg-secondary"
+    );
+    expect(button).not.toHaveClass("bg-primary");
+    expect(button).not.toHaveClass("text-primary-foreground");
+    expect(button).not.toHaveClass("hover:bg-primary-hover");
   });
 
   it("prevents repeated activation while loading and defaults to a non-submit button", async () => {

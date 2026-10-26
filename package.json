@@ -1,6 +1,6 @@
 {
   "name": "@darthcharles/greda",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Generic React components with a complete, overridable base theme.",
   "type": "module",
   "license": "MIT",
@@ -90,6 +90,7 @@
     "storybook": "^10.6.3",
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-v4": "npm:tailwindcss@^4.3.3",
     "typescript": "^5.9.0",
     "vite": "^7.0.0",
     "vitest": "^3.2.0"

@@ -23,7 +23,7 @@ const DialogOverlay = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-fixed ds-inset-0 ds-z-overlay ds-bg-overlay data-[state=open]:ds-animate-in data-[state=closed]:ds-animate-out data-[state=closed]:ds-fade-out-0 data-[state=open]:ds-fade-in-0",
+      "fixed inset-0 z-overlay bg-overlay data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -49,15 +49,15 @@ const DialogContent = React.forwardRef<
       ref={ref}
       className={cn(
         "comal-ui",
-        "ds-fixed ds-left-[50%] ds-top-[50%] ds-z-overlay ds-grid ds-text-foreground ds-w-[calc(100%-2rem)] ds-max-w-lg ds-max-h-[calc(100dvh-2rem)] ds-overflow-y-auto ds-translate-x-[-50%] ds-translate-y-[-50%] ds-gap-4 ds-border ds-bg-background ds-p-6 ds-shadow-lg ds-duration-200 data-[state=open]:ds-animate-in data-[state=closed]:ds-animate-out data-[state=closed]:ds-fade-out-0 data-[state=open]:ds-fade-in-0 data-[state=closed]:ds-zoom-out-95 data-[state=open]:ds-zoom-in-95 data-[state=closed]:ds-slide-out-to-left-1/2 data-[state=closed]:ds-slide-out-to-top-[48%] data-[state=open]:ds-slide-in-from-left-1/2 data-[state=open]:ds-slide-in-from-top-[48%] sm:ds-rounded-lg",
+        "fixed left-[50%] top-[50%] z-overlay grid text-foreground w-[calc(100%-2rem)] max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
         className
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="comal-ui ds-absolute ds-right-4 ds-top-4 ds-rounded-sm ds-opacity-70 ds-ring-offset-background ds-transition-opacity hover:ds-opacity-100 focus:ds-outline-none focus:ds-ring-2 focus:ds-ring-ring focus:ds-ring-offset-2 disabled:ds-pointer-events-none data-[state=open]:ds-bg-accent data-[state=open]:ds-text-muted-foreground">
-        <X className="ds-h-4 ds-w-4" />
-        <span className="ds-sr-only">Close</span>
+      <DialogPrimitive.Close className="comal-ui absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
@@ -71,7 +71,7 @@ const DialogHeader = ({
   <div
     className={cn(
       "comal-ui",
-      "ds-flex ds-flex-col ds-space-y-1.5 ds-text-center sm:ds-text-left",
+      "flex flex-col space-y-1.5 text-center sm:text-left",
       className
     )}
     {...props}
@@ -86,7 +86,7 @@ const DialogFooter = ({
   <div
     className={cn(
       "comal-ui",
-      "ds-flex ds-flex-col-reverse sm:ds-flex-row sm:ds-justify-end sm:ds-space-x-2",
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
       className
     )}
     {...props}
@@ -102,7 +102,7 @@ const DialogTitle = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "comal-heading ds-text-lg ds-font-semibold ds-leading-none ds-tracking-tight",
+      "comal-heading text-lg font-semibold leading-none tracking-tight",
       className
     )}
     {...props}
@@ -116,7 +116,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("comal-ui", "ds-text-sm ds-text-muted-foreground", className)}
+    className={cn("comal-ui", "text-sm text-muted-foreground", className)}
     {...props}
   />
 ));

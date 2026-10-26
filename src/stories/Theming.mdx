@@ -3,25 +3,24 @@ import * as OverviewStories from "./Overview.stories";
 
 <Meta of={OverviewStories} name="Theming" />
 
-# Set up a theme
+# Use and customize a theme
 
-The package supplies a complete neutral base theme. Your application owns its
-brand theme: you override CSS variables, and every shared component uses those
-values. No Tailwind setup or component edits are needed in the consuming app.
+Greda supplies a complete neutral base theme. Importing `styles.css` is enough
+to use its components with the defaults. A custom theme, spacing rules, font
+downloads, and Tailwind configuration are not required.
 
 Use **Design Tokens** in the sidebar to explore the available tokens and their
-visual results. This guide shows how to connect those tokens to an application.
+visual results. The customization examples below are optional: override only
+the CSS variables your application needs, and components and color utilities
+automatically use those values.
 
 ## 1. Load the package stylesheet
 
-Import the compiled stylesheet once in your application's entry point, followed
-by the theme and your application styles:
+Import the compiled stylesheet once in your application's entry point:
 
 ```tsx
 // src/main.tsx
 import "@darthcharles/greda/styles.css";
-import "./comal-theme.css";
-import "./app.css";
 
 import { Button } from "@darthcharles/greda";
 ```
@@ -30,11 +29,15 @@ The package stylesheet already includes the base tokens. You do not need to
 import `tokens.css` separately. It styles components without resetting your
 application's page layout. Components continue to use normal package imports.
 
+You can stop here and use the base theme. If you only need CSS variables without
+component styles, import `@darthcharles/greda/tokens.css` instead.
+
 ## 2. Create the brand theme
 
-Create `src/comal-theme.css`. Override only the values your brand needs; the rest
-retain their base defaults. Define related background and foreground colors
-together so labels remain readable.
+To customize the base theme, create `src/comal-theme.css` and import it after
+`@darthcharles/greda/styles.css` in your application entry point. Override only
+the values your brand needs; the rest retain their base defaults. Define related
+background and foreground colors together so labels remain readable.
 
 This example takes Comal's warm canvas, paper surfaces, terracotta, and sage from
 Meal Planner. It uses Meal Planner's darker terracotta for actions and a darker
@@ -85,9 +88,10 @@ into your application to start your theme.
 
 ## 3. Load your fonts and style the page
 
-Declaring a font family does not download its font files. Load fonts yourself,
-or keep the base system fonts. Storybook hosts DM Sans and Fraunces locally using
-Fontsource. To use the same setup in an application:
+The default theme uses system fonts. The custom font imports and page rules in
+this section are optional examples for the consuming application. Declaring a
+font family does not download its font files. Storybook hosts DM Sans and Fraunces
+locally using Fontsource. To use the same setup in an application:
 
 ```bash
 npm install @fontsource-variable/dm-sans @fontsource-variable/fraunces
@@ -197,15 +201,39 @@ the UI so the correct palette is present on first render.
 
 ## 6. Adjust spacing and individual components
 
-Override the base spacing unit to scale the spacing system, or a named step for
-a more targeted change:
+Spacing tokens are shared distances, not separate margin and padding settings.
+For example, `--space-4` defaults to `1rem` (16px with a 16px root font size) and
+can be used for padding, margin, gap, or a control dimension. The utility name or
+CSS property determines how the distance is applied.
+
+No spacing overrides or layout rules are required to use or theme Greda. To
+customize the scale, override the base spacing unit on the document root, or a
+named step for a more targeted change:
 
 ```css
-[data-theme="comal"] {
+:root {
   --spacing-unit: 0.25rem;
   --space-4: 1.25rem; /* Adjust the step used by p-4, px-4, and similar utilities. */
 }
 ```
+
+For your application's own layout, use any spacing token directly in CSS:
+
+```css
+/* Optional application layout example */
+.section {
+  display: grid;
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+  gap: var(--space-2);
+}
+```
+
+This example styles an application element; it is not theme setup. In a Tailwind 4
+app, the token import described below enables spacing utilities such as `p-4`,
+`m-4`, and `gap-4`. If you use only Greda's precompiled stylesheet, spacing
+classes are included only when used by a component; use CSS variables for any
+additional layout needs.
 
 Keep structural changes, such as a wider page layout, in application CSS. For a
 single control, scope a token override using a consumer class:
@@ -223,6 +251,130 @@ single control, scope a token override using a consumer class:
 Use named spacing steps when adjusting a scoped section. Derived tokens such as
 `--space-4` are computed where they are declared; changing `--spacing-unit` on a
 nested wrapper alone will not recalculate inherited root declarations.
+
+## Using Tailwind 4 in your application
+
+Import Greda's tokens from the CSS file processed by your Tailwind build:
+
+```css
+/* src/app.css */
+@import "tailwindcss";
+@import "@darthcharles/greda/tokens.css";
+```
+
+That import includes the base palette, dark palette, and Tailwind theme
+definitions. No preset, copied theme configuration, or app safelist is needed.
+Tailwind generates utilities from the class names in your application source:
+
+```tsx
+<section className="grid gap-4 rounded-md bg-primary p-4 text-primary-foreground md:p-8 hover:bg-primary/90">
+  Application content
+</section>
+```
+
+The integration maps semantic colors, spacing, font families, font sizes,
+weights, radii, shadows, and the dialog width to Greda's runtime tokens. Named
+spacing steps such as `p-4`, `m-4`, and `gap-4` share `--space-4`; other numeric
+steps derive from `--spacing-unit`. Fractional utilities such as `p-0.5` use
+`--space-0-5`. It also provides the token-based border width, `ring-1`, `ring-2`,
+`ring-offset-2`, `opacity-disabled`, and the named stacking utilities `z-overlay`,
+`z-popover`, and `z-toast`.
+
+Color utilities support Tailwind's normal opacity and state variants. The
+`dark:` variant follows `data-color-scheme="dark"`, matching Greda's palette.
+Changing a token updates both application utilities and Greda components;
+customization is optional and requires no rebuild of the library.
+
+### Using components and your own Tailwind utilities together
+
+Import the compiled component styles into the `components` layer before the
+token import:
+
+```css
+@import "tailwindcss";
+@import "@darthcharles/greda/styles.css" layer(components);
+@import "@darthcharles/greda/tokens.css";
+```
+
+Import this app stylesheet once at your application entry point. Do not also
+import Greda's `styles.css` in JavaScript: an unlayered duplicate would take
+precedence over the app's layered Tailwind utilities. This setup lets application
+classes, including responsive and opacity variants, override component defaults:
+
+```tsx
+<Button className="md:bg-secondary md:text-secondary-foreground">
+  Responsive action
+</Button>
+```
+
+The Tailwind theme definitions are registered at build time, so a JavaScript
+import of `tokens.css` alone cannot register utilities. Plain CSS consumers can
+still import the same file for its runtime variables; browsers ignore the
+Tailwind directives. This CSS-only integration targets Tailwind 4. Tailwind 3
+consumers can use the precompiled component styles but must configure their own
+Tailwind theme to generate additional token-based utilities.
+
+## Shared utilities without an application Tailwind build
+
+Greda components and consuming applications use the same unprefixed Tailwind
+class names and CSS variables. Import `styles.css` once; no separate utility
+stylesheet or Tailwind setup is required:
+
+```tsx
+<div className="comal-ui border border-primary bg-accent p-4 text-accent-foreground">
+  Application content
+</div>
+
+<Button className="bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground">
+  Custom action
+</Button>
+```
+
+The package guarantees `bg-{color}`, `text-{color}`, and `border-{color}` for
+every semantic color in the token catalog, including `primary`, `foreground`,
+`accent`, `card-foreground`, and `border`. The `hover:`, `focus:`, and
+`focus-visible:` variants of these color utilities are also included. Colors
+follow the active theme and color scheme, including custom token overrides.
+
+Components already apply `comal-ui`. Add it to standalone elements when you need
+Greda's scoped baseline, including solid borders and Tailwind variable
+initialization. Color utilities also work on elements without `comal-ui`.
+Other layout utilities and opacity, responsive, or state combinations are
+included only when used by a component. These limits apply to the precompiled
+stylesheet; apps importing the Tailwind 4 token theme generate their own utilities
+from their source and can use any supported combination.
+
+The exported `cn` helper merges unprefixed utilities. A consumer `className`
+replaces conflicting component defaults for the same state:
+
+```tsx
+import { cn } from "@darthcharles/greda";
+
+cn("bg-primary hover:bg-primary-hover", "bg-accent hover:bg-secondary");
+// "bg-accent hover:bg-secondary"
+```
+
+Utility selectors are global. Use the layered setup above for Tailwind 4 so both
+builds share the same mapping and app utilities can override component styles.
+Tailwind 3 requires manual theme mappings (for example, `primary` to
+`hsl(var(--primary) / <alpha-value>)`). Matching class names share the cascade,
+so align any app theme customizations with Greda's variables. The package's reset
+and Tailwind variable defaults remain scoped; its CSS does not add global preflight.
+
+### Migrating from prefixed utilities
+
+This is a breaking class-name change. Remove `ds-` from consumer classes and CSS
+selectors, including utilities after state modifiers. For example:
+
+```text
+ds-bg-primary              → bg-primary
+hover:ds-bg-primary-hover  → hover:bg-primary-hover
+-ds-mx-1                   → -mx-1
+```
+
+Update escaped CSS selectors and any app Tailwind configuration that used the old
+prefix. Old `ds-*` classes are no longer generated or merged by `cn`. Token names,
+value formats, component props, and package imports remain the same.
 
 ## Scoped previews and portals
 

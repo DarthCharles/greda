@@ -18,7 +18,7 @@ const ToastViewport = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-fixed ds-top-0 ds-z-toast ds-flex ds-max-h-screen ds-w-full ds-flex-col-reverse ds-p-4 sm:ds-bottom-0 sm:ds-right-0 sm:ds-top-auto sm:ds-flex-col md:ds-max-w-[var(--toast-width)]",
+      "fixed top-0 z-toast flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[var(--toast-width)]",
       className
     )}
     {...props}
@@ -27,13 +27,13 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(
-  "ds-group ds-pointer-events-auto ds-relative ds-flex ds-w-full ds-items-center ds-justify-between ds-space-x-2 ds-overflow-hidden ds-rounded-md ds-border ds-p-4 ds-pr-6 ds-shadow-lg ds-transition-all data-[swipe=cancel]:ds-translate-x-0 data-[swipe=end]:ds-translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:ds-translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:ds-transition-none data-[state=open]:ds-animate-in data-[state=closed]:ds-animate-out data-[swipe=end]:ds-animate-out data-[state=closed]:ds-fade-out-80 data-[state=closed]:ds-slide-out-to-right-full data-[state=open]:ds-slide-in-from-top-full data-[state=open]:sm:ds-slide-in-from-bottom-full",
+  "group pointer-events-auto relative flex w-full items-center justify-between space-x-2 overflow-hidden rounded-md border p-4 pr-6 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
   {
     variants: {
       variant: {
-        default: "ds-border ds-bg-background ds-text-foreground",
+        default: "border bg-background text-foreground",
         destructive:
-          "ds-destructive ds-group ds-border-destructive ds-bg-destructive ds-text-destructive-foreground",
+          "destructive group border-destructive bg-destructive text-destructive-foreground",
       },
     },
     defaultVariants: {
@@ -65,7 +65,7 @@ const ToastAction = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-inline-flex ds-h-8 ds-shrink-0 ds-items-center ds-justify-center ds-rounded-md ds-border ds-bg-transparent ds-px-3 ds-text-sm ds-font-medium ds-transition-colors hover:ds-bg-secondary focus:ds-outline-none focus:ds-ring-1 focus:ds-ring-ring disabled:ds-pointer-events-none disabled:ds-opacity-50 group-[.ds-destructive]:ds-border-muted/40 group-[.ds-destructive]:hover:ds-border-destructive/30 group-[.ds-destructive]:hover:ds-bg-destructive group-[.ds-destructive]:hover:ds-text-destructive-foreground group-[.ds-destructive]:focus:ds-ring-destructive",
+      "inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium transition-colors hover:bg-secondary focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive",
       className
     )}
     {...props}
@@ -81,14 +81,14 @@ const ToastClose = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-absolute ds-right-1 ds-top-1 ds-rounded-md ds-p-1 ds-text-foreground/50 ds-opacity-0 ds-transition-opacity hover:ds-text-foreground focus:ds-opacity-100 focus:ds-outline-none focus:ds-ring-1 group-hover:ds-opacity-100 group-[.ds-destructive]:ds-text-red-300 group-[.ds-destructive]:hover:ds-text-red-50 group-[.ds-destructive]:focus:ds-ring-red-400 group-[.ds-destructive]:focus:ds-ring-offset-red-600",
+      "absolute right-1 top-1 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-1 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
       className
     )}
     aria-label="Dismiss notification"
     toast-close=""
     {...props}
   >
-    <X className="ds-h-4 ds-w-4" />
+    <X className="h-4 w-4" />
   </ToastPrimitives.Close>
 ));
 ToastClose.displayName = ToastPrimitives.Close.displayName;
@@ -101,7 +101,7 @@ const ToastTitle = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "ds-text-sm ds-font-semibold [&+div]:ds-text-xs",
+      "text-sm font-semibold [&+div]:text-xs",
       className
     )}
     {...props}
@@ -115,7 +115,7 @@ const ToastDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Description
     ref={ref}
-    className={cn("comal-ui", "ds-text-sm ds-opacity-90", className)}
+    className={cn("comal-ui", "text-sm opacity-90", className)}
     {...props}
   />
 ));

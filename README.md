@@ -32,17 +32,48 @@ export function Example() {
 }
 ```
 
-The stylesheet includes the base theme and scoped component styles. Your
-application controls page layout, backgrounds, and fonts. React and React DOM
-remain peer dependencies outside the ESM bundle.
+The stylesheet includes a ready-to-use base theme, CSS tokens, and scoped
+component styles. No custom theme or additional CSS is required to use Greda.
+Your application controls its own page layout, backgrounds, and fonts. React
+and React DOM remain peer dependencies outside the ESM bundle.
 
 Visit [Storybook](https://elegant-hotteok-cbb834.netlify.app/) for component APIs,
 variants, interaction examples, and accessibility guidance.
 
+Greda and application markup share unprefixed utility classes such as
+`bg-primary`, `text-foreground`, and `border-primary`. Pass them through
+`className` to override component defaults. See the theming guide for supported
+utilities and migration from `ds-*` classes.
+
+## With Tailwind 4
+
+Import Greda's tokens in your app's Tailwind CSS entry point. This registers the
+theme so Tailwind can generate utilities without a preset or manual mappings:
+
+```css
+@import "tailwindcss";
+@import "@darthcharles/greda/tokens.css";
+```
+
+```tsx
+<div className="bg-primary p-4 text-primary-foreground hover:bg-primary-hover">
+  Your content
+</div>
+```
+
+To use Greda components too, add
+`@import "@darthcharles/greda/styles.css" layer(components);` between those two
+imports, instead of importing `styles.css` again in JavaScript. The layer lets
+your generated utilities override component styles, including responsive variants.
+The import-only theme integration requires Tailwind 4; Greda's precompiled
+component styles also work without Tailwind.
+
 ## Theming
 
-Import your theme after the package stylesheet and override the tokens you need.
-Unspecified values keep their base defaults:
+Customization is optional. To change the default theme, import your own
+`theme.css` after the package stylesheet and override only the tokens you need.
+Unspecified values keep their base defaults, and components and color utilities
+automatically use your overrides:
 
 ```css
 /* theme.css */
@@ -57,6 +88,11 @@ Unspecified values keep their base defaults:
 
 Colors use space-separated HSL channels without an `hsl()` wrapper;
 `--overlay` also includes alpha. Other tokens accept ordinary CSS values.
+
+Spacing tokens such as `--space-4` are shared distances for padding, margin, and
+gap. Use them directly in your own CSS when needed; layout rules are optional
+examples, not theme setup. If you only need tokens, import
+`@darthcharles/greda/tokens.css` instead of `styles.css`.
 
 Set `data-color-scheme="dark"` on `<html>` for the base dark palette. Brand
 overrides need matching dark colors. Apply themes to `<html>` so portaled

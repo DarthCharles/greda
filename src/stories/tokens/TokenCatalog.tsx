@@ -203,9 +203,16 @@ export function TokenCatalog({
           <h2>{name}</h2>
           {name === "Spacing" && (
             <p className="tokens-section-description">
-              A 4px base unit generates the named spacing scale. Override{" "}
-              <code>--spacing-unit</code> to scale it, or a single{" "}
-              <code>--space-*</code> token to adjust one step.
+              One spacing scale supplies distances for padding, margin, gap,
+              and control dimensions. The default base unit is 4px. For example,{" "}
+              <code>--space-4</code> is 16px at the default root font size.
+              No overrides are required. Optionally override{" "}
+              <code>--spacing-unit</code> on the document root to scale it, or a
+              single <code>--space-*</code> token to adjust one step. Use any step
+              directly in your CSS, or import the token theme into a Tailwind 4
+              app to generate padding, margin, and gap utilities. The precompiled
+              component stylesheet includes only the spacing classes used by
+              Greda's components.
             </p>
           )}
           <div className="tokens-grid">

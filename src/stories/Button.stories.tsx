@@ -80,3 +80,27 @@ export const VariantHelper: Story = {
     </a>
   ),
 };
+
+export const SharedUtilities: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Components and application markup share unprefixed utilities and CSS tokens. Use className to replace component defaults. Standalone elements can opt into Greda's scoped baseline with comal-ui.",
+      },
+    },
+  },
+  render: () => (
+    <div className="catalog-stack">
+      <div className="comal-ui rounded-md border border-primary bg-accent p-4 text-accent-foreground">
+        Application markup using the same color utilities as Greda.
+      </div>
+      <div className="catalog-row">
+        <Button>Primary action</Button>
+        <Button className="bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground">
+          Custom action
+        </Button>
+      </div>
+    </div>
+  ),
+};
