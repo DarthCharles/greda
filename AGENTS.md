@@ -86,8 +86,8 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
   neutral; Comal branding and fonts belong in the Storybook example or the
   consuming application. Do not add font downloads to the package.
 - When changing tokens, review the dark palette, Tailwind mapping, and token
-  classification/previews in `src/stories/tokens/`. Run `npm run docs:tokens` to
-  regenerate the README table; do not maintain it manually.
+  classification/previews in `src/stories/tokens/`. Storybook reads the token
+  stylesheet directly; keep the README focused on usage and reference links.
 - Preserve viewport constraints on overlays, visible focus, and support for
   `prefers-reduced-motion`.
 
@@ -116,7 +116,7 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
 | --- | --- |
 | Documentation only | Review paths, commands, links, and examples for accuracy |
 | Components, types, or behavior | `npm run typecheck`, `npm test`, `npm run validate:stories` |
-| Tokens | `npm run docs:tokens` and review the generated diff; validate as a visual change |
+| Tokens | Review Storybook token classification/previews; validate as a visual change |
 | CSS, themes, portals, or visual changes | `npm run check`, then `npm run test:browser` |
 | Build, dependencies, or exports | `npm run check`; also browser tests if runtime or CSS is affected |
 

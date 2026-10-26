@@ -1,50 +1,121 @@
-# @darthcharles/greda
+# Greda
 
-A reusable React/TypeScript package built from **shadcn/ui component source**,
-with a complete neutral base theme and consumer-owned token overrides.
-Storybook documents each component in its own `*.stories.tsx` file.
+React components with a neutral base theme and CSS tokens you control.
+
+Built from shadcn/ui New York and Radix primitives, Greda ships typed,
+composable components with compiled styles. Use it with React 18 or 19,
+without configuring Tailwind in your application.
+
+[Quick start](#quick-start) · [Components](#components) · [Theming](#theming) ·
+[Design tokens](#design-tokens) · [Development](#development)
 
 ## Quick start
 
+### Install
+
+Add Greda to an existing React application:
+
+```bash
+npm install @darthcharles/greda
+```
+
+Requires `react` and `react-dom` **18.2+ or 19**. Both are peer dependencies
+and remain outside the ESM bundle. TypeScript declarations are included.
+
+### Import the styles
+
+Load the compiled stylesheet once at your application's entry point:
+
+```tsx
+import "@darthcharles/greda/styles.css";
+```
+
+The stylesheet includes the base theme and component styles. The baseline reset
+and Tailwind variable initialization are scoped to `.comal-ui`, which the
+components apply themselves. Your application controls page layout, backgrounds,
+and fonts; the package downloads no external fonts.
+
+### Use a component
+
 ```tsx
 import { Button, Input, Label } from "@darthcharles/greda";
-import "@darthcharles/greda/styles.css";
-import "./theme.css";
 
-export function Example() {
+export function NameField() {
   return (
-    <>
-      <Label htmlFor="name">Name</Label>
-      <Input id="name" />
-      <Button>Continue</Button>
-    </>
+    <form>
+      <div>
+        <Label htmlFor="name">Name</Label>
+        <Input id="name" name="name" autoComplete="name" />
+      </div>
+      <Button type="submit">Continue</Button>
+    </form>
   );
 }
 ```
 
-React 18 and 19 are peer dependencies and are excluded from the ESM build.
-Import the stylesheet once at the application entry point. CSS is compiled by
-the package: consumers need **no Tailwind setup**. Utility classes use the `ds-`
-prefix, and the baseline reset and Tailwind variable initialization are scoped to `.comal-ui`. Page layout, page
-backgrounds, and fonts remain the application's responsibility.
+## Components
 
-```css
-body {
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: var(--font-sans);
-}
+Components follow shadcn's composition model, with Radix handling keyboard
+interaction and ARIA behavior. Import components and their types from
+`@darthcharles/greda`.
+
+Each linked story includes usage examples, relevant variants and states, and
+keyboard documentation. Run `npm run storybook` to browse them locally.
+
+| Component | API at a glance | Examples |
+| --- | --- | --- |
+| Button | Six variants; `default`, `sm`, `lg`, and `icon` sizes; `loading` and `asChild` | [Button](src/stories/Button.stories.tsx) |
+| Input | Native input props and refs | [Input](src/stories/Input.stories.tsx) |
+| Textarea | Native textarea props and refs | [Textarea](src/stories/Textarea.stories.tsx) |
+| Label | Label associated with a control through `htmlFor` | [Label](src/stories/Label.stories.tsx) |
+| Select | Trigger, value, content, groups, labels, items, separators, and scroll buttons; `onValueChange` | [Select](src/stories/Select.stories.tsx) |
+| Checkbox | Boolean or `indeterminate` state; `onCheckedChange` | [Checkbox](src/stories/Checkbox.stories.tsx) |
+| Dialog | Trigger, content, title, description, header, footer, close, overlay, and portal | [Dialog](src/stories/Dialog.stories.tsx) |
+| Card | Header, title, description, content, and footer | [Card](src/stories/Card.stories.tsx) |
+| Badge | `default`, `secondary`, `outline`, and `destructive` variants | [Badge](src/stories/Badge.stories.tsx) |
+| Tabs | List, trigger, and content; horizontal or vertical orientation | [Tabs](src/stories/Tabs.stories.tsx) |
+| Toast | Provider, viewport, title, description, action, and close; controlled open state | [Toast](src/stories/Toast.stories.tsx) |
+| Tooltip | Provider, trigger, and content | [Tooltip](src/stories/Tooltip.stories.tsx) |
+
+### Usage conventions
+
+- **Buttons:** variants are `default`, `secondary`, `outline`, `ghost`,
+  `destructive`, and `link`. The default type is `button`; use `type="submit"`
+  in forms. `loading` sets `aria-busy` and disables native buttons. Use a useful
+  label such as `Saving…`. With `asChild`, the child keeps its semantics;
+  links do not gain native disabled behavior.
+- **Forms:** associate labels with controls. Connect errors with `aria-invalid`
+  and `aria-describedby`, and give icon buttons accessible names.
+- **Dialogs:** include a `DialogTitle`. Add a `DialogDescription`, or pass
+  `aria-describedby={undefined}` to `DialogContent` when omitting it. Content
+  includes an accessible close button.
+- **Notifications:** supply a `ToastProvider` and `ToastViewport`, and control
+  each toast's open state. Keep critical errors inline rather than relying only
+  on a toast or tooltip.
+
+Use `className` for application styling. The exported `cn` helper combines
+conditional classes and resolves conflicting `ds-` Tailwind utilities:
+
+```tsx
+import { cn } from "@darthcharles/greda/utils";
 ```
 
-## Consumer themes
+`cn` is also available from the package root. Component utilities use the `ds-`
+prefix, such as `ds-px-4`. Only utilities used by the library's component source
+are guaranteed to appear in its compiled CSS; use application CSS for your layout.
 
-Override any subset of tokens. Unspecified tokens retain their base values.
-Colors use **space-separated HSL channels**, not hex or complete `hsl()` calls.
-The overlay token additionally includes alpha. Other tokens accept CSS values.
-Token names and value formats are part of the versioned public API.
+## Theming
+
+Override the tokens your application needs. Unspecified values keep their base
+defaults. Import your theme stylesheet after the package stylesheet:
+
+```tsx
+import "@darthcharles/greda/styles.css";
+import "./theme.css";
+```
 
 ```css
-/* The consumer's theme.css */
+/* theme.css */
 :root {
   --primary: 9.500 55.556% 42.353%;
   --primary-hover: 9.714 56.150% 36.667%;
@@ -52,212 +123,138 @@ Token names and value formats are part of the versioned public API.
   --ring: 9.500 55.556% 42.353%;
   --radius: 0.75rem;
 }
-```
 
-Base token selectors use `:where()` so ordinary consumer selectors win even
-if the library CSS loads later. Keep background/foreground pairs readable and
-verify contrast in your theme. The base theme downloads no external fonts.
-Comal's brand overrides belong in its consuming application.
-
-Set `data-color-scheme="dark"` on `<html>` to opt into the base dark palette.
-Brand identity and color scheme are independent. A consumer can customize dark
-mode using `:root[data-color-scheme="dark"]` overrides.
-
-Apply themes on `<html>` so portaled dialogs, selects, and tooltips inherit them.
-For themes scoped to a subtree, pass the themed element to the content component's
-`container` prop. `@darthcharles/greda/tokens.css` exports just the tokens;
-`styles.css` already includes them.
-
-### Base token reference
-
-| Token | Default |
-| --- | --- |
-| `--background` | `0 0% 100%` |
-| `--foreground` | `222 47% 11%` |
-| `--card` | `0 0% 100%` |
-| `--card-foreground` | `222 47% 11%` |
-| `--popover` | `0 0% 100%` |
-| `--popover-foreground` | `222 47% 11%` |
-| `--accent` | `220 20% 94%` |
-| `--accent-foreground` | `222 35% 20%` |
-| `--primary` | `220 80% 45%` |
-| `--primary-foreground` | `0 0% 100%` |
-| `--primary-hover` | `220 80% 38%` |
-| `--secondary` | `220 20% 94%` |
-| `--secondary-foreground` | `222 35% 20%` |
-| `--muted` | `220 15% 96%` |
-| `--muted-foreground` | `220 10% 42%` |
-| `--border` | `220 15% 82%` |
-| `--input` | `220 15% 82%` |
-| `--ring` | `220 80% 45%` |
-| `--destructive` | `0 72% 43%` |
-| `--destructive-foreground` | `0 0% 100%` |
-| `--overlay` | `222 47% 11% / 0.4` |
-| `--font-sans` | `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif` |
-| `--font-heading` | `var(--font-sans)` |
-| `--font-size-xs` | `0.75rem` |
-| `--font-size-sm` | `0.8125rem` |
-| `--font-size-md` | `0.875rem` |
-| `--font-size-lg` | `1.25rem` |
-| `--font-weight-medium` | `500` |
-| `--font-weight-bold` | `600` |
-| `--line-height` | `1.5` |
-| `--spacing-unit` | `0.25rem` |
-| `--space-0` | `calc(var(--spacing-unit) * 0)` |
-| `--space-0-5` | `calc(var(--spacing-unit) * 0.5)` |
-| `--space-1` | `calc(var(--spacing-unit) * 1)` |
-| `--space-1-5` | `calc(var(--spacing-unit) * 1.5)` |
-| `--space-2` | `calc(var(--spacing-unit) * 2)` |
-| `--space-2-5` | `calc(var(--spacing-unit) * 2.5)` |
-| `--space-3` | `calc(var(--spacing-unit) * 3)` |
-| `--space-3-5` | `calc(var(--spacing-unit) * 3.5)` |
-| `--space-4` | `calc(var(--spacing-unit) * 4)` |
-| `--space-5` | `calc(var(--spacing-unit) * 5)` |
-| `--space-6` | `calc(var(--spacing-unit) * 6)` |
-| `--space-8` | `calc(var(--spacing-unit) * 8)` |
-| `--space-9` | `calc(var(--spacing-unit) * 9)` |
-| `--space-10` | `calc(var(--spacing-unit) * 10)` |
-| `--space-12` | `calc(var(--spacing-unit) * 12)` |
-| `--space-16` | `calc(var(--spacing-unit) * 16)` |
-| `--space-20` | `calc(var(--spacing-unit) * 20)` |
-| `--space-24` | `calc(var(--spacing-unit) * 24)` |
-| `--space-32` | `calc(var(--spacing-unit) * 32)` |
-| `--radius` | `0.5rem` |
-| `--radius-sm` | `calc(var(--radius) * 0.6)` |
-| `--radius-full` | `9999px` |
-| `--radius-lg` | `calc(var(--radius) * 1.5)` |
-| `--border-width` | `1px` |
-| `--dialog-width` | `32.5rem` |
-| `--tooltip-width` | `20rem` |
-| `--toast-width` | `24rem` |
-| `--shadow-sm` | `0 1px 2px hsl(222 47% 11% / 0.08)` |
-| `--shadow` | `0 8px 24px hsl(222 47% 11% / 0.12)` |
-| `--shadow-dialog` | `0 24px 70px hsl(222 47% 11% / 0.24)` |
-| `--focus-width` | `2px` |
-| `--focus-offset` | `2px` |
-| `--disabled-opacity` | `0.5` |
-| `--duration` | `150ms` |
-| `--z-overlay` | `50` |
-| `--z-popover` | `60` |
-| `--z-toast` | `70` |
-
-The **Design Tokens** section in Storybook shows every token's value and a live
-preview: color swatches, typography samples, spacing bars, corner shapes, shadows,
-focus outlines, motion, opacity, sizing, and stacking layers. Its examples update
-with the theme and color-scheme toolbar. The catalog reads directly from the token
-stylesheet. Run `npm run docs:tokens` after editing tokens to refresh the reference
-table in this README.
-
-`--spacing-unit` scales the spacing utilities used by components. Named steps such
-as `--space-1` (4px), `--space-2` (8px), `--space-4` (16px), and `--space-8` (32px)
-derive from that unit. Override a single step to adjust every component utility
-that uses it. Fractional steps use a hyphen, for example `--space-0-5` (2px).
-
-```css
-:root {
-  --space-4: 1.25rem; /* Change the step used by px-4 and p-4. */
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
 }
 ```
 
-Radii, fonts,
-shadows, focus, and semantic colors are also mapped through Tailwind to runtime
-variables. Breakpoints are build-time application layout choices rather than
-CSS variable tokens. Components fit their containers; dialog and toast content
-are constrained to the viewport. Use composition and `className` for layout
-changes and application-specific styling.
+Colors use **space-separated HSL channels**, without an `hsl()` wrapper.
+`--overlay` also includes alpha, for example `222 47% 11% / 0.4`.
+Other tokens accept ordinary CSS values. Keep background and foreground pairs
+readable and verify contrast in your theme.
 
-## Components and Storybook
+Base token selectors use `:where()`, so ordinary consumer selectors take
+precedence even if the library stylesheet loads later. Token names and value
+formats are part of the public API.
 
-| Component | Storybook source                                                     |
-| --------- | -------------------------------------------------------------------- |
-| Button    | [src/stories/Button.stories.tsx](src/stories/Button.stories.tsx)     |
-| Input     | [src/stories/Input.stories.tsx](src/stories/Input.stories.tsx)       |
-| Textarea  | [src/stories/Textarea.stories.tsx](src/stories/Textarea.stories.tsx) |
-| Label     | [src/stories/Label.stories.tsx](src/stories/Label.stories.tsx)       |
-| Select    | [src/stories/Select.stories.tsx](src/stories/Select.stories.tsx)     |
-| Dialog    | [src/stories/Dialog.stories.tsx](src/stories/Dialog.stories.tsx)     |
-| Card      | [src/stories/Card.stories.tsx](src/stories/Card.stories.tsx)         |
-| Badge     | [src/stories/Badge.stories.tsx](src/stories/Badge.stories.tsx)       |
-| Checkbox  | [src/stories/Checkbox.stories.tsx](src/stories/Checkbox.stories.tsx) |
-| Tabs      | [src/stories/Tabs.stories.tsx](src/stories/Tabs.stories.tsx)         |
-| Toast     | [src/stories/Toast.stories.tsx](src/stories/Toast.stories.tsx)       |
-| Tooltip   | [src/stories/Tooltip.stories.tsx](src/stories/Tooltip.stories.tsx)   |
+### Dark mode
 
-Each file contains default usage and relevant variants, sizes, disabled/loading,
-validation, and keyboard documentation. The toolbar previews base/Comal themes
-and light/dark color schemes. Noninteractive components do not invent loading
-or disabled behavior. `npm run validate:stories` enforces one story file per
-component. Storybook includes automatic prop documentation and an axe panel.
+Opt into the base dark palette by setting the color scheme on the document root:
 
-The public API follows shadcn's composition model:
+```html
+<html lang="en" data-color-scheme="dark">
+```
 
-- Button: `default`, `secondary`, `outline`, `ghost`, `destructive`, `link` variants;
-  `default`, `sm`, `lg`, `icon` sizes. `loading` sets `aria-busy` and disables native
-  buttons. Set a useful label such as `Saving…`. The default type is `button`;
-  pass `type="submit"` for forms. `asChild` supports links; disabled/loading
-  behavior is intended for native buttons.
-- Input, Textarea, Label: native field props and refs. Associate visible labels
-  and connect errors using `aria-invalid` and `aria-describedby`.
-- Select: SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel,
-  SelectItem, SelectSeparator, SelectScrollUpButton, SelectScrollDownButton.
-  Controlled values use `onValueChange`.
-- Dialog: DialogTrigger, DialogContent, DialogTitle, DialogDescription,
-  DialogHeader, DialogFooter, DialogClose, DialogOverlay, DialogPortal. Content
-  includes a built-in accessible close button. Include a title. Explicitly pass
-  `aria-describedby={undefined}` when there is no description.
-- Card: CardHeader, CardTitle, CardDescription, CardContent, CardFooter.
-- Badge: `default`, `secondary`, `outline`, `destructive` variants.
-- Checkbox: boolean or `indeterminate` state; controlled `onCheckedChange`.
-- Tabs: TabsList, TabsTrigger, TabsContent; horizontal/vertical orientation.
-- Toast: ToastProvider, ToastViewport, ToastTitle, ToastDescription, ToastAction,
-  ToastClose. Supply one provider/viewport and control each toast's open state.
-- Tooltip: TooltipProvider, TooltipTrigger, TooltipContent.
+Brand identity and color scheme are independent. If your brand overrides base
+colors, provide matching dark overrides in `:root[data-color-scheme="dark"]`.
 
-Radix remains a dependency of the shadcn components and supplies their keyboard
-and ARIA behavior. Give icon buttons accessible names and keep critical errors
-inline. `cn` is exported from the root and `@darthcharles/greda/utils`; it combines
-conditional classes and merges conflicting `ds-` Tailwind utilities.
+### Portals and scoped themes
+
+Apply themes to `<html>` so portaled dialogs, selects, and tooltips inherit
+the same tokens. For a theme scoped to a subtree, pass its element to the
+`container` prop on `DialogContent`, `SelectContent`, or `TooltipContent`.
+
+See the [theming guide](src/stories/Theming.mdx) for a complete walkthrough,
+including fonts, dark palettes, and scoped portals. The
+[Comal theme](.storybook/themes/comal.css) is a Storybook example with locally
+hosted DM Sans and Fraunces; its branding and fonts are excluded from the package.
+
+## Design tokens
+
+Tokens cover semantic colors, typography, spacing, radii, shadows, focus,
+motion, dimensions, and stacking. Storybook's **Design Tokens** section shows
+live previews that respond to the theme and color-scheme toolbar.
+
+Spacing steps derive from `--spacing-unit` (`0.25rem` by default): `--space-1`
+is 4px, `--space-2` is 8px, and `--space-4` is 16px. Fractional names use a
+hyphen, such as `--space-0-5` for 2px. Override an individual step to adjust
+component utilities that use it:
+
+```css
+:root {
+  --space-4: 1.25rem;
+}
+```
+
+Use root overrides to scale the spacing system. Derived steps are computed where
+they are declared; changing only `--spacing-unit` on a nested wrapper does not
+recalculate inherited steps. Breakpoints are build-time layout choices, rather
+than CSS variable tokens. Dialog and toast content remain viewport-constrained.
+
+`@darthcharles/greda/tokens.css` provides the tokens separately when you only
+need the variables. They are already included in `styles.css`.
+
+Browse [Design Tokens in Storybook](http://localhost:6006/?path=/story/design-tokens--overview)
+with `npm run storybook`, or read the defaults in
+[src/styles/tokens.css](src/styles/tokens.css).
 
 ## Development
 
-Use Node 24 (`nvm use`) and npm:
+Use **Node 24**, as specified in `.nvmrc`, and npm with the committed lockfile.
 
 ```bash
+nvm use
 npm ci
-npm run storybook         # http://localhost:6006
-npm run check             # types, interactions, stories, package, static catalog
-npm run test:browser      # render all stories, axe, theme/portal checks
-npm pack                  # build a local package archive
+npm run storybook
 ```
 
-Local browser tests use installed Google Chrome. CI installs Playwright Chromium.
-Build Storybook before running browser tests (`npm run build-storybook`).
-Build outputs are ignored: ESM and declarations go to `dist/`, compiled CSS to
-`dist/styles.css`, and the static catalog to `storybook-static/`.
+Storybook runs at **http://localhost:6006** with component examples, automatic
+prop documentation, an axe panel, and base/Comal and light/dark toolbar options.
 
-The Comal example in `.storybook/themes/comal.css` uses Meal Planner’s cream,
-paper, terracotta, and sage palette with locally hosted DM Sans and Fraunces.
-Its dark palette is a complementary Storybook example; Meal Planner currently
-defines only light colors. Action and muted text colors use darker shades for
-contrast. This example and its fonts are excluded from the published package. No application integration or registry publication is performed.
+### Validation
 
-### shadcn source and updates
+```bash
+npm run check
+npm run test:browser
+```
 
-This package owns customized copies of the React 18-compatible New York component
-sources and builds them with Tailwind 3.4. `components.json` records aliases, CSS,
-style, and prefix settings. Original registry responses, hashes, and MIT license
-are preserved in `upstream/shadcn-ui/`; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+`check` runs type checking, Vitest, story validation, the package build, package
+validation, and the static Storybook build. **Playwright runs separately** through
+`test:browser` and requires up-to-date `dist/` and `storybook-static/` outputs;
+run `check` first.
 
-To update, review changes against those snapshots and preserve the documented
-local adaptations. `node scripts/fetch-shadcn.mjs` refreshes only the upstream
-snapshots and manifest; it does not overwrite local components. Upstream CLI
-updates may overwrite customizations, so review their diffs before keeping them.
+Browser tests serve the static catalog on port **6007** and check rendering,
+accessibility, themes, portals, and CSS isolation. Local runs use installed
+Google Chrome; CI installs Playwright Chromium.
+
+| Command | Purpose |
+| --- | --- |
+| `npm run typecheck` | Check TypeScript types |
+| `npm test` | Run interaction and unit tests |
+| `npm run validate:stories` | Validate component story coverage |
+| `npm run build` | Build ESM, declarations, and compiled CSS into `dist/` |
+| `npm run validate:package` | Validate the built package |
+| `npm run build-storybook` | Build the catalog into `storybook-static/` |
+| `npm pack` | Build and create a local package archive |
+
+### Upstream sources
+
+Greda maintains customized React 18-compatible copies of shadcn/ui New York
+components, built with Tailwind CSS 3.4. [components.json](components.json)
+records the aliases, stylesheet, style, and prefix configuration. Original
+registry responses, hashes, and the upstream license are preserved in
+[upstream/shadcn-ui](upstream/shadcn-ui/).
+
+`node scripts/fetch-shadcn.mjs` refreshes the snapshots and manifest without
+changing local components. Compare upstream changes against those snapshots and
+preserve local adaptations; review CLI updates before accepting overwrites.
 
 ### Versioning and publishing
 
-Use `npm run changeset` for a change description, then `npm run version-packages`
-to prepare the version and changelog. Compatible features use minors and fixes
-use patches. Breaking prop, token, or export changes need explicit notes and a
-minor bump before 1.0, then a major bump after 1.0. CI validates the package and
-Storybook. `npm run release` validates and publishes through Changesets using
+Add a Changeset with `npm run changeset` for publishable changes. Use patch
+versions for fixes and minor versions for compatible features. Breaking prop,
+token, or export changes require explicit migration notes and a minor bump before
+1.0, or a major bump after 1.0.
+
+For a requested release, `npm run version-packages` prepares versions and
+changelogs. `npm run release` validates and publishes through Changesets using
 the maintainer's npm credentials. Publishing requires an explicit release action.
+
+## License
+
+[MIT](LICENSE) © 2026 Carlos Contreras. Adapted components retain their upstream
+attribution; see [Third-party notices](THIRD_PARTY_NOTICES.md) and the
+[shadcn/ui license](upstream/shadcn-ui/LICENSE.md).

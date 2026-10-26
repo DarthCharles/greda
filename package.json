@@ -50,8 +50,7 @@
     "release": "npm run check && changeset publish",
     "prepack": "npm run build",
     "test:browser": "playwright test",
-    "validate:stories": "node scripts/validate-stories.mjs",
-    "docs:tokens": "node scripts/generate-token-reference.mjs"
+    "validate:stories": "node scripts/validate-stories.mjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.0.0",
