@@ -5,7 +5,7 @@ Built from shadcn/ui New York and Radix primitives, with compiled styles and
 TypeScript declarations. Supports React 18 and 19; no Tailwind setup required.
 
 **[Explore Storybook](https://elegant-hotteok-cbb834.netlify.app/)** ·
-[Theming guide](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/introduction-overview--theming) ·
+[Getting started](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/introduction-overview--getting-started) ·
 [Design tokens](https://elegant-hotteok-cbb834.netlify.app/?path=/story/design-tokens--overview)
 
 ## Quick start
@@ -41,8 +41,8 @@ Visit [Storybook](https://elegant-hotteok-cbb834.netlify.app/) for component API
 variants, interaction examples, and accessibility guidance.
 
 Greda and application markup share unprefixed utility classes such as
-`bg-primary`, `text-foreground`, and `border-primary`. Pass them through
-`className` to override component defaults. See the theming guide for supported
+`surface-primary`, `text-primary`, and `border-primary`. Pass them through
+`className` to override component defaults. See the introduction guide for supported
 utilities and migration from `ds-*` classes.
 
 ## With Tailwind 4
@@ -71,23 +71,54 @@ component styles also work without Tailwind.
 ## Theming
 
 Customization is optional. To change the default theme, import your own
-`theme.css` after the package stylesheet and override only the tokens you need.
+`theme.css` after the package stylesheet and override the base colors or other
+tokens you need.
 Unspecified values keep their base defaults, and components and color utilities
 automatically use your overrides:
 
 ```css
 /* theme.css */
 :root {
-  --primary: 9.500 55.556% 42.353%;
-  --primary-hover: 9.714 56.150% 36.667%;
-  --primary-foreground: 0 0% 100%;
-  --ring: 9.500 55.556% 42.353%;
+  --base-primary: 9.500 55.556% 42.353%;
+  --base-primary-hover: 9.714 56.150% 36.667%;
   --radius: 0.75rem;
 }
 ```
 
 Colors use space-separated HSL channels without an `hsl()` wrapper;
 `--overlay` also includes alpha. Other tokens accept ordinary CSS values.
+
+Consumers override only the generic base colors: `--base-primary`,
+`--base-primary-hover`, `--base-secondary`, `--base-accent`,
+`--base-destructive`, `--base-white`, `--base-black`, and selected
+`--base-gray-*` steps (50, 100, 200, 300, 500, 600, 800, 900). Every theme uses
+the same names. Greda assigns them to independent roles and utilities:
+
+| Category | Utility examples | Default light base colors |
+| --- | --- | --- |
+| Surfaces | `surface-primary`, `surface-secondary`, `surface-inverse` | White, gray-100, black |
+| Text | `text-primary`, `text-secondary`, `text-muted`, `text-inverse` | Black, gray-600, gray-500, white |
+| Borders | `border-primary`, `border-secondary`, `border-inverse` | Gray-200, gray-100, gray-600 |
+
+`bg-primary` / `bg-secondary` use base primary/secondary action colors.
+Primary text and borders use their neutral base assignments independently.
+Dark assignments are built in. Define base overrides on `:root` or a
+`data-theme` element; scoped themes automatically rebind the role variables.
+Consumers do not need to declare surface, text, or border tokens.
+
+`styles.css` includes role utilities and hover/focus variants; the Tailwind 4
+import also generates responsive and opacity variants. Start with Storybook's
+**Design Tokens → Overview**. **Base colors** shows the palette you customize,
+with brand/state colors first and neutrals second. **Color roles** combines
+surface, text, and border assignments with live examples. Other foundations
+have separate pages.
+
+**Migration:** move color overrides to the generic base slots above. In particular,
+`--primary` becomes `--base-primary`. `text-primary`, `text-secondary`,
+`text-muted`, `border-primary`, and `border-secondary` use category roles
+rather than the matching action color. Use `text-action` / `border-action`
+for action colors. Existing component tokens remain as derived variables;
+Greda owns their assignments. Tooltip uses inverse surface/text roles.
 
 Spacing tokens such as `--space-4` are shared distances for padding, margin, and
 gap. Use them directly in your own CSS when needed; layout rules are optional
@@ -98,7 +129,7 @@ Set `data-color-scheme="dark"` on `<html>` for the base dark palette. Brand
 overrides need matching dark colors. Apply themes to `<html>` so portaled
 content inherits them; scoped themes use the content component's `container` prop.
 
-The [theming guide](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/introduction-overview--theming)
+The [introduction guide](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/introduction-overview--getting-started)
 covers fonts, dark mode, and scoped portals. Browse the
 [interactive token catalog](https://elegant-hotteok-cbb834.netlify.app/?path=/story/design-tokens--overview)
 or read the defaults in [tokens.css](src/styles/tokens.css).

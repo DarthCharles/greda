@@ -34,6 +34,34 @@ export const colors = Object.fromEntries(
   ])
 );
 
+// These names describe roles within a category, independently of brand colors.
+export const colorRoles = {
+  surface: ["primary", "secondary", "raised", "inverse"],
+  text: ["primary", "secondary", "muted", "inverse", "action"],
+  border: ["primary", "secondary", "inverse", "action"],
+};
+
+export function roleColors(category: keyof typeof colorRoles) {
+  // matchUtilities handles surface opacity itself; built-in color plugins
+  // resolve their <alpha-value> placeholder through Tailwind's color helpers.
+  const alpha = category === "surface" ? "" : " / <alpha-value>";
+  return Object.fromEntries(
+    colorRoles[category].map((name) => [
+      name,
+      `hsl(var(--${category}-${name})${alpha})`,
+    ])
+  );
+}
+
+export const colorUtilities = [
+  ...Object.keys(colors).flatMap((name) =>
+    ["bg", "text", "border"].map((utility) => `${utility}-${name}`)
+  ),
+  ...Object.entries(colorRoles).flatMap(([category, names]) =>
+    names.map((name) => `${category}-${name}`)
+  ),
+];
+
 export const theme = {
   fontFamily: {
     sans: ["var(--font-sans)"],
@@ -58,6 +86,8 @@ export const theme = {
   },
   extend: {
     colors,
+    textColor: roleColors("text"),
+    borderColor: roleColors("border"),
     zIndex: {
       overlay: "var(--z-overlay)",
       popover: "var(--z-popover)",

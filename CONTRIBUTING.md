@@ -25,8 +25,12 @@ validation, and the static Storybook build. **Playwright runs separately** throu
 `test:browser` and requires up-to-date `dist/` and `storybook-static/` outputs;
 run `check` first.
 
-Browser tests serve the static catalog on port **6007** and check rendering,
-accessibility, themes, portals, and CSS isolation. Local runs use installed
+Browser tests serve the static catalog on port **6007** and cover component
+accessibility, critical interactions, themes, portals, and package CSS integration.
+Tests should protect public contracts and meaningful regressions; documentation
+structure and repeated implementation assertions do not need tests. See the
+test-value rules in [AGENTS.md](AGENTS.md). For test-only changes, reuse current
+build outputs if their source inputs have not changed. Local runs use installed
 Google Chrome; CI installs Playwright Chromium.
 
 | Command | Purpose |

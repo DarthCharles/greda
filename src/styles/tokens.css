@@ -1,28 +1,21 @@
-/* Colors are space-separated HSL channels. All other tokens use CSS values.
-   Low-specificity defaults let consumer :root rules win in either import order. */
-:where(:root) {
-  color-scheme: light;
-  --background: 0 0% 100%;
-  --foreground: 222 47% 11%;
-  --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
-  --accent: 220 20% 94%;
-  --accent-foreground: 222 35% 20%;
-  --primary: 220 80% 45%;
-  --primary-foreground: 0 0% 100%;
-  --primary-hover: 220 80% 38%;
-  --secondary: 220 20% 94%;
-  --secondary-foreground: 222 35% 20%;
-  --muted: 220 15% 96%;
-  --muted-foreground: 220 10% 42%;
-  --border: 220 15% 82%;
-  --input: 220 15% 82%;
-  --ring: 220 80% 45%;
-  --destructive: 0 72% 43%;
-  --destructive-foreground: 0 0% 100%;
-  --overlay: 222 47% 11% / 0.4;
+/* Consumers customize only the generic --base-* colors. All color values are
+   space-separated HSL channels. Role assignments are owned by Greda. */
+:where(:root, [data-color-scheme="light"]) {
+  --base-white: 0 0% 100%;
+  --base-black: 222 47% 11%;
+  --base-gray-50: 220 15% 96%;
+  --base-gray-100: 220 20% 94%;
+  --base-gray-200: 220 15% 82%;
+  --base-gray-300: 220 15% 72%;
+  --base-gray-500: 220 10% 42%;
+  --base-gray-600: 220 15% 36%;
+  --base-gray-800: 222 20% 18%;
+  --base-gray-900: 222 30% 9%;
+  --base-primary: 220 80% 45%;
+  --base-primary-hover: 220 80% 38%;
+  --base-secondary: 220 20% 94%;
+  --base-accent: 220 20% 94%;
+  --base-destructive: 0 72% 43%;
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
   --font-heading: var(--font-sans);
@@ -61,9 +54,6 @@
   --dialog-width: 32.5rem;
   --tooltip-width: 20rem;
   --toast-width: 24rem;
-  --shadow-sm: 0 1px 2px hsl(222 47% 11% / 0.08);
-  --shadow: 0 8px 24px hsl(222 47% 11% / 0.12);
-  --shadow-dialog: 0 24px 70px hsl(222 47% 11% / 0.24);
   --focus-width: 2px;
   --focus-offset: 2px;
   --disabled-opacity: 0.5;
@@ -72,31 +62,72 @@
   --z-popover: 60;
   --z-toast: 70;
 }
-:where([data-color-scheme="light"]) {
+
+/* Rebind roles at theme boundaries so scoped base overrides update every role.
+   Low specificity lets consumers supply base colors in either import order. */
+:where(:root, [data-theme], [data-color-scheme]) {
   color-scheme: light;
+  --surface-primary: var(--base-white);
+  --surface-secondary: var(--base-gray-100);
+  --surface-raised: var(--base-gray-50);
+  --surface-inverse: var(--base-black);
+  --text-primary: var(--base-black);
+  --text-secondary: var(--base-gray-600);
+  --text-muted: var(--base-gray-500);
+  --text-inverse: var(--base-white);
+  --text-action: var(--base-primary);
+  --border-primary: var(--base-gray-200);
+  --border-secondary: var(--base-gray-100);
+  --border-inverse: var(--base-gray-600);
+  --border-action: var(--base-primary);
+
+  /* Existing component tokens derive from the same generic base palette. */
+  --background: var(--surface-primary);
+  --foreground: var(--text-primary);
+  --card: var(--surface-raised);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--text-primary);
+  --accent: var(--base-accent);
+  --accent-foreground: var(--text-primary);
+  --primary: var(--base-primary);
+  --primary-foreground: var(--base-white);
+  --primary-hover: var(--base-primary-hover);
+  --secondary: var(--base-secondary);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--surface-secondary);
+  --muted-foreground: var(--text-muted);
+  --border: var(--border-primary);
+  --input: var(--border-primary);
+  --ring: var(--base-primary);
+  --destructive: var(--base-destructive);
+  --destructive-foreground: var(--base-white);
+  --overlay: var(--base-black) / 0.4;
+  --shadow-sm: 0 1px 2px hsl(var(--base-black) / 0.08);
+  --shadow: 0 8px 24px hsl(var(--base-black) / 0.12);
+  --shadow-dialog: 0 24px 70px hsl(var(--base-black) / 0.24);
 }
+
 /* Opt in independently of the consumer's brand theme. */
 :where([data-color-scheme="dark"]) {
   color-scheme: dark;
-  --background: 222 30% 9%;
-  --foreground: 220 20% 96%;
-  --card: 222 25% 13%;
-  --card-foreground: 220 20% 96%;
-  --popover: 222 25% 13%;
-  --popover-foreground: 220 20% 96%;
-  --accent: 222 20% 22%;
-  --accent-foreground: 220 20% 96%;
-  --primary: 217 90% 70%;
-  --primary-foreground: 222 47% 11%;
-  --primary-hover: 217 90% 78%;
-  --secondary: 222 20% 22%;
-  --secondary-foreground: 220 20% 96%;
-  --muted: 222 20% 18%;
-  --muted-foreground: 220 15% 72%;
-  --border: 220 15% 36%;
-  --input: 220 15% 36%;
-  --ring: 217 90% 70%;
-  --destructive: 0 80% 72%;
-  --destructive-foreground: 222 47% 11%;
-  --overlay: 222 47% 3% / 0.7;
+  --base-primary: 217 90% 70%;
+  --base-primary-hover: 217 90% 78%;
+  --base-secondary: 222 20% 22%;
+  --base-accent: 222 20% 22%;
+  --base-destructive: 0 80% 72%;
+  --surface-primary: var(--base-gray-900);
+  --surface-secondary: var(--base-gray-800);
+  --surface-raised: var(--base-gray-800);
+  --surface-inverse: var(--base-white);
+  --text-primary: var(--base-white);
+  --text-secondary: var(--base-gray-300);
+  --text-muted: var(--base-gray-300);
+  --text-inverse: var(--base-black);
+  --border-primary: var(--base-gray-600);
+  --border-secondary: var(--base-gray-800);
+  --border-inverse: var(--base-gray-200);
+  --primary-foreground: var(--base-black);
+  --destructive-foreground: var(--base-black);
+  --overlay: var(--base-black) / 0.7;
 }

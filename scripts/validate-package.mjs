@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import postcss from "postcss";
 import { access, readFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
+import { colors as semanticColors, colorUtilities, colorRoles } from "../src/styles/tailwind-theme.ts";
 
 const pkg = JSON.parse(await readFile("package.json", "utf8"));
 const packed = JSON.parse(
@@ -45,20 +46,22 @@ stylesheet.walkRules((rule) => {
 });
 // Semantic color utilities are public even if a component never uses them.
 const tokens = await readFile("dist/tokens.css", "utf8");
-const colors = new Set(
-  [...tokens.matchAll(/--([\w-]+):\s*[\d.]+\s+[\d.]+%\s+[\d.]+%/g)].map(
-    ([, name]) => name
-  )
-);
+const colors = new Set(Object.keys(semanticColors));
 assert(colors.has("primary"), "Missing semantic color tokens");
 for (const name of colors) {
-  for (const utility of ["bg", "text", "border"]) {
-    for (const state of ["", "hover", "focus", "focus-visible"]) {
-      const selector = state
-        ? `.${state}\\:${utility}-${name}:${state}`
-        : `.${utility}-${name}`;
-      assert(selectors.has(selector), `Missing public color utility: ${selector}`);
-    }
+  assert(tokens.includes(`--${name}:`), `Missing semantic token: ${name}`);
+}
+for (const [category, names] of Object.entries(colorRoles)) {
+  for (const name of names) {
+    assert(tokens.includes(`--${category}-${name}:`), `Missing role: ${category}-${name}`);
+  }
+}
+for (const utility of colorUtilities) {
+  for (const state of ["", "hover", "focus", "focus-visible"]) {
+    const selector = state
+      ? `.${state}\\:${utility}:${state}`
+      : `.${utility}`;
+    assert(selectors.has(selector), `Missing public color utility: ${selector}`);
   }
 }
 const api = await import("../dist/index.js");

@@ -19,7 +19,9 @@ import {
   SelectItem,
 } from "../index";
 const meta = {
-  title: "Introduction/Overview",
+  title: "Introduction",
+  id: "introduction-overview",
+  tags: ["!autodocs"],
   parameters: { layout: "padded" },
 } satisfies Meta;
 export default meta;
@@ -82,7 +84,11 @@ export const Components: Story = {
           <CardContent>
             <pre
               style={{ whiteSpace: "pre-wrap" }}
-            >{`:root {\n  --primary: 9.500 55.556% 42.353%;\n  --primary-hover: 9.714 56.150% 36.667%;\n  --ring: 9.500 55.556% 42.353%;\n  --radius: 0.75rem;\n}`}</pre>
+            >{`:root {
+  --base-primary: 9.500 55.556% 42.353%;
+  --base-primary-hover: 9.714 56.150% 36.667%;
+  --radius: 0.75rem;
+}`}</pre>
             <p className="catalog-muted">
               The library ships no brand or product logic. Unspecified tokens
               retain their base values.

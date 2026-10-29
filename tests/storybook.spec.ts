@@ -7,15 +7,16 @@ import { buildConsumerCss } from "./tailwind-consumer";
 
 const index = JSON.parse(readFileSync("storybook-static/index.json", "utf8"));
 const stories = Object.values(index.entries) as { id: string; type: string }[];
-for (const story of stories.filter((story) => story.type === "story")) {
-  test(`renders ${story.id}`, async ({ page }) => {
+// Sweep public component states for runtime errors and accessibility regressions.
+for (const story of stories.filter((story) =>
+  story.type === "story" && story.id.startsWith("components-")
+)) {
+  test(`accessible component example: ${story.id}`, async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto(`/iframe.html?id=${story.id}&viewMode=story`);
     await expect(page.locator(".catalog-canvas")).toBeVisible();
     expect(errors).toEqual([]);
-    if (story.id === "introduction-overview--components")
-      await page.screenshot({ path: "test-results/overview.png" });
     const results = await new AxeBuilder({ page })
       .include(".catalog-canvas")
       .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
@@ -103,24 +104,7 @@ test("button moves down on press, excludes popup triggers, and respects reduced 
   await page.mouse.up();
 });
 
-test("token catalog previews follow consumer overrides and spacing is used by components", async ({
-  page,
-}) => {
-  await page.goto(
-    "/iframe.html?id=design-tokens--colors&viewMode=story&globals=theme:comal;scheme:light"
-  );
-  const primary = page.locator('[data-token="--primary"]');
-  await expect(primary.locator(".token-sample")).toHaveCSS(
-    "background-color",
-    "rgb(168, 67, 48)"
-  );
-  await expect(primary.locator(".token-values")).toContainText(
-    "9.5 55.556% 42.353%"
-  );
-  await page.goto("/iframe.html?id=design-tokens--spacing&viewMode=story");
-  const step = page.locator('[data-token="--space-4"]');
-  await expect(step.locator(".token-sample")).toHaveCSS("width", "16px");
-  await expect(step.locator(".token-spacing-label")).toHaveText("16px");
+test("spacing overrides update component padding", async ({ page }) => {
   await page.goto("/iframe.html?id=components-button--default&viewMode=story");
   const button = page.getByRole("button", { name: "Continue" });
   await expect(button).toHaveCSS("padding-left", "16px");
@@ -128,38 +112,6 @@ test("token catalog previews follow consumer overrides and spacing is used by co
     document.documentElement.style.setProperty("--space-4", "28px")
   );
   await expect(button).toHaveCSS("padding-left", "28px");
-});
-
-test("Comal preview uses Meal Planner colors and locally loaded typography", async ({
-  page,
-}) => {
-  await page.goto(
-    "/iframe.html?id=introduction-overview--components&viewMode=story&globals=theme:comal;scheme:light"
-  );
-  await expect(page.locator("body")).toHaveCSS(
-    "background-color",
-    "rgb(251, 247, 239)"
-  );
-  await expect(page.locator("body")).toHaveCSS(
-    "font-family",
-    /DM Sans Variable/
-  );
-  await expect(page.locator(".comal-heading").first()).toHaveCSS(
-    "font-family",
-    /Fraunces Variable/
-  );
-  await page.evaluate(() => document.fonts.ready);
-  expect(
-    await page.evaluate(() => document.fonts.check('14px "DM Sans Variable"'))
-  ).toBe(true);
-  expect(
-    await page.evaluate(() => document.fonts.check('20px "Fraunces Variable"'))
-  ).toBe(true);
-  const results = await new AxeBuilder({ page })
-    .include(".catalog-canvas")
-    .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
-    .analyze();
-  expect(results.violations).toEqual([]);
 });
 
 test("package CSS preserves unrelated layered consumer utilities", async ({
@@ -186,80 +138,6 @@ test("package CSS preserves unrelated layered consumer utilities", async ({
   await expect(consumer).toHaveCSS("box-shadow", before.shadow);
 });
 
-test("package CSS shares unprefixed color utilities with consumer markup", async ({
-  page,
-}) => {
-  const api = await import(new URL("../dist/index.js", import.meta.url).href);
-  const css = readFileSync("dist/styles.css", "utf8");
-  const comal = readFileSync(".storybook/themes/comal.css", "utf8");
-  for (const theme of ["base", "comal"]) {
-    for (const scheme of ["light", "dark"]) {
-      await page.setContent(`<!doctype html>
-        <html data-theme="${theme}" data-color-scheme="${scheme}">
-          <body>
-            <button id="component">Component action</button>
-            <div id="consumer" class="comal-ui border border-primary bg-primary text-primary-foreground">
-              Application content
-            </div>
-            <div id="accent" class="bg-accent text-foreground">Accent content</div>
-          </body>
-        </html>`);
-      await page.locator("#component").evaluate((element, classes) => {
-        element.setAttribute("class", classes);
-      }, api.buttonVariants());
-      await page.addStyleTag({ content: css });
-      await page.addStyleTag({ content: comal });
-      const primary =
-        theme === "comal"
-          ? scheme === "dark"
-            ? "rgb(239, 168, 143)"
-            : "rgb(168, 67, 48)"
-          : scheme === "dark"
-          ? "rgb(110, 162, 247)"
-          : "rgb(23, 84, 207)";
-      await expect(page.locator("#component")).toHaveClass(/\bbg-primary\b/);
-      await expect(page.locator("#component")).not.toHaveClass(/ds-/);
-      await expect(page.locator("#component")).toHaveCSS(
-        "background-color",
-        primary
-      );
-      await expect(page.locator("#consumer")).toHaveCSS(
-        "background-color",
-        primary
-      );
-      await expect(page.locator("#consumer")).toHaveCSS("border-color", primary);
-      await expect(page.locator("#consumer")).toHaveCSS("border-style", "solid");
-      await page.evaluate(() => {
-        document.documentElement.style.setProperty("--primary", "120 100% 25%");
-        document.documentElement.style.setProperty(
-          "--primary-foreground",
-          "0 0% 100%"
-        );
-        document.documentElement.style.setProperty("--accent", "240 100% 50%");
-        document.documentElement.style.setProperty("--foreground", "0 0% 100%");
-      });
-      for (const selector of ["#component", "#consumer"]) {
-        await expect(page.locator(selector)).toHaveCSS(
-          "background-color",
-          "rgb(0, 128, 0)"
-        );
-        await expect(page.locator(selector)).toHaveCSS(
-          "color",
-          "rgb(255, 255, 255)"
-        );
-      }
-      await expect(page.locator("#accent")).toHaveCSS(
-        "background-color",
-        "rgb(0, 0, 255)"
-      );
-      await expect(page.locator("#accent")).toHaveCSS(
-        "color",
-        "rgb(255, 255, 255)"
-      );
-    }
-  }
-});
-
 test("consumer className overrides component colors and hover states", async ({
   page,
 }) => {
@@ -268,7 +146,7 @@ test("consumer className overrides component colors and hover states", async ({
   );
   const button = page.getByRole("button", { name: "Custom action" });
   await expect(button).toHaveCSS("background-color", "rgb(237, 239, 243)");
-  await expect(button).toHaveCSS("color", "rgb(33, 44, 69)");
+  await expect(button).toHaveCSS("color", "rgb(15, 23, 41)");
   await button.hover();
   await page.evaluate(() => {
     document.documentElement.style.setProperty("--accent", "120 100% 25%");
@@ -325,7 +203,7 @@ test("Tailwind 4 consumers get token utilities from one CSS import", async ({
   const panel = page.locator("#panel");
   await expect(panel).toHaveCSS("background-color", "rgb(23, 84, 207)");
   await expect(panel).toHaveCSS("color", "rgb(255, 255, 255)");
-  await expect(panel).toHaveCSS("border-color", "rgb(23, 84, 207)");
+  await expect(panel).toHaveCSS("border-color", "rgb(202, 207, 216)");
   await expect(panel).toHaveCSS("border-width", "1px");
   for (const property of ["padding", "margin", "gap"]) {
     await expect(panel).toHaveCSS(property, "16px");
@@ -357,7 +235,7 @@ test("Tailwind 4 consumers get token utilities from one CSS import", async ({
     "rgb(45, 52, 67)"
   );
   await page.locator("#state").focus();
-  await expect(page.locator("#state")).toHaveCSS("color", "rgb(243, 244, 247)");
+  await expect(page.locator("#state")).toHaveCSS("color", "rgb(255, 255, 255)");
   await page.locator("#scope").evaluate((element) => {
     element.setAttribute("style", `
       --primary: 120 100% 25%;
@@ -417,6 +295,51 @@ test("tokens.css still supplies ordinary CSS variables without Tailwind", async 
   await expect(page.locator("#plain")).toHaveCSS("color", "rgb(23, 84, 207)");
   await expect(page.locator("#plain")).toHaveCSS("padding", "16px");
   await expect(page.locator("#plain")).toHaveCSS("font-family", /system-ui/);
+});
+
+test("base-only overrides update controls and scoped roles across CSS imports", async ({ page }) => {
+  const stylesheets = [
+    readFileSync("dist/tokens.css", "utf8"),
+    readFileSync("dist/styles.css", "utf8"),
+    await buildConsumerCss(["bg-primary", "text-primary-foreground"]),
+  ];
+  const overrides = `:root {
+    --base-primary: 120 100% 25%;
+    --base-gray-200: 120 100% 25%;
+  }
+  :root[data-color-scheme="dark"] { --base-primary: 120 100% 75%; }
+  #scoped {
+    --base-primary: 240 100% 50%;
+    --base-white: 60 100% 75%;
+    --base-black: 240 100% 25%;
+    --base-gray-200: 120 100% 25%;
+  }`;
+  for (const css of stylesheets) {
+    for (const overridesFirst of [true, false]) {
+      await page.setContent(`<!doctype html>
+        <button id="root" style="background-color: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border: 1px solid hsl(var(--border-primary))">Root</button>
+        <div id="scoped" data-theme="custom" data-color-scheme="light">
+          <span id="child" style="background-color: hsl(var(--surface-primary)); color: hsl(var(--text-primary)); border: 1px solid hsl(var(--border-primary))">Scoped</span>
+          <button id="scoped-action" style="background-color: hsl(var(--primary)); color: hsl(var(--primary-foreground))">Action</button>
+        </div>`);
+      for (const content of overridesFirst ? [overrides, css] : [css, overrides]) {
+        await page.addStyleTag({ content });
+      }
+      await expect(page.locator("#root")).toHaveCSS("background-color", "rgb(0, 128, 0)");
+      await expect(page.locator("#root")).toHaveCSS("color", "rgb(255, 255, 255)");
+      await expect(page.locator("#root")).toHaveCSS("border-color", "rgb(0, 128, 0)");
+      await expect(page.locator("#child")).toHaveCSS("background-color", "rgb(255, 255, 128)");
+      await expect(page.locator("#child")).toHaveCSS("color", "rgb(0, 0, 128)");
+      await expect(page.locator("#child")).toHaveCSS("border-color", "rgb(0, 128, 0)");
+      await expect(page.locator("#scoped-action")).toHaveCSS("background-color", "rgb(0, 0, 255)");
+      await page.evaluate(() => { document.documentElement.dataset.colorScheme = "dark"; });
+      await expect(page.locator("#root")).toHaveCSS("background-color", "rgb(128, 255, 128)");
+      await expect(page.locator("#root")).toHaveCSS("color", "rgb(15, 23, 41)");
+      await expect(page.locator("#child")).toHaveCSS("background-color", "rgb(255, 255, 128)");
+      await expect(page.locator("#child")).toHaveCSS("color", "rgb(0, 0, 128)");
+      await expect(page.locator("#scoped-action")).toHaveCSS("background-color", "rgb(0, 0, 255)");
+    }
+  }
 });
 
 test("indeterminate icons remain visible inside cards and dialogs", async ({
@@ -492,4 +415,99 @@ test("scoped Comal palettes set the native color scheme independently of the doc
       inner
     );
   }
+});
+
+for (const layered of [false, true]) {
+  test(`category color roles stay independent in ${layered ? "layered components" : "standalone utilities"}`, async ({ page }) => {
+    const api = await import(new URL("../dist/index.js", import.meta.url).href);
+    const candidates = [
+      "bg-primary", "text-primary-foreground",
+      "surface-primary", "surface-inverse", "text-primary", "text-inverse",
+      "border-primary",
+    ];
+    const cssImports = layered
+      ? [await buildConsumerCss(candidates, true)]
+      : [readFileSync("dist/styles.css", "utf8"), await buildConsumerCss(candidates)];
+    const comal = readFileSync(".storybook/themes/comal.css", "utf8");
+    for (const css of cssImports) {
+      for (const theme of ["base", "comal"]) {
+        for (const scheme of ["light", "dark"]) {
+          await page.setContent(`<!doctype html>
+            <html data-theme="${theme}" data-color-scheme="${scheme}"><body>
+              <div id="roles" class="comal-ui surface-primary text-primary border border-primary">Primary roles</div>
+              <div id="inverse" class="surface-inverse text-inverse">Inverse roles</div>
+              <div id="brand" class="bg-primary">Brand action</div>
+              ${renderToStaticMarkup(createElement(api.Button, { id: "component" }, "Component action"))}
+              <div id="scope" data-theme="custom" data-color-scheme="light" style="--base-white: 240 100% 25%; --base-black: 60 100% 75%; --base-gray-200: 120 100% 25%">
+                <div id="scoped" class="surface-primary text-primary border-primary">Scoped roles</div>
+              </div>
+            </body></html>`);
+          await page.addStyleTag({ content: css });
+          await page.addStyleTag({ content: comal });
+          const dark = scheme === "dark";
+          const surface = theme === "comal"
+            ? dark ? "rgb(33, 28, 23)" : "rgb(251, 247, 239)"
+            : dark ? "rgb(16, 20, 30)" : "rgb(255, 255, 255)";
+          const text = theme === "comal"
+            ? dark ? "rgb(245, 236, 224)" : "rgb(43, 40, 35)"
+            : dark ? "rgb(255, 255, 255)" : "rgb(15, 23, 41)";
+          const border = theme === "comal"
+            ? dark ? "rgb(97, 84, 71)" : "rgb(233, 227, 216)"
+            : dark ? "rgb(78, 87, 106)" : "rgb(202, 207, 216)";
+          const roles = page.locator("#roles");
+          await expect(roles).toHaveCSS("background-color", surface);
+          await expect(roles).toHaveCSS("color", text);
+          await expect(roles).toHaveCSS("border-color", border);
+          const action = theme === "comal"
+            ? dark ? "rgb(239, 168, 143)" : "rgb(168, 67, 48)"
+            : dark ? "rgb(110, 162, 247)" : "rgb(23, 84, 207)";
+          await expect(page.locator("#brand")).toHaveCSS("background-color", action);
+          await expect(page.locator("#component")).toHaveCSS("background-color", action);
+          const actionForeground = dark
+            ? theme === "comal" ? "rgb(43, 40, 35)" : "rgb(15, 23, 41)"
+            : theme === "comal" ? "rgb(251, 247, 239)" : "rgb(255, 255, 255)";
+          await expect(page.locator("#component")).toHaveCSS("color", actionForeground);
+          await expect(page.locator("#inverse")).toHaveCSS("background-color", text);
+          await expect(page.locator("#inverse")).toHaveCSS("color", actionForeground);
+          await expect(page.locator("#scoped")).toHaveCSS("background-color", "rgb(0, 0, 128)");
+          await expect(page.locator("#scoped")).toHaveCSS("color", "rgb(255, 255, 128)");
+          await expect(page.locator("#scoped")).toHaveCSS("border-color", "rgb(0, 128, 0)");
+          await page.evaluate(() => {
+            document.documentElement.style.setProperty("--base-primary", "120 100% 25%");
+          });
+          await expect(page.locator("#brand")).toHaveCSS("background-color", "rgb(0, 128, 0)");
+          await expect(page.locator("#component")).toHaveCSS("background-color", "rgb(0, 128, 0)");
+          await expect(roles).toHaveCSS("background-color", surface);
+          await expect(roles).toHaveCSS("color", text);
+          await expect(roles).toHaveCSS("border-color", border);
+        }
+      }
+    }
+  });
+}
+
+test("Tailwind 4 category roles support opacity, interaction, and responsive variants", async ({ page }) => {
+  const css = await buildConsumerCss([
+    "surface-primary/50", "text-primary/50", "border-primary/50",
+    "surface-primary/[0.25]",
+    "surface-primary", "hover:surface-secondary", "focus:text-inverse", "md:surface-inverse",
+  ], true);
+  await page.setContent(`<!doctype html>
+    <div id="alpha" class="surface-primary/50 text-primary/50 border-primary/50">Transparent roles</div>
+    <div id="arbitrary-alpha" class="surface-primary/[0.25]">Arbitrary opacity</div>
+    <button id="state" class="surface-primary hover:surface-secondary focus:text-inverse">States</button>
+    <div id="responsive" class="surface-primary md:surface-inverse">Responsive surface</div>`);
+  await page.addStyleTag({ content: css });
+  await expect(page.locator("#alpha")).toHaveCSS("background-color", "rgba(255, 255, 255, 0.5)");
+  await expect(page.locator("#alpha")).toHaveCSS("color", "rgba(15, 23, 41, 0.5)");
+  await expect(page.locator("#alpha")).toHaveCSS("border-color", "rgba(202, 207, 216, 0.5)");
+  await expect(page.locator("#arbitrary-alpha")).toHaveCSS("background-color", "rgba(255, 255, 255, 0.25)");
+  await page.locator("#state").hover();
+  await expect(page.locator("#state")).toHaveCSS("background-color", "rgb(237, 239, 243)");
+  await page.locator("#state").focus();
+  await expect(page.locator("#state")).toHaveCSS("color", "rgb(255, 255, 255)");
+  await page.setViewportSize({ width: 600, height: 800 });
+  await expect(page.locator("#responsive")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await page.setViewportSize({ width: 1100, height: 800 });
+  await expect(page.locator("#responsive")).toHaveCSS("background-color", "rgb(15, 23, 41)");
 });

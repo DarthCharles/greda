@@ -1,0 +1,233 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as OverviewStories from "./Overview.stories";
+
+<Meta of={OverviewStories} name="Getting started" />
+
+# Getting started
+
+Greda provides composable React components, TypeScript declarations, and compiled
+styles. It supports React 18.2+ and 19. The default theme works immediately;
+Tailwind and a custom theme are optional.
+
+## Install and use
+
+```bash
+npm install @darthcharles/greda
+```
+
+Import the stylesheet once at your application's entry point, then use the
+components:
+
+```tsx
+import "@darthcharles/greda/styles.css";
+import { Button } from "@darthcharles/greda";
+
+export function App() {
+  return <Button>Continue</Button>;
+}
+```
+
+The stylesheet includes the default colors, tokens, and component styles. Your
+application controls its page layout and typography. React and React DOM remain
+peer dependencies.
+
+## Explore the components
+
+Use the **base / comal** and **light / dark** toolbar options to preview the same
+components under different themes. Component pages document their props,
+variants, keyboard interaction, and applicable states.
+
+<Canvas of={OverviewStories.Components} />
+
+## Customize your theme
+
+For colors, override only the generic `--base-*` variables. Greda assigns those
+colors to surfaces, text, borders, actions, and components automatically.
+
+```css
+/* theme.css — import after Greda's stylesheet */
+:root {
+  --base-primary: 9.5 55.556% 42.353%;
+  --base-primary-hover: 9.714 56.15% 36.667%;
+}
+```
+
+Colors are space-separated HSL channels, without an `hsl()` wrapper. Every theme
+uses the same base names. Primary text and borders keep their own neutral
+assignments when the primary action color changes.
+
+The <a href="/?path=/story/design-tokens--overview" target="_top">Design Tokens overview</a> explains
+**base colors → roles → components**. <a href="/?path=/story/design-tokens--palette" target="_top">Base colors</a>
+shows the complete palette you can override, including neutrals and secondary
+colors. <a href="/?path=/story/design-tokens--roles" target="_top">Color roles</a> shows the assignments
+and utility classes. Typography, spacing, shape, and sizing have their own pages.
+The complete Comal example lives in `.storybook/themes/comal.css`.
+
+Other token customizations are optional. For example, `--radius: 0.75rem` changes
+the default corner radius, and `--space-4: 1.25rem` changes one spacing step.
+Use tokens directly in application CSS, such as `gap: var(--space-4)`.
+
+## Dark mode and theme scope
+
+Set the scheme on the document root so dialogs, selects, tooltips, and other
+portaled content inherit it:
+
+```html
+<html lang="en" data-color-scheme="dark">
+```
+
+The default dark theme is included. A custom palette needs matching dark base
+colors for the slots it overrides:
+
+```css
+:root[data-color-scheme="dark"] {
+  --base-primary: 15.625 75% 74.902%;
+  --base-primary-hover: 15.789 77.551% 80.784%;
+}
+```
+
+Change `document.documentElement.dataset.colorScheme` to switch schemes at
+runtime. Set the initial attribute before React mounts to avoid showing the
+wrong scheme first.
+
+For a named or scoped theme, put `data-theme="brand"` on the theme element and
+define its base overrides with `[data-theme="brand"]`. Greda rebinds color roles
+at root, theme, and scheme boundaries, so consumers do not redeclare them.
+
+## Utilities and Tailwind
+
+Greda's precompiled CSS includes its color utilities and their `hover:`,
+`focus:`, and `focus-visible:` variants. Use them in application markup or pass
+them through a component's `className`:
+
+```tsx
+<div className="comal-ui surface-primary text-primary border border-primary">
+  Application content
+</div>
+
+<Button className="bg-secondary text-secondary-foreground">
+  Custom action
+</Button>
+```
+
+Components already apply `comal-ui`. Add it to standalone elements when you need
+the scoped baseline and solid borders. Other precompiled layout and state
+utilities are included only when a component uses them; use token variables for
+additional application styles, or generate utilities with Tailwind 4.
+
+<details>
+<summary>Tailwind 4 setup</summary>
+
+Import the package CSS through your application's Tailwind entry point:
+
+```css
+@import "tailwindcss";
+@import "@darthcharles/greda/styles.css" layer(components);
+@import "@darthcharles/greda/tokens.css";
+```
+
+Import that app stylesheet once. Do not also import Greda's `styles.css` in
+JavaScript: an unlayered duplicate would override layered app utilities.
+The component layer lets responsive, opacity, and other app utilities override
+component defaults. For example, `md:surface-secondary` uses the secondary
+surface at the medium breakpoint. The `dark:` variant follows
+`data-color-scheme="dark"`.
+
+If you only need tokens and generated utilities, omit the component stylesheet
+import. No preset or copied theme mapping is needed. The integration also maps
+typography, spacing, radii, shadows, focus, opacity, and stacking tokens.
+Tailwind theme directives must be processed by the app's CSS build; importing
+tokens only in JavaScript does not register utilities.
+
+Tailwind 3 consumers can use the compiled CSS, but must configure their own
+Tailwind mappings to generate additional utilities.
+
+</details>
+
+<details>
+<summary>Scoped themes and portaled content</summary>
+
+Use both theme and scheme attributes on the subtree. Pass its DOM element to
+the content component's `container` prop so the portal stays inside that theme:
+
+```tsx
+const [container, setContainer] = useState<HTMLDivElement | null>(null);
+
+return (
+  <div ref={setContainer} data-theme="brand" data-color-scheme="light">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Edit profile</Button>
+      </DialogTrigger>
+      <DialogContent container={container}>
+        <DialogTitle>Edit profile</DialogTitle>
+        <DialogDescription>Update your public information.</DialogDescription>
+      </DialogContent>
+    </Dialog>
+  </div>
+);
+```
+
+`DialogContent`, `SelectContent`, and `TooltipContent` support this prop. An
+unmarked descendant with a base-color override alone does not rebind inherited
+roles; mark the theme boundary with `data-theme`.
+
+Spacing has a separate scope rule: derived steps are computed where they are
+declared. Override a named step such as `--space-4` on a subtree; changing only
+`--spacing-unit` there does not recalculate inherited steps.
+
+</details>
+
+<details>
+<summary>Fonts and application styles</summary>
+
+The default theme uses system fonts. A font-family token does not download a
+font. Load your fonts in the application, then set `--font-sans` and
+`--font-heading`. Storybook's Comal example loads DM Sans and Fraunces locally
+through Fontsource; these fonts are excluded from the published library.
+
+Application styles can use the role and typography tokens directly:
+
+```css
+body {
+  background: hsl(var(--surface-primary));
+  color: hsl(var(--text-primary));
+  font-family: var(--font-sans);
+  line-height: var(--line-height);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+}
+```
+
+The package applies the heading font to component headings. Your application
+owns its page rules, font loading, and layout.
+
+</details>
+
+<details>
+<summary>Migration from earlier token and utility names</summary>
+
+Move theme color overrides to the generic base palette: `--primary` becomes
+`--base-primary`, `--primary-hover` becomes `--base-primary-hover`, and secondary,
+accent, and destructive use the same `--base-` prefix. Use neutral base slots
+for surface, text, and border colors; Greda supplies their role assignments.
+
+`text-primary`, `text-secondary`, `text-muted`, `border-primary`, and
+`border-secondary` now refer to category roles. Use `text-action` and
+`border-action` for action colors. Tooltip uses inverse surface/text roles.
+
+Remove the old `ds-` utility prefix, including after state modifiers:
+
+```text
+ds-bg-primary             → bg-primary
+hover:ds-bg-primary-hover → hover:bg-primary-hover
+-ds-mx-1                  → -mx-1
+```
+
+Update app Tailwind mappings and escaped CSS selectors as well. The exported
+`cn` helper merges unprefixed utilities, including surface/background conflicts.
+Old prefixed classes are no longer generated or merged.
+
+</details>

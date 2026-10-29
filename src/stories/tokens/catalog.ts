@@ -16,7 +16,10 @@ export type TokenKind =
   | "duration"
   | "layer";
 export type TokenGroup =
-  | "Colors"
+  | "Palette"
+  | "Surfaces"
+  | "Text colors"
+  | "Border colors"
   | "Typography"
   | "Spacing"
   | "Shape & elevation"
@@ -27,9 +30,18 @@ export interface DesignToken {
   kind: TokenKind;
   group: TokenGroup;
   description: string;
+  dark?: string;
 }
 
-function classify(name: string): [TokenKind, TokenGroup, string] {
+function classify(name: string): [TokenKind, TokenGroup, string] | undefined {
+  if (name.startsWith("--base-"))
+    return ["color", "Palette", "A generic base color. Override this value to customize the theme."];
+  if (name.startsWith("--surface-"))
+    return ["color", "Surfaces", "A surface role, independent of brand colors."];
+  if (name.startsWith("--text-"))
+    return ["color", "Text colors", "A text role, independent of surfaces and borders."];
+  if (name.startsWith("--border-") && name !== "--border-width")
+    return ["color", "Border colors", "A border role, independent of surfaces and text."];
   if (name.startsWith("--space-") || name === "--spacing-unit")
     return [
       "spacing",
@@ -92,32 +104,85 @@ function classify(name: string): [TokenKind, TokenGroup, string] {
       "Sizing & states",
       "Stacking order of overlay, popover, and notification surfaces.",
     ];
-  return [
-    "color",
-    "Colors",
-    name.endsWith("foreground")
-      ? "A text color, shown as a swatch."
-      : "A semantic color used by components.",
-  ];
 }
 
-export const tokens: DesignToken[] = Array.from(
-  css.split("/* Opt in")[0].matchAll(/^\s*(--[\w-]+):\s*([^;]+);/gm),
-  ([, name, base]) => {
-    const [kind, group, description] = classify(name);
-    return {
-      name,
-      base: base.replace(/\s+/g, " ").trim(),
-      kind,
-      group,
-      description,
-    };
-  }
+const darkValues = new Map(
+  Array.from(
+    css.split("/* Opt in")[1].matchAll(/^\s*(--[\w-]+):\s*([^;]+);/gm),
+    ([, name, value]) => [name, value.trim()]
+  )
 );
-export const groups: TokenGroup[] = [
-  "Colors",
-  "Typography",
-  "Spacing",
-  "Shape & elevation",
-  "Sizing & states",
+
+export const tokens: DesignToken[] = Array.from(
+  css.split("/* Opt in")[0].matchAll(/^\s*(--[\w-]+):\s*([^;]+);/gm)
+).flatMap(([, name, base]) => {
+  const classification = classify(name);
+  if (!classification) return [];
+  const [kind, group, description] = classification;
+  return [{
+    name,
+    base: base.replace(/\s+/g, " ").trim(),
+    kind,
+    group,
+    description,
+    dark: darkValues.get(name),
+  }];
+});
+
+export type TokenPage =
+  | "overview"
+  | "palette"
+  | "roles"
+  | "typography"
+  | "spacing"
+  | "shape-and-elevation"
+  | "sizing-and-states";
+
+export const tokenPages: {
+  id: TokenPage;
+  title: string;
+  description: string;
+  groups: TokenGroup[];
+}[] = [
+  { id: "overview", title: "Overview", description: "Start with base colors. Greda turns them into roles and component styles.", groups: [] },
+  {
+    id: "palette",
+    title: "Base colors",
+    description: "The color palette you customize. Every theme uses the same generic names.",
+    groups: ["Palette"],
+  },
+  {
+    id: "roles",
+    title: "Color roles",
+    description: "How Greda assigns base colors to surfaces, text, borders, and components.",
+    groups: ["Surfaces", "Text colors", "Border colors"],
+  },
+  {
+    id: "typography",
+    title: "Typography",
+    description: "Typefaces, sizes, weights, and line height.",
+    groups: ["Typography"],
+  },
+  {
+    id: "spacing",
+    title: "Spacing",
+    description: "One scale for padding, margins, gaps, and control dimensions.",
+    groups: ["Spacing"],
+  },
+  {
+    id: "shape-and-elevation",
+    title: "Shape & elevation",
+    description: "Corner radii, border thickness, and shadows.",
+    groups: ["Shape & elevation"],
+  },
+  {
+    id: "sizing-and-states",
+    title: "Sizing & states",
+    description: "Content widths, focus, disabled opacity, motion, and stacking order.",
+    groups: ["Sizing & states"],
+  },
 ];
+
+export function tokenPageHref(page: TokenPage) {
+  return `/?path=/story/design-tokens--${page}`;
+}

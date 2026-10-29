@@ -7,7 +7,7 @@
   :where(.comal-ui) {
     box-sizing: border-box;
     margin: 0;
-    border: 0 solid hsl(var(--border));
+    border: 0 solid hsl(var(--border-primary));
     font-family: var(--font-sans);
     font-size: var(--font-size-md);
     line-height: var(--line-height);
@@ -22,7 +22,7 @@
     cursor: not-allowed;
   }
   :where(input.comal-ui, textarea.comal-ui) {
-    color: hsl(var(--foreground));
+    color: hsl(var(--text-primary));
   }
   :where(input.comal-ui, textarea.comal-ui)::placeholder {
     opacity: 1;

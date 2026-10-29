@@ -21,9 +21,9 @@
   line-height: 1.1;
   margin: 0.5rem 0 1rem;
 }
-.tokens-header > p:last-child,
+.tokens-header > p:not(.tokens-eyebrow):not(.tokens-theme),
 .tokens-section-description {
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--text-muted));
   line-height: 1.6;
 }
 .tokens-navigation {
@@ -34,9 +34,9 @@
 }
 .tokens-navigation a {
   padding: 0.5rem 0.875rem;
-  border: 1px solid hsl(var(--border));
+  border: 1px solid hsl(var(--border-primary));
   border-radius: 999px;
-  color: hsl(var(--foreground));
+  color: hsl(var(--text-primary));
   text-decoration: none;
   font-size: 0.875rem;
 }
@@ -64,10 +64,10 @@
 }
 .token-card {
   min-width: 0;
-  border: 1px solid hsl(var(--border));
+  border: 1px solid hsl(var(--border-primary));
   border-radius: 12px;
-  background: hsl(var(--card));
-  color: hsl(var(--card-foreground));
+  background: hsl(var(--surface-raised));
+  color: hsl(var(--text-primary));
   overflow: hidden;
 }
 .token-card-header {
@@ -80,7 +80,7 @@
 }
 .token-card-header p {
   font-size: 0.8125rem;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--text-muted));
   margin: 0;
   line-height: 1.5;
   min-height: 2.5rem;
@@ -92,11 +92,11 @@
   min-height: 108px;
   padding: 1.25rem;
   margin: 0 1rem;
-  border: 1px solid hsl(var(--border));
+  border: 1px solid hsl(var(--border-primary));
   border-radius: 8px;
   overflow: hidden;
   isolation: isolate;
-  background: hsl(var(--background));
+  background: hsl(var(--surface-primary));
 }
 .token-sample {
   box-sizing: border-box;
@@ -104,11 +104,11 @@
 }
 .token-stage--color {
   padding: 0;
-  background-color: white;
-  background-image: linear-gradient(45deg, #ddd 25%, transparent 25%),
-    linear-gradient(-45deg, #ddd 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #ddd 75%),
-    linear-gradient(-45deg, transparent 75%, #ddd 75%);
+  background-color: hsl(var(--base-white));
+  background-image: linear-gradient(45deg, hsl(var(--base-gray-200)) 25%, transparent 25%),
+    linear-gradient(-45deg, hsl(var(--base-gray-200)) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, hsl(var(--base-gray-200)) 75%),
+    linear-gradient(-45deg, transparent 75%, hsl(var(--base-gray-200)) 75%);
   background-size: 16px 16px;
   background-position: 0 0, 0 8px, 8px -8px, -8px 0;
 }
@@ -124,7 +124,7 @@
 .token-sample--font span,
 .token-sample--fontSize span,
 .token-sample--weight span {
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--text-muted));
 }
 .token-sample--font {
   font-size: 1rem;
@@ -140,7 +140,7 @@
 .token-spacing-label {
   margin-left: 0.75rem;
   font-family: monospace;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--text-muted));
   font-size: 0.8125rem;
 }
 .token-sample--radius,
@@ -161,9 +161,9 @@
   place-items: center;
   width: 120px;
   height: 60px;
-  background: hsl(var(--card));
-  color: hsl(var(--card-foreground));
-  border: 1px solid hsl(var(--border));
+  background: hsl(var(--surface-raised));
+  color: hsl(var(--text-primary));
+  border: 1px solid hsl(var(--border-primary));
   border-radius: 8px;
   font-size: 0.875rem;
 }
@@ -196,10 +196,10 @@
 .token-motion-button {
   font: inherit;
   font-size: 0.8125rem;
-  border: 1px solid hsl(var(--border));
+  border: 1px solid hsl(var(--border-primary));
   border-radius: 5px;
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background: hsl(var(--surface-primary));
+  color: hsl(var(--text-primary));
   padding: 0.375rem 0.625rem;
   cursor: pointer;
 }
@@ -218,7 +218,7 @@
   width: 90px;
   height: 55px;
   background: hsl(var(--secondary));
-  border: 1px solid hsl(var(--border));
+  border: 1px solid hsl(var(--border-primary));
   border-radius: 6px;
   z-index: 1;
 }
@@ -235,22 +235,148 @@
   gap: 0.5rem;
 }
 .token-values dt {
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--text-muted));
 }
 .token-values dd {
   margin: 0;
   overflow-wrap: anywhere;
 }
-.token-base-value {
-  margin: 0;
-  border-top: 1px solid hsl(var(--border));
-  padding: 0.75rem 1rem;
-  color: hsl(var(--muted-foreground));
-  font-size: 0.75rem;
-  overflow-wrap: anywhere;
-}
+
 @media (prefers-reduced-motion: reduce) {
   .token-sample--duration {
     transition: none;
   }
+}
+
+.tokens-theme {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid hsl(var(--border-primary));
+  border-radius: var(--radius-full);
+  color: hsl(var(--text-primary));
+  font-size: var(--font-size-sm);
+}
+.tokens-introduction {
+  padding: 1.5rem;
+  border: 1px solid hsl(var(--border-primary));
+  border-radius: var(--radius);
+  background: hsl(var(--surface-raised));
+}
+.tokens-introduction h2,
+.tokens-page-links h2 {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  margin: 0 0 0.75rem;
+}
+.tokens-introduction ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 1.5rem;
+  padding-left: 1.25rem;
+}
+.tokens-introduction li span {
+  display: block;
+  margin-top: 0.375rem;
+  color: hsl(var(--text-muted));
+}
+.tokens-introduction > p {
+  margin-bottom: 0;
+}
+.tokens-page-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.tokens-page-links a {
+  border: 1px solid hsl(var(--border-primary));
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  color: hsl(var(--text-primary));
+  text-decoration: none;
+}
+.tokens-page-links p {
+  margin: 0;
+  color: hsl(var(--text-muted));
+}
+.tokens-page-links a:hover,
+.tokens-navigation a[aria-current="page"] {
+  background: hsl(var(--surface-secondary));
+}
+.tokens-page-links a:focus-visible,
+.token-table-scroll:focus-visible {
+  outline: var(--focus-width) solid hsl(var(--ring));
+  outline-offset: var(--focus-offset);
+}
+.tokens-grid--palette {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+}
+.tokens-grid--palette .token-stage,
+.tokens-grid--palette .token-sample {
+  min-height: 72px;
+}
+.tokens-role-examples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+}
+.tokens-role-examples > div {
+  padding: 1.25rem;
+  border-radius: var(--radius);
+}
+.tokens-role-examples h2 {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  margin: 0 0 0.5rem;
+}
+.tokens-role-examples code {
+  font-size: var(--font-size-xs);
+  overflow-wrap: anywhere;
+}
+.token-table-scroll {
+  overflow-x: auto;
+  margin: 2rem 0;
+}
+.token-role-table {
+  width: 100%;
+  min-width: 36rem;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--font-size-sm);
+}
+.token-role-table caption {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  text-align: left;
+  padding-bottom: 1rem;
+}
+.token-role-table th,
+.token-role-table td {
+  padding: 0.875rem 0.75rem;
+  border-bottom: 1px solid hsl(var(--border-primary));
+}
+.token-role-table thead th {
+  color: hsl(var(--text-muted));
+  font-weight: var(--font-weight-medium);
+}
+.token-role-table tbody th {
+  font-weight: var(--font-weight-medium);
+}
+.token-role-color {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.token-role-swatch {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid hsl(var(--border-primary));
+  border-radius: var(--radius-sm);
+}
+.token-role-table .token-values {
+  padding: 0;
+  font-size: inherit;
 }

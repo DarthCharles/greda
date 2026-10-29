@@ -1,64 +1,35 @@
-/* Storybook consumer example, based on Meal Planner's Comal palette.
-   The original dark terracotta is used for small text actions, and muted text
-   is darkened for contrast. Meal Planner has no dark palette; the dark values
-   below extend the same warm colors for this demonstration. */
+/* Comal consumer example: override generic base colors only. Greda owns
+   all surface, text, border, and component color assignments. Fonts and shape
+   are separate, optional customizations. */
 [data-theme="comal"] {
-  color-scheme: light;
-  --background: 40 60% 96.078%; /* #fbf7ef */
-  --foreground: 37.5 10.256% 15.294%; /* #2b2823 */
-  --card: 42.857 100% 98.627%; /* #fffdf8 */
-  --card-foreground: 37.5 10.256% 15.294%; /* #2b2823 */
-  --popover: 42.857 100% 98.627%; /* #fffdf8 */
-  --popover-foreground: 37.5 10.256% 15.294%; /* #2b2823 */
-  --primary: 9.5 55.556% 42.353%; /* #a84330 */
-  --primary-foreground: 0 0% 100%; /* #ffffff */
-  --primary-hover: 9.714 56.15% 36.667%; /* #923a29 */
-  --secondary: 25.385 56.522% 90.98%; /* #f5e6db */
-  --secondary-foreground: 9.5 55.556% 42.353%; /* #a84330 */
-  --muted: 36.923 37.143% 93.137%; /* #f4efe7 */
-  --muted-foreground: 41.25 7.273% 43.137%; /* #767166 */
-  --accent: 85.714 29.167% 90.588%; /* #e8eee0 */
-  --accent-foreground: 37.5 10.256% 15.294%; /* #2b2823 */
-  --border: 38.824 27.869% 88.039%; /* #e9e3d8 */
-  --input: 38.824 27.869% 88.039%; /* #e9e3d8 */
-  --ring: 9.5 55.556% 42.353%; /* #a84330 */
-  --destructive: 6.512 57.848% 43.725%; /* #b03d2f */
-  --destructive-foreground: 0 0% 100%; /* #ffffff */
-  --overlay: 37.5 10.256% 15.294% / 0.34;
+  --base-white: 40 60% 96.078%;
+  --base-black: 37.5 10.256% 15.294%;
+  --base-gray-50: 42.857 100% 98.627%;
+  --base-gray-100: 36.923 37.143% 93.137%;
+  --base-gray-200: 38.824 27.869% 88.039%;
+  --base-gray-300: 33.103 19.205% 70.392%;
+  --base-gray-500: 41.25 7.273% 43.137%;
+  --base-gray-600: 30 15.476% 32.941%;
+  --base-gray-800: 30 16.216% 14.51%;
+  --base-gray-900: 30 17.857% 10.98%;
+  --base-primary: 9.5 55.556% 42.353%;
+  --base-primary-hover: 9.714 56.15% 36.667%;
+  --base-secondary: 25.385 56.522% 90.98%;
+  --base-accent: 85.714 29.167% 90.588%;
+  --base-destructive: 6.512 57.848% 43.725%;
   --font-sans: "DM Sans Variable", "DM Sans", sans-serif;
   --font-heading: "Fraunces Variable", "Fraunces", serif;
   --radius: 0.75rem;
   --radius-sm: 0.375rem;
   --radius-lg: 1.5rem;
-  --shadow-sm: 0 4px 12px rgba(71, 49, 30, 0.04);
-  --shadow: 0 16px 45px rgba(71, 49, 30, 0.08);
-  --shadow-dialog: 0 24px 70px rgba(45, 31, 20, 0.25);
 }
-/* A complementary dark palette for the Storybook example. */
+
+/* Complementary dark base colors for this Storybook example. */
 [data-theme="comal"][data-color-scheme="dark"] {
-  color-scheme: dark;
-  --background: 30 17.857% 10.98%; /* #211c17 */
-  --foreground: 34.286 51.22% 91.961%; /* #f5ece0 */
-  --card: 30 16.216% 14.51%; /* #2b251f */
-  --card-foreground: 34.286 51.22% 91.961%; /* #f5ece0 */
-  --popover: 30 16.216% 14.51%; /* #2b251f */
-  --popover-foreground: 34.286 51.22% 91.961%; /* #f5ece0 */
-  --primary: 15.625 75% 74.902%; /* #efa88f */
-  --primary-foreground: 37.5 10.256% 15.294%; /* #2b2823 */
-  --primary-hover: 15.789 77.551% 80.784%; /* #f4bca8 */
-  --secondary: 22.5 24.49% 19.216%; /* #3d2e25 */
-  --secondary-foreground: 17.015 70.526% 81.373%; /* #f1c1ae */
-  --muted: 32.308 15.663% 16.275%; /* #302a23 */
-  --muted-foreground: 33.103 19.205% 70.392%; /* #c2b5a5 */
-  --accent: 108 14.286% 20.588%; /* #303c2d */
-  --accent-foreground: 102.857 28% 90.196%; /* #e3eddf */
-  --border: 30 15.476% 32.941%; /* #615447 */
-  --input: 30 15.476% 32.941%; /* #615447 */
-  --ring: 15.625 75% 74.902%; /* #efa88f */
-  --destructive: 7.174 79.31% 77.255%; /* #f3a297 */
-  --destructive-foreground: 37.5 10.256% 15.294%; /* #2b2823 */
-  --overlay: 30 20% 5% / 0.7;
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --shadow: 0 16px 45px rgba(0, 0, 0, 0.25);
-  --shadow-dialog: 0 24px 70px rgba(0, 0, 0, 0.4);
+  --base-white: 34.286 51.22% 91.961%;
+  --base-primary: 15.625 75% 74.902%;
+  --base-primary-hover: 15.789 77.551% 80.784%;
+  --base-secondary: 22.5 24.49% 19.216%;
+  --base-accent: 108 14.286% 20.588%;
+  --base-destructive: 7.174 79.31% 77.255%;
 }

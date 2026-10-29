@@ -36,23 +36,11 @@ describe("accessible component behavior", () => {
     expect(
       cn("bg-primary hover:bg-primary-hover", "bg-accent hover:bg-secondary")
     ).toBe("bg-accent hover:bg-secondary");
-  });
-
-  it("uses the same unprefixed utilities for components and consumer overrides", () => {
-    render(
-      <Button className="bg-accent text-accent-foreground hover:bg-secondary">
-        Custom action
-      </Button>
-    );
-    const button = screen.getByRole("button", { name: "Custom action" });
-    expect(button).toHaveClass(
-      "bg-accent",
-      "text-accent-foreground",
-      "hover:bg-secondary"
-    );
-    expect(button).not.toHaveClass("bg-primary");
-    expect(button).not.toHaveClass("text-primary-foreground");
-    expect(button).not.toHaveClass("hover:bg-primary-hover");
+    expect(cn("surface-primary", "bg-primary")).toBe("bg-primary");
+    expect(cn("bg-primary", "surface-secondary")).toBe("surface-secondary");
+    expect(cn("hover:surface-primary", "hover:bg-accent")).toBe("hover:bg-accent");
+    expect(cn("surface-primary text-primary border-primary", "surface-inverse text-inverse border-inverse"))
+      .toBe("surface-inverse text-inverse border-inverse");
   });
 
   it("prevents repeated activation while loading and defaults to a non-submit button", async () => {

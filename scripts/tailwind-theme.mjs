@@ -1,13 +1,40 @@
 import postcss from "postcss";
-import { colors, theme } from "../src/styles/tailwind-theme.ts";
+import { colors, colorRoles, theme } from "../src/styles/tailwind-theme.ts";
 
 // Keep Tailwind 4 aliases in a layer so the runtime token defaults (and consumer
 // overrides) take precedence, including tokens sharing a Tailwind theme name.
 export function createTailwindTheme(tokens) {
   const aliases = new Map();
   const utilities = new Map();
+  const categoryNames = new Set([...colorRoles.text, ...colorRoles.border]);
   for (const [name, value] of Object.entries(colors)) {
-    aliases.set(`--color-${name}`, value.replace(" / <alpha-value>", ""));
+    // A global --color-primary would also generate text-primary and
+    // border-primary from the brand color, overriding the category roles.
+    if (categoryNames.has(name)) {
+      for (const category of ["bg", "text", "border"]) {
+        aliases.set(`--greda-${category}-${name}`, `var(--${name})`);
+      }
+    } else {
+      aliases.set(`--color-${name}`, value.replace(" / <alpha-value>", ""));
+    }
+  }
+  for (const [category, names] of Object.entries(colorRoles)) {
+    for (const name of names) {
+      aliases.set(`--greda-${category}-${name}`, `var(--${category}-${name})`);
+    }
+  }
+  for (const [category, property] of Object.entries({
+    bg: "background-color",
+    surface: "background-color",
+    text: "color",
+    border: "border-color",
+  })) {
+    const value = `--value(--greda-${category}-*)`;
+    utilities.set(`${category}-*`, [
+      `${property}: hsl(${value});`,
+      `${property}: hsl(${value} / calc(--modifier(integer) * 1%));`,
+      `${property}: hsl(${value} / --modifier([number], [percentage]));`,
+    ].join("\n  "));
   }
   aliases.set("--spacing", "var(--spacing-unit)");
   const source = postcss.parse(tokens);

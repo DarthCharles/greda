@@ -125,6 +125,7 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
 | Change | Validation |
 | --- | --- |
 | Documentation only | Review paths, commands, links, and examples for accuracy |
+| Tests only | Run the affected test suites; reuse current build outputs when their inputs have not changed |
 | Components, types, or behavior | `npm run typecheck`, `npm test`, `npm run validate:stories` |
 | Tokens | Review Storybook token classification/previews; validate as a visual change |
 | CSS, themes, portals, or visual changes | `npm run check`, then `npm run test:browser` |
@@ -143,6 +144,28 @@ observable actions, roles, and accessible names with Testing Library and
 in a browser; jsdom does not replace those checks. Do not weaken assertions or
 disable axe to make a change pass. Documentation-only changes do not require the
 full suite.
+
+### Test value and scope
+
+- Add a test only when it protects a critical user path, a public contract, or a
+  meaningful regression. Identify the failure it would catch before writing it.
+- Prioritize keyboard and focus behavior, loading and validation, native form
+  semantics, accessibility, portal theme inheritance, CSS isolation, and actual
+  package/Tailwind consumer integration.
+- Do not test documentation headings, page counts, sidebar organization, copy,
+  token inventories, or other incidental presentation. Review documentation and
+  build examples instead. Avoid assertions that merely repeat implementation
+  strings or constants without exercising observable behavior.
+- Cover each contract at the lowest useful level. Do not repeat the same check
+  in unit tests, catalog tests, and package tests unless each catches a distinct
+  failure. Use browser tests for behavior that depends on real CSS or focus.
+- Parameterize only meaningful compatibility boundaries, such as published CSS
+  versus consumer-generated CSS, layered imports, or light/dark theme behavior.
+  Avoid repeating equivalent cases or rerunning accessibility scans already
+  covered by the component sweep without a distinct state or theme to check.
+- Remove or merge obsolete and redundant tests in the area being changed.
+  Preserve meaningful assertions and regression coverage; fewer tests is not
+  the objective by itself. Do not add tests merely because a file changed.
 
 ## Upstream and versioning
 
