@@ -176,8 +176,7 @@ full suite.
   the diff.
 - For publishable changes, prepare a Changeset with clear scope and impact: patch
   for fixes and minor for compatible new features. Under the current policy,
-  breaking changes require explicit notes and a minor bump before 1.0; after 1.0,
-  they require a major bump.
+  breaking changes require explicit migration notes and a major bump.
 - Publishing requires an explicit request. `npm run release` publishes to npm;
   do not run it as a validation step. Run `version-packages` when preparing a
   requested release, not as part of routine editing.

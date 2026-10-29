@@ -76,8 +76,7 @@ preserve local adaptations; review CLI updates before accepting overwrites.
 
 Add a Changeset with `npm run changeset` for publishable changes. Use patch
 versions for fixes and minor versions for compatible features. Breaking prop,
-token, or export changes require explicit migration notes and a minor bump before
-1.0, or a major bump after 1.0.
+token, or export changes require explicit migration notes and a major bump.
 
 For a requested release, `npm run version-packages` prepares versions and
 changelogs. `npm run release` validates and publishes through Changesets using
