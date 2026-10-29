@@ -69,6 +69,7 @@
   color-scheme: light;
   --surface-primary: var(--base-white);
   --surface-secondary: var(--base-gray-100);
+  --surface-tertiary: var(--base-accent);
   --surface-raised: var(--base-gray-50);
   --surface-inverse: var(--base-black);
   --text-primary: var(--base-black);

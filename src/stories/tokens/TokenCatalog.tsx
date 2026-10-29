@@ -219,6 +219,11 @@ function RoleExamples() {
         <p>A separate surface and border assignment.</p>
         <code>surface-secondary · border-secondary</code>
       </div>
+      <div className="comal-ui surface-tertiary text-primary border border-secondary">
+        <h2>Tertiary surface</h2>
+        <p>An accent surface, using the theme’s base accent color.</p>
+        <code>surface-tertiary · text-primary</code>
+      </div>
       <div className="comal-ui surface-inverse text-inverse border border-inverse">
         <h2>Inverse surface</h2>
         <p>Inverse text on an inverse surface.</p>

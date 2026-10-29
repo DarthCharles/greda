@@ -4,7 +4,7 @@ import { extendTailwindMerge } from "tailwind-merge";
 const twMerge = extendTailwindMerge({
   extend: {
     classGroups: {
-      "bg-color": [{ surface: ["primary", "secondary", "raised", "inverse"] }],
+      "bg-color": [{ surface: ["primary", "secondary", "tertiary", "raised", "inverse"] }],
     },
   },
 });

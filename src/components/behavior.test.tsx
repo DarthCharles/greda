@@ -38,6 +38,8 @@ describe("accessible component behavior", () => {
     ).toBe("bg-accent hover:bg-secondary");
     expect(cn("surface-primary", "bg-primary")).toBe("bg-primary");
     expect(cn("bg-primary", "surface-secondary")).toBe("surface-secondary");
+    expect(cn("bg-primary", "surface-tertiary")).toBe("surface-tertiary");
+    expect(cn("surface-tertiary", "bg-primary")).toBe("bg-primary");
     expect(cn("hover:surface-primary", "hover:bg-accent")).toBe("hover:bg-accent");
     expect(cn("surface-primary text-primary border-primary", "surface-inverse text-inverse border-inverse"))
       .toBe("surface-inverse text-inverse border-inverse");

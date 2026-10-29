@@ -422,7 +422,7 @@ for (const layered of [false, true]) {
     const api = await import(new URL("../dist/index.js", import.meta.url).href);
     const candidates = [
       "bg-primary", "text-primary-foreground",
-      "surface-primary", "surface-inverse", "text-primary", "text-inverse",
+      "surface-primary", "surface-tertiary", "surface-inverse", "text-primary", "text-inverse",
       "border-primary",
     ];
     const cssImports = layered
@@ -435,11 +435,13 @@ for (const layered of [false, true]) {
           await page.setContent(`<!doctype html>
             <html data-theme="${theme}" data-color-scheme="${scheme}"><body>
               <div id="roles" class="comal-ui surface-primary text-primary border border-primary">Primary roles</div>
+              <div id="tertiary" class="surface-tertiary text-primary">Tertiary surface</div>
               <div id="inverse" class="surface-inverse text-inverse">Inverse roles</div>
               <div id="brand" class="bg-primary">Brand action</div>
               ${renderToStaticMarkup(createElement(api.Button, { id: "component" }, "Component action"))}
-              <div id="scope" data-theme="custom" data-color-scheme="light" style="--base-white: 240 100% 25%; --base-black: 60 100% 75%; --base-gray-200: 120 100% 25%">
+              <div id="scope" data-theme="custom" data-color-scheme="light" style="--base-white: 240 100% 25%; --base-black: 60 100% 75%; --base-gray-200: 120 100% 25%; --base-accent: 120 100% 25%">
                 <div id="scoped" class="surface-primary text-primary border-primary">Scoped roles</div>
+                <div id="scoped-tertiary" class="surface-tertiary">Scoped accent surface</div>
               </div>
             </body></html>`);
           await page.addStyleTag({ content: css });
@@ -458,6 +460,12 @@ for (const layered of [false, true]) {
           await expect(roles).toHaveCSS("background-color", surface);
           await expect(roles).toHaveCSS("color", text);
           await expect(roles).toHaveCSS("border-color", border);
+          const tertiary = theme === "comal"
+            ? dark ? "rgb(48, 60, 45)" : "rgb(232, 238, 224)"
+            : dark ? "rgb(45, 52, 67)" : "rgb(237, 239, 243)";
+          await expect(page.locator("#tertiary")).toHaveCSS("background-color", tertiary);
+          await expect(page.locator("#tertiary")).toHaveCSS("color", text);
+          await expect(page.locator("#scoped-tertiary")).toHaveCSS("background-color", "rgb(0, 128, 0)");
           const action = theme === "comal"
             ? dark ? "rgb(239, 168, 143)" : "rgb(168, 67, 48)"
             : dark ? "rgb(110, 162, 247)" : "rgb(23, 84, 207)";

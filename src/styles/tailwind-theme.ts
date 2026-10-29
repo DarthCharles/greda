@@ -36,7 +36,7 @@ export const colors = Object.fromEntries(
 
 // These names describe roles within a category, independently of brand colors.
 export const colorRoles = {
-  surface: ["primary", "secondary", "raised", "inverse"],
+  surface: ["primary", "secondary", "tertiary", "raised", "inverse"],
   text: ["primary", "secondary", "muted", "inverse", "action"],
   border: ["primary", "secondary", "inverse", "action"],
 };

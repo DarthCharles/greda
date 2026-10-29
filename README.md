@@ -96,7 +96,7 @@ the same names. Greda assigns them to independent roles and utilities:
 
 | Category | Utility examples | Default light base colors |
 | --- | --- | --- |
-| Surfaces | `surface-primary`, `surface-secondary`, `surface-inverse` | White, gray-100, black |
+| Surfaces | `surface-primary`, `surface-secondary`, `surface-tertiary`, `surface-inverse` | White, gray-100, accent, black |
 | Text | `text-primary`, `text-secondary`, `text-muted`, `text-inverse` | Black, gray-600, gray-500, white |
 | Borders | `border-primary`, `border-secondary`, `border-inverse` | Gray-200, gray-100, gray-600 |
 
@@ -105,6 +105,8 @@ Primary text and borders use their neutral base assignments independently.
 Dark assignments are built in. Define base overrides on `:root` or a
 `data-theme` element; scoped themes automatically rebind the role variables.
 Consumers do not need to declare surface, text, or border tokens.
+`surface-tertiary` uses `--base-accent`: light green in Comal's light scheme
+and a darker green in its dark scheme. Override the base accent to customize it.
 
 `styles.css` includes role utilities and hover/focus variants; the Tailwind 4
 import also generates responsive and opacity variants. Start with Storybook's
