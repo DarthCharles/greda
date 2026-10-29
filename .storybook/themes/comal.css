@@ -15,6 +15,7 @@
   --base-primary: 9.5 55.556% 42.353%;
   --base-primary-hover: 9.714 56.15% 36.667%;
   --base-secondary: 25.385 56.522% 90.98%;
+  --base-tertiary: 85.714 29.167% 90.588%;
   --base-accent: 85.714 29.167% 90.588%;
   --base-destructive: 6.512 57.848% 43.725%;
   --font-sans: "DM Sans Variable", "DM Sans", sans-serif;
@@ -30,6 +31,7 @@
   --base-primary: 15.625 75% 74.902%;
   --base-primary-hover: 15.789 77.551% 80.784%;
   --base-secondary: 22.5 24.49% 19.216%;
+  --base-tertiary: 108 14.286% 20.588%;
   --base-accent: 108 14.286% 20.588%;
   --base-destructive: 7.174 79.31% 77.255%;
 }

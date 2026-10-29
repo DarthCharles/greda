@@ -421,7 +421,7 @@ for (const layered of [false, true]) {
   test(`category color roles stay independent in ${layered ? "layered components" : "standalone utilities"}`, async ({ page }) => {
     const api = await import(new URL("../dist/index.js", import.meta.url).href);
     const candidates = [
-      "bg-primary", "text-primary-foreground",
+      "bg-primary", "bg-accent", "text-primary-foreground",
       "surface-primary", "surface-tertiary", "surface-inverse", "text-primary", "text-inverse",
       "border-primary",
     ];
@@ -436,10 +436,11 @@ for (const layered of [false, true]) {
             <html data-theme="${theme}" data-color-scheme="${scheme}"><body>
               <div id="roles" class="comal-ui surface-primary text-primary border border-primary">Primary roles</div>
               <div id="tertiary" class="surface-tertiary text-primary">Tertiary surface</div>
+              <div id="accent" class="bg-accent">Accent background</div>
               <div id="inverse" class="surface-inverse text-inverse">Inverse roles</div>
               <div id="brand" class="bg-primary">Brand action</div>
               ${renderToStaticMarkup(createElement(api.Button, { id: "component" }, "Component action"))}
-              <div id="scope" data-theme="custom" data-color-scheme="light" style="--base-white: 240 100% 25%; --base-black: 60 100% 75%; --base-gray-200: 120 100% 25%; --base-accent: 120 100% 25%">
+              <div id="scope" data-theme="custom" data-color-scheme="light" style="--base-white: 240 100% 25%; --base-black: 60 100% 75%; --base-gray-200: 120 100% 25%; --base-tertiary: 120 100% 25%">
                 <div id="scoped" class="surface-primary text-primary border-primary">Scoped roles</div>
                 <div id="scoped-tertiary" class="surface-tertiary">Scoped accent surface</div>
               </div>
@@ -462,9 +463,12 @@ for (const layered of [false, true]) {
           await expect(roles).toHaveCSS("border-color", border);
           const tertiary = theme === "comal"
             ? dark ? "rgb(48, 60, 45)" : "rgb(232, 238, 224)"
-            : dark ? "rgb(45, 52, 67)" : "rgb(237, 239, 243)";
+            : dark ? "rgb(28, 41, 64)" : "rgb(239, 246, 255)";
           await expect(page.locator("#tertiary")).toHaveCSS("background-color", tertiary);
           await expect(page.locator("#tertiary")).toHaveCSS("color", text);
+          const accent = await page.locator("#accent").evaluate((element) =>
+            getComputedStyle(element).backgroundColor
+          );
           await expect(page.locator("#scoped-tertiary")).toHaveCSS("background-color", "rgb(0, 128, 0)");
           const action = theme === "comal"
             ? dark ? "rgb(239, 168, 143)" : "rgb(168, 67, 48)"
@@ -482,9 +486,13 @@ for (const layered of [false, true]) {
           await expect(page.locator("#scoped")).toHaveCSS("border-color", "rgb(0, 128, 0)");
           await page.evaluate(() => {
             document.documentElement.style.setProperty("--base-primary", "120 100% 25%");
+            document.documentElement.style.setProperty("--base-tertiary", "240 100% 50%");
           });
           await expect(page.locator("#brand")).toHaveCSS("background-color", "rgb(0, 128, 0)");
           await expect(page.locator("#component")).toHaveCSS("background-color", "rgb(0, 128, 0)");
+          await expect(page.locator("#tertiary")).toHaveCSS("background-color", "rgb(0, 0, 255)");
+          await expect(page.locator("#accent")).toHaveCSS("background-color", accent);
+          await expect(page.locator("#scoped-tertiary")).toHaveCSS("background-color", "rgb(0, 128, 0)");
           await expect(roles).toHaveCSS("background-color", surface);
           await expect(roles).toHaveCSS("color", text);
           await expect(roles).toHaveCSS("border-color", border);

@@ -14,6 +14,7 @@
   --base-primary: 220 80% 45%;
   --base-primary-hover: 220 80% 38%;
   --base-secondary: 220 20% 94%;
+  --base-tertiary: 214 100% 96.863%;
   --base-accent: 220 20% 94%;
   --base-destructive: 0 72% 43%;
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -69,7 +70,7 @@
   color-scheme: light;
   --surface-primary: var(--base-white);
   --surface-secondary: var(--base-gray-100);
-  --surface-tertiary: var(--base-accent);
+  --surface-tertiary: var(--base-tertiary);
   --surface-raised: var(--base-gray-50);
   --surface-inverse: var(--base-black);
   --text-primary: var(--base-black);
@@ -115,6 +116,7 @@
   --base-primary: 217 90% 70%;
   --base-primary-hover: 217 90% 78%;
   --base-secondary: 222 20% 22%;
+  --base-tertiary: 218 40% 18%;
   --base-accent: 222 20% 22%;
   --base-destructive: 0 80% 72%;
   --surface-primary: var(--base-gray-900);

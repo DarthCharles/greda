@@ -221,7 +221,7 @@ function RoleExamples() {
       </div>
       <div className="comal-ui surface-tertiary text-primary border border-secondary">
         <h2>Tertiary surface</h2>
-        <p>An accent surface, using the theme’s base accent color.</p>
+        <p>A separate surface color, independent of accents.</p>
         <code>surface-tertiary · text-primary</code>
       </div>
       <div className="comal-ui surface-inverse text-inverse border border-inverse">

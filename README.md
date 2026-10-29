@@ -89,14 +89,14 @@ Colors use space-separated HSL channels without an `hsl()` wrapper;
 `--overlay` also includes alpha. Other tokens accept ordinary CSS values.
 
 Consumers override only the generic base colors: `--base-primary`,
-`--base-primary-hover`, `--base-secondary`, `--base-accent`,
+`--base-primary-hover`, `--base-secondary`, `--base-tertiary`, `--base-accent`,
 `--base-destructive`, `--base-white`, `--base-black`, and selected
 `--base-gray-*` steps (50, 100, 200, 300, 500, 600, 800, 900). Every theme uses
 the same names. Greda assigns them to independent roles and utilities:
 
 | Category | Utility examples | Default light base colors |
 | --- | --- | --- |
-| Surfaces | `surface-primary`, `surface-secondary`, `surface-tertiary`, `surface-inverse` | White, gray-100, accent, black |
+| Surfaces | `surface-primary`, `surface-secondary`, `surface-tertiary`, `surface-inverse` | White, gray-100, tertiary, black |
 | Text | `text-primary`, `text-secondary`, `text-muted`, `text-inverse` | Black, gray-600, gray-500, white |
 | Borders | `border-primary`, `border-secondary`, `border-inverse` | Gray-200, gray-100, gray-600 |
 
@@ -105,8 +105,10 @@ Primary text and borders use their neutral base assignments independently.
 Dark assignments are built in. Define base overrides on `:root` or a
 `data-theme` element; scoped themes automatically rebind the role variables.
 Consumers do not need to declare surface, text, or border tokens.
-`surface-tertiary` uses `--base-accent`: light green in Comal's light scheme
-and a darker green in its dark scheme. Override the base accent to customize it.
+`surface-tertiary` uses `--base-tertiary`: soft blue (`#eff6ff`) in Base and
+light green (`#e8eee0`) in Comal, with darker counterparts in dark mode.
+Override `--base-tertiary` to customize this surface independently of accent
+backgrounds and hover states.
 
 `styles.css` includes role utilities and hover/focus variants; the Tailwind 4
 import also generates responsive and opacity variants. Start with Storybook's
