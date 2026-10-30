@@ -22,7 +22,8 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
 | `src/styles/tailwind-theme.ts` | Shared token mappings for package CSS and Tailwind 4 consumers |
 | `scripts/tailwind-theme.mjs` | Generating Tailwind 4 theme directives for `tokens.css` |
 | `src/stories/` | Examples, documentation, and token catalog |
-| `.storybook/` | Configuration, catalog styles, and example Comal theme |
+| `src/styles/themes/` | Optional exported brand themes (Comal and Cobalto) |
+| `.storybook/` | Configuration, catalog styles, and example font loading |
 | `src/components/behavior.test.tsx` | Interaction tests with Testing Library |
 | `tests/storybook.spec.ts` | Browser, axe, theme, and package CSS tests |
 | `scripts/` | Build, validation, and documentation generation |
@@ -72,8 +73,12 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
   detect them; avoid building utility names through interpolation.
 - The package build scans `src/components/ui/` and derives its public semantic
   background, text, and border color safelist from the shared theme mapping,
-  including hover, focus, and focus-visible variants. Other catalog-only styles
-  belong in Storybook CSS; a class used only in a story is not guaranteed to appear in the
+  including hover, focus, and focus-visible variants. Complete typography roles
+  are also shipped through the shared mapping; keep their class merging and
+  Tailwind 4 utilities in sync. Storybook additionally scans
+  the Comal and Cobalto recipe stories through the explicit `@config` in
+  `.storybook/styles.css`, using the shared PostCSS transforms.
+  Other catalog-only styles belong in Storybook CSS; a class used only in a story is not guaranteed to appear in the
   published CSS.
 - `tokens.css` includes runtime variables and Tailwind 4 theme directives. Test
   the actual CSS imports through the consumer compiler in `tests/tailwind-consumer.ts`.
@@ -93,8 +98,8 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
 - Preserve low specificity with `:where()` so consumer overrides work regardless
   of stylesheet import order.
 - Keep brand themes separate from `data-color-scheme="dark"`. The base theme is
-  neutral; Comal branding and fonts belong in the Storybook example or the
-  consuming application. Do not add font downloads to the package.
+  neutral; brand palettes belong in optional theme exports. Font loading belongs
+  in Storybook or the consuming application. Do not add font downloads to the package.
 - When changing tokens, review the dark palette, Tailwind mapping, and token
   classification/previews in `src/stories/tokens/`. Storybook reads the token
   stylesheet directly; keep the README focused on usage and reference links.

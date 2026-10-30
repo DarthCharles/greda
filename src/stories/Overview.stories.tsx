@@ -90,8 +90,8 @@ export const Components: Story = {
   --radius: 0.75rem;
 }`}</pre>
             <p className="catalog-muted">
-              The library ships no brand or product logic. Unspecified tokens
-              retain their base values.
+              Start with the neutral base or select an optional theme. Unspecified
+              tokens retain their base values.
             </p>
             <div className="catalog-row">
               <Badge>Typed</Badge>

@@ -64,6 +64,41 @@
   --z-toast: 70;
 }
 
+/* Complete typography roles. Rebind font and scale aliases at theme boundaries
+   so scoped font overrides resolve locally. Colors and casing stay independent. */
+:where(:root, [data-theme], [data-color-scheme]) {
+  --type-display-family: var(--font-heading);
+  --type-display-size: clamp(2.25rem, 4.8vw, 3.5rem);
+  --type-display-weight: 500;
+  --type-display-leading: 1.1;
+  --type-display-tracking: -0.04em;
+  --type-title-family: var(--font-heading);
+  --type-title-size: clamp(1.75rem, 3vw, 2.25rem);
+  --type-title-weight: 500;
+  --type-title-leading: 1.2;
+  --type-title-tracking: normal;
+  --type-body-family: var(--font-sans);
+  --type-body-size: 1rem;
+  --type-body-weight: 400;
+  --type-body-leading: 1.5;
+  --type-body-tracking: normal;
+  --type-label-family: var(--font-sans);
+  --type-label-size: var(--font-size-sm);
+  --type-label-weight: var(--font-weight-medium);
+  --type-label-leading: var(--line-height);
+  --type-label-tracking: normal;
+  --type-caption-family: var(--font-sans);
+  --type-caption-size: var(--font-size-xs);
+  --type-caption-weight: 400;
+  --type-caption-leading: var(--line-height);
+  --type-caption-tracking: normal;
+  --type-eyebrow-family: var(--font-sans);
+  --type-eyebrow-size: var(--font-size-xs);
+  --type-eyebrow-weight: var(--font-weight-bold);
+  --type-eyebrow-leading: var(--line-height);
+  --type-eyebrow-tracking: 0.1em;
+}
+
 /* Rebind roles at theme boundaries so scoped base overrides update every role.
    Low specificity lets consumers supply base colors in either import order. */
 :where(:root, [data-theme], [data-color-scheme]) {

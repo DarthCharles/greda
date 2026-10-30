@@ -1,0 +1,53 @@
+/* Optional brand palette. Import after Greda styles/tokens and opt in with
+   data-theme="cobalto". Layout and decorative motifs belong to the recipe. */
+:where([data-theme="cobalto"]) {
+  --base-primary: 221.37931 92.55319% 36.86275%; /* #073db5 */
+  --base-primary-hover: 220.94595 100% 29.01961%;
+  --base-white: 51.42857 36.84211% 96.27451%; /* #f9f8f2 */
+  --base-black: 221.37931 92.55319% 36.86275%;
+  --base-gray-50: 48 100% 99.01961%;
+  --base-gray-100: 218.70968 49.20635% 87.64706%;
+  --base-gray-200: 221.25 32% 83%;
+  --base-gray-300: 218.18182 45.83333% 81.17647%;
+  --base-gray-500: 218.96104 36.49289% 41.37255%; /* #435e90 */
+  --base-gray-600: 218.96104 36.49289% 41.37255%;
+  --base-gray-800: 218.64407 56.19048% 20.58824%;
+  --base-gray-900: 219.42857 66.03774% 10.39216%;
+  --base-secondary: 218.70968 49.20635% 87.64706%;
+  --base-tertiary: 210 15% 92.15686%;
+  --base-accent: 218.70968 49.20635% 87.64706%;
+  --base-destructive: 0 72% 43%;
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-heading: var(--font-sans);
+  --type-display-size: clamp(2.2rem, 8.7vw, 3.75rem);
+  --type-display-weight: 800;
+  --type-display-leading: 1.06;
+  --type-display-tracking: -0.045em;
+  --type-title-size: 1.5625rem;
+  --type-title-leading: 1.5;
+  --type-title-tracking: -0.025em;
+  --type-body-size: 0.9375rem;
+  --type-body-leading: 1.6;
+  --type-caption-size: 0.625rem;
+  --type-caption-tracking: 0.1em;
+  --type-eyebrow-size: 0.625rem;
+  --type-eyebrow-weight: 700;
+  --radius: 0;
+  --radius-sm: 0;
+  --radius-lg: 0;
+  --border-width: 1px;
+  --focus-width: 3px;
+  --focus-offset: 4px;
+}
+
+/* Put both attributes on the same theme boundary, including scoped themes. */
+:where([data-theme="cobalto"][data-color-scheme="dark"]) {
+  --base-black: 219.42857 66.03774% 10.39216%;
+  --base-primary: 220.71429 100% 78.03922%;
+  --base-primary-hover: 219.49367 100% 84.50980%;
+  --base-secondary: 218.64407 56.19048% 20.58824%;
+  --base-tertiary: 218.66667 58.44156% 15.09804%;
+  --base-accent: 218.64407 56.19048% 20.58824%;
+  --base-gray-600: 217.09091 29.72973% 63.72549%;
+  --base-destructive: 0 80% 78%;
+}

@@ -1,0 +1,87 @@
+import { Canvas, Meta, Source } from "@storybook/addon-docs/blocks";
+import * as CobaltoStories from "./Cobalto.stories";
+
+<Meta of={CobaltoStories} name="Composition recipe" />
+
+# Cobalto
+
+An optional editorial identity: cobalt blue `#073db5`, paper `#f9f8f2`, secondary
+ink `#435e90`, Arial/Helvetica, fine borders and square corners. Greda's neutral
+defaults remain available. Choose **cobalto** and **light / dark** in the toolbar.
+Dark mode uses a complementary navy palette with lighter blue actions and paper text.
+
+## Install the theme
+
+This recipe uses Tailwind 4 utilities directly in JSX. In an application with
+Tailwind 4 configured, import these styles from your Tailwind CSS entry point:
+
+```css
+@import "tailwindcss";
+@import "@darthcharles/greda/styles.css" layer(components);
+@import "@darthcharles/greda/tokens.css";
+@import "@darthcharles/greda/themes/cobalto.css";
+```
+
+Import that CSS entry point once in your application. The components layer lets
+application utilities override Greda component defaults. Do not also import
+`styles.css` in JavaScript. Your Tailwind build must scan the copied JSX.
+
+Opt in on the document root. The CSS import alone does not select Cobalto or
+change unrelated elements:
+
+```html
+<html data-theme="cobalto" data-color-scheme="light">
+```
+
+Change the scheme to `dark` for its dark palette. Always put both attributes on
+the same boundary. For a scoped theme, use a wrapper with both attributes, set
+its background, text color and font from the role tokens, and pass a DOM element
+inside that wrapper through `container` to DialogContent, SelectContent and
+TooltipContent. Document themes naturally reach portals mounted under body.
+
+The theme supplies variables only. Your application controls the page shell:
+
+```tsx
+<body className="m-0 surface-primary font-sans text-primary">
+  {/* Your application */}
+</body>
+```
+
+The theme uses the base palette and shape tokens, and overrides shared
+`--type-display-*`, `--type-title-*`, `--type-body-*`, `--type-caption-*` and
+`--type-eyebrow-*` typography tokens. Rounded controls become square; intentional circular
+indicators keep their shape. Override tokens after the theme to customize it.
+
+## Compose the page
+
+This fictional visual notebook combines an 800-weight headline with a
+500-weight continuation, a decorative asterisk hidden from assistive technology,
+a rotated photo frame and a primary link composed with Button. The serif italic
+caption is a local editorial accent, while the rest uses Arial/Helvetica.
+
+<Canvas of={CobaltoStories.Default} />
+<Source of={CobaltoStories.Default} />
+
+Copy the example markup into your React component, importing Button from
+`@darthcharles/greda`. Layout, responsive behavior, typography, selection and
+focus styles are expressed through Tailwind classes. There is no recipe CSS to
+copy. The same `text-display`, `text-title`, `text-body`, `text-caption` and
+`text-eyebrow` utilities used by Comal pick up Cobalto's sizes and weights.
+They set family, size, weight, line height and tracking. Color utilities such as
+`text-secondary` remain independent. `font-medium` on the headline continuation
+preserves its mixed weights. Rotation and the serif photo caption remain local
+editorial choices. Replace the external Unsplash landscape with your own local,
+licensed photograph and descriptive alt text. The image is optional and requires
+network access in this catalog; no site assets or private content are included.
+
+The composition narrows on small screens and the details strip wraps. The link
+supports Tab and Enter with a visible focus indicator and moves to the details
+section. It has link semantics and is not disabled by Button's loading or
+disabled props. There is no form, submission, authentication or saved state.
+Use the component stories for disabled, loading and validation examples.
+
+Greda components still work without Tailwind using the compiled package CSS.
+These recipes require a consumer Tailwind build for their layout utilities;
+the package does not bundle recipe-only classes. Tailwind 3 consumers need
+corresponding token mappings in their own configuration; the import-only
+integration above targets Tailwind 4.

@@ -6,6 +6,7 @@ export type TokenKind =
   | "fontSize"
   | "weight"
   | "leading"
+  | "tracking"
   | "spacing"
   | "radius"
   | "border"
@@ -34,6 +35,14 @@ export interface DesignToken {
 }
 
 function classify(name: string): [TokenKind, TokenGroup, string] | undefined {
+  if (name.startsWith("--type-")) {
+    const kinds: Partial<Record<string, TokenKind>> = {
+      family: "font", size: "fontSize", weight: "weight",
+      leading: "leading", tracking: "tracking",
+    };
+    const kind = kinds[name.split("-").pop() ?? ""];
+    if (kind) return [kind, "Typography", "One property of a complete typography role. Override it on a theme boundary."];
+  }
   if (name.startsWith("--base-"))
     return ["color", "Palette", "A generic base color. Override this value to customize the theme."];
   if (name.startsWith("--surface-"))
@@ -160,7 +169,7 @@ export const tokenPages: {
   {
     id: "typography",
     title: "Typography",
-    description: "Typefaces, sizes, weights, and line height.",
+    description: "Choose a shared style, customize your theme, or explore the type foundations.",
     groups: ["Typography"],
   },
   {

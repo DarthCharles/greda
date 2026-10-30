@@ -68,7 +68,58 @@ your generated utilities override component styles, including responsive variant
 The import-only theme integration requires Tailwind 4; Greda's precompiled
 component styles also work without Tailwind.
 
+## Typography
+
+Shared typography roles work with compiled CSS and Tailwind 4:
+
+```tsx
+<h1 className="text-display text-primary">Take your time.</h1>
+<p className="text-body text-secondary">A little room to explore.</p>
+<p className="text-caption text-muted">Materials included</p>
+```
+
+Use `text-display`, `text-title`, `text-body`, `text-label`, `text-caption` and
+`text-eyebrow` for complete styles: family, size, weight, line height and tracking.
+Colors, margins, casing, italics and HTML semantics remain independent. Existing
+size utilities such as `text-sm` still work; `font-medium` can adjust one part of
+a role. Tailwind 4 can generate variants such as `md:text-title`.
+
+Customize a role on the same theme boundary using `--type-ROLE-family`, `-size`,
+`-weight`, `-leading` and `-tracking`, for example
+`--type-display-size: clamp(2rem, 6vw, 4rem)`. Font aliases rebind at theme
+boundaries so scoped font overrides apply. See **Design Tokens → Typography**
+in Storybook to choose a style, customize its tokens, and browse the foundation
+reference. Each style has a live preview and expandable token details.
+
 ## Theming
+
+For an optional ready-made identity, import Cobalto after the package stylesheet
+and select it on the document root:
+
+```tsx
+import "@darthcharles/greda/styles.css";
+import "@darthcharles/greda/themes/cobalto.css";
+// <html data-theme="cobalto" data-color-scheme="light">
+```
+
+Cobalto supplies blue/paper colors, Arial/Helvetica and square corners, with a
+complementary dark palette selected by `data-color-scheme="dark"` on the same
+element. Importing it alone leaves the neutral base unchanged. The application
+still controls page backgrounds and fonts. Select **cobalto** in Storybook to
+preview components, and see the [composition recipe](src/stories/Cobalto.mdx)
+for large mixed-weight titles, an asterisk, a polaroid photo, scoped portals,
+and Tailwind 4 import order. Both recipes use Tailwind utilities directly in JSX;
+compile them with your application’s Tailwind 4 setup.
+
+Comal is also available as an optional theme. Import
+`@darthcharles/greda/themes/comal.css` after the package stylesheet and set
+`data-theme="comal"` with `data-color-scheme="light"` or `"dark"` on the same
+element. It uses warm neutrals, terracotta actions and rounded corners. Its font
+stacks reference DM Sans and Fraunces; load those fonts in your application or
+override `--font-sans` and `--font-heading`. No fonts are downloaded or bundled
+by either theme. Both exports can be imported together and selected by attribute.
+See the [Comal composition recipe](src/stories/Comal.mdx) for a complete fictional
+workshop page, optional font setup, responsive layout and copyable Tailwind JSX.
 
 Customization is optional. To change the default theme, import your own
 `theme.css` after the package stylesheet and override the base colors or other

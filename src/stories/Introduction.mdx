@@ -33,7 +33,7 @@ peer dependencies.
 
 ## Explore the components
 
-Use the **base / comal** and **light / dark** toolbar options to preview the same
+Use the **base / comal / cobalto** and **light / dark** toolbar options to preview the same
 components under different themes. Component pages document their props,
 variants, keyboard interaction, and applicable states.
 
@@ -61,7 +61,9 @@ The <a href="/?path=/story/design-tokens--overview" target="_top">Design Tokens 
 shows the complete palette you can override, including neutrals and secondary
 colors. <a href="/?path=/story/design-tokens--roles" target="_top">Color roles</a> shows the assignments
 and utility classes. Typography, spacing, shape, and sizing have their own pages.
-The complete Comal example lives in `.storybook/themes/comal.css`.
+Comal is available as `@darthcharles/greda/themes/comal.css`. Import it after
+Greda styles and set `data-theme="comal"` with `data-color-scheme="light"`
+or `"dark"` on the same element. Its source lives in `src/styles/themes/comal.css`.
 
 Other token customizations are optional. For example, `--radius: 0.75rem` changes
 the default corner radius, and `--space-4: 1.25rem` changes one spacing step.
@@ -177,6 +179,26 @@ declared. Override a named step such as `--space-4` on a subtree; changing only
 `--spacing-unit` there does not recalculate inherited steps.
 
 </details>
+
+## Typography
+
+Start with a complete style and add color independently:
+
+```tsx
+<h1 className="text-display text-primary">Made to be yours.</h1>
+<p className="text-body text-secondary">Your theme controls the details.</p>
+<p className="text-caption text-muted">A supporting note.</p>
+```
+
+The six roles are `text-display`, `text-title`, `text-body`, `text-label`,
+`text-caption` and `text-eyebrow`. Each sets family, size, weight, line height
+and tracking. They work with compiled CSS and the Tailwind 4 imports above;
+margins, casing, italics and semantic HTML remain your choice.
+
+The <a href="/?path=/story/design-tokens--typography" target="_top">Typography guide</a>
+organizes live style previews, per-role token details, theme customization and
+foundations in one place. Existing size utilities such as `text-sm` remain
+available. Comal and Cobalto recipes show the shared styles in full compositions.
 
 <details>
 <summary>Fonts and application styles</summary>

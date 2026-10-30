@@ -6,12 +6,14 @@ import { compile } from "tailwindcss-v4";
 // Resolve the real public CSS exports as a consumer's Tailwind build would.
 export async function buildConsumerCss(
   candidates: string[],
-  components = false
+  components = false,
+  theme?: "cobalto" | "comal"
 ) {
   const compiler = await compile(
     `@import "tailwindcss";
 ${components ? '@import "@darthcharles/greda/styles.css" layer(components);' : ""}
-@import "@darthcharles/greda/tokens.css";`,
+@import "@darthcharles/greda/tokens.css";
+${theme ? `@import "@darthcharles/greda/themes/${theme}.css";` : ""}`,
     {
       base: process.cwd(),
       loadStylesheet: async (id, base) => {

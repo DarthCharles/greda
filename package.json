@@ -24,7 +24,9 @@
       "import": "./dist/utils.js"
     },
     "./styles.css": "./dist/styles.css",
-    "./tokens.css": "./dist/tokens.css"
+    "./tokens.css": "./dist/tokens.css",
+    "./themes/cobalto.css": "./dist/themes/cobalto.css",
+    "./themes/comal.css": "./dist/themes/comal.css"
   },
   "sideEffects": [
     "**/*.css"

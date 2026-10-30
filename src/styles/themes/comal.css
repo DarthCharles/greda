@@ -1,7 +1,7 @@
-/* Comal consumer example: override generic base colors only. Greda owns
+/* Optional Comal theme: override generic base colors only. Greda owns
    all surface, text, border, and component color assignments. Fonts and shape
    are separate, optional customizations. */
-[data-theme="comal"] {
+:where([data-theme="comal"]) {
   --base-white: 40 60% 96.078%;
   --base-black: 37.5 10.256% 15.294%;
   --base-gray-50: 42.857 100% 98.627%;
@@ -25,8 +25,8 @@
   --radius-lg: 1.5rem;
 }
 
-/* Complementary dark base colors for this Storybook example. */
-[data-theme="comal"][data-color-scheme="dark"] {
+/* Complementary dark palette. Put both attributes on the theme boundary. */
+:where([data-theme="comal"][data-color-scheme="dark"]) {
   --base-white: 34.286 51.22% 91.961%;
   --base-primary: 15.625 75% 74.902%;
   --base-primary-hover: 15.789 77.551% 80.784%;

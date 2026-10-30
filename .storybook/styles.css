@@ -1,0 +1,4 @@
+/* Select the catalog's utility sources in the stylesheet itself so development
+   and static builds use the same configuration, including during hot reload. */
+@import "../src/styles/styles.css";
+@config "./tailwind.config.ts";

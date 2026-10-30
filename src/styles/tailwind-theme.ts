@@ -1,5 +1,25 @@
 import type { Config } from "tailwindcss";
 
+// Complete typographic roles shared by compiled CSS and Tailwind 4 utilities.
+export const typographyRoles = {
+  "text-display": "display",
+  "text-title": "title",
+  "text-body": "body",
+  "text-label": "label",
+  "text-caption": "caption",
+  "text-eyebrow": "eyebrow",
+} as const;
+
+export const typographyUtilities = Object.fromEntries(
+  Object.entries(typographyRoles).map(([utility, role]) => [utility, {
+    fontFamily: `var(--type-${role}-family)`,
+    fontSize: `var(--type-${role}-size)`,
+    fontWeight: `var(--type-${role}-weight)`,
+    lineHeight: `var(--type-${role}-leading)`,
+    letterSpacing: `var(--type-${role}-tracking)`,
+  }])
+);
+
 // Shared by Greda's compiled utilities and its Tailwind 4 token integration.
 const colorTokens = [
   "background",

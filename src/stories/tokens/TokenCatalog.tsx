@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { tokens, tokenPages, tokenPageHref, type DesignToken, type TokenPage } from "./catalog";
 import "./TokenCatalog.css";
+import { typographyRoles } from "../../styles/tailwind-theme";
 
 function styleFor(token: DesignToken): CSSProperties {
   const value = `var(${token.name})`;
@@ -15,6 +16,8 @@ function styleFor(token: DesignToken): CSSProperties {
       return { fontWeight: value };
     case "leading":
       return { lineHeight: value };
+    case "tracking":
+      return { letterSpacing: value };
     case "spacing":
       return { width: value };
     case "radius":
@@ -43,6 +46,7 @@ const propertyFor = {
   fontSize: "font-size",
   weight: "font-weight",
   leading: "line-height",
+  tracking: "letter-spacing",
   spacing: "width",
   radius: "border-radius",
   border: "border-width",
@@ -85,7 +89,7 @@ function TokenCard({
 }) {
   const { sample, live } = useLiveToken(token, themeKey);
   const [moving, setMoving] = useState(false);
-  const text = ["font", "fontSize", "weight"].includes(token.kind);
+  const text = ["font", "fontSize", "weight", "tracking"].includes(token.kind);
   return (
     <article className="token-card" data-token={token.name}>
       <header className="token-card-header">
@@ -233,6 +237,100 @@ function RoleExamples() {
   );
 }
 
+function TypographyTokenRow({ token, themeKey }: { token: DesignToken; themeKey: string }) {
+  const { live } = useLiveToken(token, themeKey);
+  return (
+    <tr>
+      <th scope="row"><code>{token.name}</code></th>
+      <td><code>{live.value}</code></td>
+    </tr>
+  );
+}
+
+const typographyExamples: Record<(typeof typographyRoles)[keyof typeof typographyRoles], { purpose: string; sample: string }> = {
+  display: { purpose: "Hero headlines and large editorial statements.", sample: "Made to be yours." },
+  title: { purpose: "Section titles and content headings.", sample: "A shared foundation" },
+  body: { purpose: "Paragraphs and primary reading text.", sample: "Build a clear hierarchy with styles that follow your theme." },
+  label: { purpose: "Control labels and compact interface text.", sample: "Workspace name" },
+  caption: { purpose: "Supporting notes, captions and metadata.", sample: "Your changes are saved automatically." },
+  eyebrow: { purpose: "Short introductions above a heading.", sample: "A new chapter" },
+};
+
+function TypographyGuide({ themeKey }: { themeKey: string }) {
+  const foundations = tokens.filter((token) => token.group === "Typography" && !token.name.startsWith("--type-"));
+  return (
+    <>
+      <nav className="typography-navigation" aria-label="On this page">
+        <a href="#typography-use">Choose a style</a>
+        <a href="#typography-customize">Customize a style</a>
+        <a href="#typography-foundations">Foundation reference</a>
+      </nav>
+      <section className="tokens-section" id="typography-use" aria-labelledby="typography-use-title">
+        <h2 id="typography-use-title">Choose a style</h2>
+        <p className="tokens-section-description">Start with a complete role. It sets font family, size, weight, line height and tracking. Add a text color separately; choose HTML elements for their meaning. Margins, uppercase and italics stay explicit.</p>
+        <pre className="typography-code"><code>{`<h1 className="text-display text-primary">Made to be yours.</h1>
+<p className="text-body text-secondary">A little room to explore.</p>
+<p className="text-caption text-muted">A supporting note.</p>`}</code></pre>
+        <p className="tokens-section-description">These previews follow the theme and scheme selected in the toolbar. Open a style’s theme tokens to inspect its current values.</p>
+        <div className="typography-styles">
+          {Object.entries(typographyRoles).map(([utility, role]) => {
+            const example = typographyExamples[role];
+            return (
+              <article key={utility} className="typography-style">
+                <header className="typography-style-header">
+                  <h3><code>{utility}</code></h3>
+                  <p>{example.purpose}</p>
+                </header>
+                <p className={`typography-style-sample ${utility}`}>{example.sample}</p>
+                <details className="typography-details">
+                  <summary>Theme tokens for <code>{utility}</code></summary>
+                  <table className="typography-token-table" aria-label={`Theme tokens for ${utility}`}>
+                    <thead><tr><th scope="col">Token</th><th scope="col">Current value</th></tr></thead>
+                    <tbody>
+                      {tokens.filter((token) => token.name.startsWith(`--type-${role}-`)).map((token) => (
+                        <TypographyTokenRow key={token.name} token={token} themeKey={themeKey} />
+                      ))}
+                    </tbody>
+                  </table>
+                </details>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+      <section className="tokens-section" id="typography-customize" aria-labelledby="typography-customize-title">
+        <h2 id="typography-customize-title">Customize a style</h2>
+        <p className="tokens-section-description">For one element, add an ordinary utility such as <code>text-display font-medium</code>. With a Tailwind 4 build, <code>text-body md:text-title</code> switches roles at a breakpoint. The six unmodified roles also work with Greda’s compiled CSS.</p>
+        <p className="tokens-section-description">To change a role throughout a theme, override its tokens on the theme boundary. Each role has <code>family</code>, <code>size</code>, <code>weight</code>, <code>leading</code> and <code>tracking</code> properties.</p>
+        <pre className="typography-code"><code>{`[data-theme="brand"] {
+  --type-display-size: clamp(2rem, 6vw, 4rem);
+  --type-display-weight: 700;
+  --type-caption-size: 0.8125rem;
+}`}</code></pre>
+        <p className="tokens-section-description">Font aliases resolve at theme boundaries. Comal uses DM Sans and Fraunces; Cobalto uses Arial/Helvetica with its own headline sizes and weights. Load custom fonts in your application: a family token does not download a font.</p>
+      </section>
+      <section className="tokens-section" id="typography-foundations" aria-labelledby="typography-foundations-title">
+        <h2 id="typography-foundations-title">Foundation reference</h2>
+        <p className="tokens-section-description">These individual tokens support existing component styles and size utilities. A size utility such as <code>text-sm</code> sets size and line height; a role such as <code>text-label</code> supplies the complete style.</p>
+        {[
+          { title: "Font families", kinds: ["font"] },
+          { title: "Size scale", kinds: ["fontSize"] },
+          { title: "Weights and line height", kinds: ["weight", "leading"] },
+        ].map(({ title, kinds }) => (
+          <details className="typography-details typography-foundation" key={title}>
+            <summary>{title}</summary>
+            <div className="tokens-grid">
+              {foundations.filter((token) => kinds.includes(token.kind)).map((token) => (
+                <TokenCard key={token.name} token={token} themeKey={themeKey} />
+              ))}
+            </div>
+          </details>
+        ))}
+      </section>
+    </>
+  );
+}
+
 export function TokenCatalog({ page, theme, scheme }: {
   page: TokenPage;
   theme: string;
@@ -249,7 +347,7 @@ export function TokenCatalog({ page, theme, scheme }: {
         <p className="tokens-eyebrow">Design tokens</p>
         <h1>{current.title}</h1>
         <p>{current.description}</p>
-        <p className="tokens-theme">{theme === "comal" ? "Comal" : "Base"} · {scheme === "dark" ? "Dark" : "Light"}</p>
+        <p className="tokens-theme">{theme === "cobalto" ? "Cobalto" : theme === "comal" ? "Comal" : "Base"} · {scheme === "dark" ? "Dark" : "Light"}</p>
       </header>
       {page === "overview" ? (
         <>
@@ -298,7 +396,8 @@ export function TokenCatalog({ page, theme, scheme }: {
           {current.groups.map((group) => <ColorRoleTable key={group} group={group} themeKey={themeKey} scheme={scheme} />)}
         </>
       )}
-      {page !== "palette" && page !== "roles" && current.groups.map((group) => (
+      {page === "typography" && <TypographyGuide themeKey={themeKey} />}
+      {page !== "palette" && page !== "roles" && page !== "typography" && current.groups.map((group) => (
         <section className="tokens-section" key={group}>
           <h2>{group}</h2>
           {group === "Spacing" && <p className="tokens-section-description">The default spacing unit is 4px. For example, --space-4 resolves to 16px at the default root font size. Override --spacing-unit to scale the system, or one --space-* token to change a single step.</p>}

@@ -1,11 +1,16 @@
 import postcss from "postcss";
-import { colors, colorRoles, theme } from "../src/styles/tailwind-theme.ts";
+import { colors, colorRoles, theme, typographyUtilities } from "../src/styles/tailwind-theme.ts";
 
 // Keep Tailwind 4 aliases in a layer so the runtime token defaults (and consumer
 // overrides) take precedence, including tokens sharing a Tailwind theme name.
 export function createTailwindTheme(tokens) {
   const aliases = new Map();
   const utilities = new Map();
+  for (const [name, style] of Object.entries(typographyUtilities)) {
+    utilities.set(name, Object.entries(style).map(([property, value]) =>
+      `${property.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}: ${value};`
+    ).join("\n  "));
+  }
   const categoryNames = new Set([...colorRoles.text, ...colorRoles.border]);
   for (const [name, value] of Object.entries(colors)) {
     // A global --color-primary would also generate text-primary and

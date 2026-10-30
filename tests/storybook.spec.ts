@@ -25,7 +25,7 @@ for (const story of stories.filter((story) =>
   });
 }
 
-for (const theme of ["base", "comal"]) {
+for (const theme of ["base", "comal", "cobalto"]) {
   for (const scheme of ["light", "dark"]) {
     test(`applies ${theme} ${scheme} tokens to controls and portals`, async ({
       page,
@@ -38,14 +38,16 @@ for (const theme of ["base", "comal"]) {
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveCSS(
         "border-radius",
-        theme === "comal" ? "24px" : "12px"
+        theme === "cobalto" ? "0px" : theme === "comal" ? "24px" : "12px"
       );
       const input = dialog.getByRole("textbox", { name: "Name" });
       await expect(input).toBeFocused();
       const button = dialog.getByRole("button", { name: "Done" });
       await expect(button).toHaveCSS(
         "background-color",
-        theme === "comal"
+        theme === "cobalto"
+          ? scheme === "dark" ? "rgb(143, 179, 255)" : "rgb(7, 61, 181)"
+          : theme === "comal"
           ? scheme === "dark"
             ? "rgb(239, 168, 143)"
             : "rgb(168, 67, 48)"
@@ -403,7 +405,7 @@ test("scoped Comal palettes set the native color scheme independently of the doc
       content: readFileSync("dist/styles.css", "utf8"),
     });
     await page.addStyleTag({
-      content: readFileSync(".storybook/themes/comal.css", "utf8"),
+      content: readFileSync("dist/themes/comal.css", "utf8"),
     });
     await expect(page.locator("html")).toHaveCSS("color-scheme", outer);
     await expect(page.locator("#scoped-theme")).toHaveCSS(
@@ -428,7 +430,7 @@ for (const layered of [false, true]) {
     const cssImports = layered
       ? [await buildConsumerCss(candidates, true)]
       : [readFileSync("dist/styles.css", "utf8"), await buildConsumerCss(candidates)];
-    const comal = readFileSync(".storybook/themes/comal.css", "utf8");
+    const comal = readFileSync("dist/themes/comal.css", "utf8");
     for (const css of cssImports) {
       for (const theme of ["base", "comal"]) {
         for (const scheme of ["light", "dark"]) {
@@ -527,3 +529,147 @@ test("Tailwind 4 category roles support opacity, interaction, and responsive var
   await page.setViewportSize({ width: 1100, height: 800 });
   await expect(page.locator("#responsive")).toHaveCSS("background-color", "rgb(15, 23, 41)");
 });
+
+// The published theme must work through both supported consumer CSS paths,
+// without recoloring siblings or preventing ordinary application overrides.
+for (const consumer of ["compiled", "tailwind4"]) {
+  test(`Cobalto scopes the published palette with ${consumer} CSS`, async ({ page }) => {
+    const css = consumer === "tailwind4"
+      ? await buildConsumerCss(["surface-primary", "text-primary", "text-secondary", "border-primary"], true, "cobalto")
+      : readFileSync("dist/styles.css", "utf8") + readFileSync("dist/themes/cobalto.css", "utf8");
+    await page.goto("/iframe.html");
+    await page.setContent(`
+      <div id="neutral" class="comal-ui surface-primary text-primary">Neutral</div>
+      <section id="cobalto" data-theme="cobalto" data-color-scheme="light">
+        <div id="paper" class="comal-ui surface-primary text-primary">Paper</div>
+        <p id="ink" class="text-secondary">Secondary ink</p>
+        <button class="comal-ui rounded-md border border-primary">Control</button>
+      </section>`);
+    await page.addStyleTag({ content: css });
+    await expect(page.locator("#neutral")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(page.locator("#paper")).toHaveCSS("background-color", "rgb(249, 248, 242)");
+    await expect(page.locator("#paper")).toHaveCSS("color", "rgb(7, 61, 181)");
+    await expect(page.locator("#ink")).toHaveCSS("color", "rgb(67, 94, 144)");
+    await expect(page.getByRole("button", { name: "Control" })).toHaveCSS("border-radius", "0px");
+    await expect(page.locator("#paper")).toHaveCSS("font-family", "Arial, Helvetica, sans-serif");
+    await page.locator("#cobalto").evaluate((element) => { element.dataset.colorScheme = "dark"; });
+    await expect(page.locator("#paper")).toHaveCSS("background-color", "rgb(9, 21, 44)");
+    await expect(page.locator("#paper")).toHaveCSS("color", "rgb(249, 248, 242)");
+    await expect(page.locator("#neutral")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await page.addStyleTag({ content: '[data-theme="cobalto"] { --base-white: 0 0% 100%; }' });
+    await expect(page.locator("#paper")).toHaveCSS("color", "rgb(255, 255, 255)");
+  });
+}
+
+test("Comal's public CSS import compiles with Tailwind 4", async ({ page }) => {
+  const css = await buildConsumerCss(["bg-primary"], true, "comal");
+  await page.goto("/iframe.html");
+  await page.setContent('<section data-theme="comal" data-color-scheme="light"><button class="comal-ui bg-primary">Continue</button></section>');
+  await page.addStyleTag({ content: css });
+  const button = page.getByRole("button", { name: "Continue" });
+  await expect(button).toHaveCSS("background-color", "rgb(168, 67, 48)");
+  await page.locator("section").evaluate((element) => { element.dataset.colorScheme = "dark"; });
+  await expect(button).toHaveCSS("background-color", "rgb(239, 168, 143)");
+});
+
+for (const recipe of [
+  { theme: "cobalto", link: "Explorar el cuaderno", target: "#cobalto-details", width: "558px" },
+  { theme: "comal", link: "Conocer el taller", target: "#comal-session", width: "1100px" },
+] as const) {
+  for (const scheme of ["light", "dark"]) {
+    for (const consumer of ["storybook", "tailwind4"]) {
+      test(`${recipe.theme} recipe preserves layout and focus in ${scheme} with ${consumer}`, async ({ page }) => {
+        await page.setViewportSize({ width: 375, height: 812 });
+        await page.goto(`/iframe.html?id=recipes-${recipe.theme}--default&viewMode=story&globals=theme:${recipe.theme};scheme:${scheme}`);
+        await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+        if (consumer === "tailwind4") {
+          // Compile the actual rendered classes against the public CSS exports.
+          // Recreate the page without catalog styles to catch missing mappings,
+          // layering problems, and reliance on Storybook-only CSS.
+          const { markup, candidates } = await page.getByRole("article").evaluate((article) => ({
+            markup: article.outerHTML,
+            candidates: [...new Set([article, ...article.querySelectorAll("*")]
+              .flatMap((element) => [...element.classList]))],
+          }));
+          const css = await buildConsumerCss(candidates, true, recipe.theme);
+          await page.setContent(`<!doctype html><html data-theme="${recipe.theme}" data-color-scheme="${scheme}"><body>${markup}</body></html>`);
+          await page.addStyleTag({ content: css });
+        }
+        const article = page.getByRole("article");
+        await expect(article).toHaveCSS("max-width", recipe.width);
+        await page.setViewportSize({ width: 1100, height: 900 });
+        expect(await article.getByRole("heading", { level: 1 }).evaluate(
+          (element) => parseFloat(getComputedStyle(element).fontSize)
+        )).toBeGreaterThan(50);
+        if (recipe.theme === "comal") {
+          const columns = await article.locator("section[aria-labelledby='comal-title']").evaluate(
+            (element) => getComputedStyle(element.parentElement!).gridTemplateColumns.split(" ").length
+          );
+          expect(columns).toBe(2);
+        }
+        await page.setViewportSize({ width: 375, height: 812 });
+        if (recipe.theme === "cobalto") {
+          await expect(article.locator("figcaption")).toHaveCSS("font-family", /Georgia/);
+        }
+        expect(await article.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+        await page.keyboard.press("Tab");
+        await expect(page.getByRole("link", { name: recipe.link })).toBeFocused();
+        await page.keyboard.press("Enter");
+        const target = page.locator(recipe.target);
+        await expect(target).toBeFocused();
+        await expect(target).toHaveCSS("outline-style", "solid");
+        expect(await target.evaluate((element) => parseFloat(getComputedStyle(element).outlineWidth))).toBeGreaterThan(0);
+        const results = await new AxeBuilder({ page }).include("article")
+          .withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+        expect(results.violations).toEqual([]);
+      });
+    }
+  }
+}
+
+for (const consumer of ["compiled", "tailwind4"]) {
+  test(`shared typography roles compose and inherit scoped tokens with ${consumer} CSS`, async ({ page }) => {
+    const { cn, Button } = await import("../dist/index.js");
+    const roles = ["display", "title", "body", "label", "caption", "eyebrow"];
+    const candidates = [...roles.map((role) => `text-${role}`), "text-secondary", "font-medium", "md:text-title"];
+    const css = consumer === "tailwind4"
+      ? await buildConsumerCss(candidates, true)
+      : readFileSync("dist/styles.css", "utf8");
+    const button = renderToStaticMarkup(createElement(Button, {
+      variant: "ghost", className: "text-label text-secondary",
+    }, "Typography control"));
+    await page.setContent(`<!doctype html>
+      <section data-theme="custom" data-color-scheme="light" style="--font-sans: Arial; --font-heading: Georgia; --font-size-xs: 1rem; --type-display-size: 2.5rem; --type-display-weight: 800; --type-title-size: 2rem; --base-gray-600: 120 100% 25%">
+        ${roles.map((role) => `<p id="type-${role}" class="${cn(`text-${role}`, "text-secondary")}">Shared typography</p>`).join("")}
+        <p id="type-override" class="text-display font-medium">Local weight</p>
+        <p id="type-responsive" class="text-body md:text-title">Responsive role</p>
+        ${button}
+      </section>`);
+    await page.addStyleTag({ content: css });
+    const display = page.locator("#type-display");
+    await expect(display).toHaveCSS("font-size", "40px");
+    await expect(display).toHaveCSS("font-family", "Georgia");
+    await expect(display).toHaveCSS("font-weight", "800");
+    await expect(display).toHaveCSS("line-height", "44px");
+    await expect(display).toHaveCSS("letter-spacing", "-1.6px");
+    await expect(display).toHaveCSS("color", "rgb(0, 128, 0)");
+    await expect(page.locator("#type-title")).toHaveCSS("font-size", "32px");
+    await expect(page.locator("#type-body")).toHaveCSS("font-size", "16px");
+    await expect(page.locator("#type-body")).toHaveCSS("line-height", "24px");
+    await expect(page.locator("#type-label")).toHaveCSS("font-size", "13px");
+    await expect(page.locator("#type-caption")).toHaveCSS("font-size", "16px");
+    await expect(page.locator("#type-caption")).toHaveCSS("font-family", "Arial");
+    await expect(page.locator("#type-eyebrow")).toHaveCSS("letter-spacing", "1.6px");
+    await expect(page.locator("#type-eyebrow")).toHaveCSS("text-transform", "none");
+    await expect(page.locator("#type-override")).toHaveCSS("font-weight", "500");
+    await expect(page.locator("#type-override")).toHaveCSS("font-size", "40px");
+    await expect(page.getByRole("button", { name: "Typography control" })).toHaveCSS("font-size", "13px");
+    await expect(page.getByRole("button", { name: "Typography control" })).toHaveCSS("color", "rgb(0, 128, 0)");
+    if (consumer === "tailwind4") {
+      await page.setViewportSize({ width: 600, height: 800 });
+      await expect(page.locator("#type-responsive")).toHaveCSS("font-size", "16px");
+      await page.setViewportSize({ width: 1100, height: 800 });
+      await expect(page.locator("#type-responsive")).toHaveCSS("font-size", "32px");
+    }
+  });
+}

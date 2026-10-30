@@ -1,10 +1,11 @@
 import * as React from "react";
 import type { Preview } from "@storybook/react-vite";
 import "../src/styles/tokens.css";
-import "../src/styles/styles.css";
+import "./styles.css";
 import "@fontsource-variable/dm-sans";
 import "@fontsource-variable/fraunces";
-import "./themes/comal.css";
+import "../src/styles/themes/comal.css";
+import "../src/styles/themes/cobalto.css";
 import "./preview.css";
 
 function Theme({
@@ -29,7 +30,7 @@ const preview: Preview = {
       description: "Consumer token overrides",
       toolbar: {
         icon: "paintbrush",
-        items: ["base", "comal"],
+        items: ["base", "comal", "cobalto"],
         dynamicTitle: true,
       },
     },

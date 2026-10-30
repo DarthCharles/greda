@@ -33,6 +33,12 @@ import {
 describe("accessible component behavior", () => {
   it("lets consumer utility overrides replace conflicting defaults", () => {
     expect(cn("px-3 text-sm", false, "px-6")).toBe("text-sm px-6");
+    expect(cn("text-caption", "text-secondary")).toBe("text-caption text-secondary");
+    expect(cn("text-secondary", "text-caption")).toBe("text-secondary text-caption");
+    expect(cn("font-heading text-sm font-medium leading-none tracking-tight text-action", "text-label"))
+      .toBe("text-action text-label");
+    expect(cn("text-display", "text-title font-medium")).toBe("text-title font-medium");
+    expect(cn("md:text-body", "md:text-caption text-primary")).toBe("md:text-caption text-primary");
     expect(
       cn("bg-primary hover:bg-primary-hover", "bg-accent hover:bg-secondary")
     ).toBe("bg-accent hover:bg-secondary");

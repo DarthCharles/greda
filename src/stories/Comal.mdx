@@ -1,0 +1,106 @@
+import { Canvas, Meta, Source } from "@storybook/addon-docs/blocks";
+import * as ComalStories from "./Comal.stories";
+
+<Meta of={ComalStories} name="Composition recipe" />
+
+# Comal
+
+A warm identity with cream surfaces, terracotta actions, a soft green accent,
+rounded corners, DM Sans body text and Fraunces headings. This fictional pottery
+workshop combines Button, Badge and Card with Tailwind layout utilities. Choose
+**comal** and **light / dark** in the toolbar to explore both palettes.
+
+## Install the theme and fonts
+
+This recipe uses Tailwind 4 utilities directly in JSX. In an application with
+Tailwind 4 configured, import these styles from your Tailwind CSS entry point:
+
+```css
+@import "tailwindcss";
+@import "@darthcharles/greda/styles.css" layer(components);
+@import "@darthcharles/greda/tokens.css";
+@import "@darthcharles/greda/themes/comal.css";
+```
+
+Import that CSS entry point once in your application. The components layer lets
+application utilities override Greda component defaults. Do not also import
+`styles.css` in JavaScript. Your Tailwind build must scan the copied JSX.
+
+Select the theme and color scheme on the same element:
+
+```html
+<html data-theme="comal" data-color-scheme="light">
+```
+
+Use `dark` for the complementary dark palette. Importing the theme alone does
+not select it or change Greda's neutral base. The application owns page styles; use utilities on your page shell:
+
+```tsx
+<body className="m-0 surface-primary font-sans text-primary">
+  {/* Your application */}
+</body>
+```
+
+The theme references font families but does not download fonts. Storybook loads
+DM Sans and Fraunces through Fontsource. To reproduce that typography, optionally
+install these packages in your application:
+
+```bash
+npm install @fontsource-variable/dm-sans @fontsource-variable/fraunces
+```
+
+```tsx
+import "@fontsource-variable/dm-sans";
+import "@fontsource-variable/fraunces";
+```
+
+Alternatively, self-host the fonts or override `--font-sans` and `--font-heading`
+with your own families. Without loaded fonts the theme falls back to sans-serif
+body text and serif headings. No font or image request is required by the recipe.
+
+## Compose the page
+
+The heading pairs a serif title with an italic action-colored phrase. A green
+aside introduces the process; a raised Card groups practical details. Badge's
+secondary and outline variants identify supporting information, and a large
+primary Button composes with a native anchor. All copy describes an imaginary
+workshop; there is no registration, form submission or persistent state.
+
+<Canvas of={ComalStories.Default} />
+<Source of={ComalStories.Default} />
+
+Copy the example markup into your React component, importing Button, Badge,
+Card, CardHeader, CardContent and CardFooter from `@darthcharles/greda`.
+Layout, responsive behavior, typography and focus styles are all expressed
+through Tailwind classes. There is no recipe stylesheet to copy. Semantic
+utilities such as `surface-tertiary`, `text-action` and `rounded-lg` read
+Greda's tokens. Typography uses the shared `text-display`, `text-title`,
+`text-body`, `text-caption` and `text-eyebrow` roles. Each role sets family,
+size, weight, line height and tracking; color stays separate. Keep `uppercase`
+and `italic` explicit. The theme's fonts give these roles their Comal identity.
+The column ratio and wordmark remain local editorial choices.
+
+## Responsive layout and interaction
+
+The two-column introduction and three-column details stack below 700px. The
+header and card footer wrap when space is limited. The decorative mark is hidden
+from assistive technology, while the details use a semantic description list.
+
+Tab focuses “Conocer el taller”; Enter moves focus to the workshop details with
+a visible focus outline. Button retains anchor semantics through `asChild`, so
+its disabled/loading props do not guarantee a disabled link. No artificial
+loading, disabled or validation state is added to this static composition.
+See the component stories for those states.
+
+For a theme scoped to a subtree, put `data-theme="comal"` and
+`data-color-scheme="light"` or `"dark"` on its wrapper. The recipe sets its own
+background, text color and font from the theme. If you add Dialog, Select or
+Tooltip, pass an element inside that wrapper to the content component's
+`container` prop so its portal inherits the same theme. Document themes
+naturally reach portals mounted under body.
+
+Greda components still work without Tailwind using the compiled package CSS.
+These recipes require a consumer Tailwind build for their layout utilities;
+the package does not bundle recipe-only classes. Tailwind 3 consumers need
+corresponding token mappings in their own configuration; the import-only
+integration above targets Tailwind 4.
