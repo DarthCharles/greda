@@ -4,6 +4,13 @@
   "description": "Generic React components with a complete, overridable base theme.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DarthCharles/greda.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "README.md",
@@ -48,7 +55,7 @@
     "validate:package": "node scripts/validate-package.mjs",
     "check": "npm run typecheck && npm test && npm run validate:stories && npm run build && npm run validate:package && npm run build-storybook",
     "changeset": "changeset",
-    "version-packages": "changeset version",
+    "version-packages": "changeset version && npm install --package-lock-only --ignore-scripts",
     "release": "npm run check && changeset publish",
     "prepack": "npm run build",
     "test:browser": "playwright test",

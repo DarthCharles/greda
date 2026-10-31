@@ -81,7 +81,37 @@ Add a Changeset with `npm run changeset` for publishable changes. Use patch
 versions for fixes and minor versions for compatible features. Breaking prop,
 token, or export changes require explicit migration notes and a major bump.
 
-For a requested release, `npm run version-packages` prepares versions and
-changelogs. `npm run release` validates and publishes through Changesets using
-the maintainer's npm credentials. Publishing requires an explicit release action.
+Releases use the manually triggered [Release workflow](.github/workflows/release.yml).
+In GitHub, open **Actions → Release → Run workflow**, select `main`, and run it.
+The workflow applies pending Changesets, validates the package and Storybook,
+runs browser tests, commits version/changelog changes to `main`, publishes to npm,
+and pushes the tags created by Changesets. The workflow requires permission to push release commits
+to `main`; repositories with branch rules must allow that before using this flow.
+
+Select **dry_run** to validate and preview the package without committing, pushing,
+or publishing. The workflow runs only on `main`; ordinary pushes and pull requests
+do not publish. Releases are serialized so two runs cannot publish concurrently.
+If publishing fails after the version commit, fix the cause and run it again on
+`main`: Changesets publishes the existing unpublished version when no new Changesets
+are pending, and skips versions already present on npm.
+
+Configure [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) once
+in the npm package's **Settings → Trusted publishing** section. Select GitHub Actions:
+
+| Field | Value |
+| --- | --- |
+| Organization or user | `DarthCharles` |
+| Repository | `greda` |
+| Workflow filename | `release.yml` |
+| Environment name | Leave empty; this workflow does not select a GitHub environment |
+
+The workflow must be present on GitHub before configuring it in npm. npm requires
+Node 22.14+ and npm CLI 11.5.1+; the workflow uses the current Node 24 release from
+`.nvmrc`. GitHub grants a short-lived OIDC identity through `id-token: write`, so
+no npm token secret or interactive npm login is needed for releases. Package
+repository metadata points at this GitHub repository for trusted publishing.
+
+For a local release instead, `npm run version-packages` prepares versions and
+changelogs, and `npm run release` validates and publishes through Changesets using
+your npm credentials. Publishing requires an explicit release action.
 

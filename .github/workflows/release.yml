@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Validate and preview the release without publishing or pushing changes
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - run: npm ci
+      - name: Prepare version and changelog
+        id: version
+        run: |
+          npm run version-packages
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync } from "node:fs";
+          const { version } = JSON.parse(readFileSync("package.json", "utf8"));
+          appendFileSync(process.env.GITHUB_OUTPUT, `version=${version}\n`);
+          NODE
+      - run: npm run check
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - name: Preview package
+        if: inputs.dry_run
+        run: npm publish --dry-run
+      - name: Save release version
+        if: ${{ !inputs.dry_run }}
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json CHANGELOG.md .changeset
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: release v$RELEASE_VERSION"
+          fi
+          git push origin HEAD:refs/heads/main
+      - name: Publish to npm using trusted publishing
+        if: ${{ !inputs.dry_run }}
+        run: npx changeset publish
+      - name: Push release tags
+        if: ${{ !inputs.dry_run }}
+        run: git push origin --tags
+      - name: Release summary
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "Validated release preview for @darthcharles/greda@$RELEASE_VERSION. Nothing was published or pushed." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Release completed for @darthcharles/greda@$RELEASE_VERSION." >> "$GITHUB_STEP_SUMMARY"
+          fi
