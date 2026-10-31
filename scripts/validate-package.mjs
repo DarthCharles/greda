@@ -82,6 +82,7 @@ for (const name of [
   "PopoverTrigger",
   "PopoverContent",
   "PopoverClose",
+  "PopoverAnchor",
   "cn",
 ]) {
   assert(name in api, `Missing public export: ${name}`);

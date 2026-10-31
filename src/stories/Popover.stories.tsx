@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Popover, PopoverTrigger, PopoverContent, PopoverClose, Button, Input, Label } from "../index";
+import { Popover, PopoverTrigger, PopoverContent, PopoverClose, PopoverAnchor, Button, Input, Label } from "../index";
 
 const meta = {
   title: "Components/Popover",
@@ -10,7 +10,7 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: "Radix mini-dialog. Tab and Shift+Tab cycle through content controls. Enter, Space, or click toggles the trigger; Escape, outside press, or focus leaving dismisses it. Focus moves into the content and returns to the trigger on Escape or close. Non-modal by default and allows outside interaction; modal traps focus, blocks outside interaction, and requires a close control. Give content an aria-label or aria-labelledby. Root placement accepts a side with optional -start or -end alignment; sideOffset controls the gap. Content also accepts Radix side, align, collision, and autofocus options. Set width with className; content scrolls within available viewport space. Use container for scoped themes. Triggers accept native disabled and asChild; loading can be composed with Button. No visual variants.",
+        component: "Adapted from shadcn/ui New York, built on Radix. Tab and Shift+Tab cycle through content controls. Enter, Space, or click toggles the trigger; Escape, outside press, or focus leaving dismisses it. Focus moves into the content and returns to the trigger on Escape or close. Non-modal by default and allows outside interaction; modal traps focus, blocks outside interaction, and requires a close control. Give content an aria-label or aria-labelledby. Root placement accepts a side with optional -start or -end alignment; sideOffset controls the gap. Content also accepts Radix side, align, collision, and autofocus options. Set width with className; content scrolls within available viewport space. Use container for scoped themes and PopoverAnchor to position against an element other than the trigger. Entrance and exit animations respect reduced motion. Triggers accept native disabled and asChild; loading can be composed with Button. No visual variants.",
       },
     },
   },
@@ -51,6 +51,23 @@ export const Controlled: Story = {
       </Popover>
     );
   },
+};
+
+export const CustomAnchor: Story = {
+  render: () => (
+    <Popover placement="bottom-start">
+      <PopoverAnchor asChild>
+        <section className="catalog-stack" aria-label="Delivery card">
+          <PopoverTrigger asChild><Button variant="outline">Delivery details</Button></PopoverTrigger>
+          <p>Deliver to the workshop reception.</p>
+        </section>
+      </PopoverAnchor>
+      <PopoverContent aria-label="Delivery details">
+        <p>This panel is positioned below the whole card.</p>
+        <PopoverClose asChild><Button>Done</Button></PopoverClose>
+      </PopoverContent>
+    </Popover>
+  ),
 };
 
 export const Modal: Story = {

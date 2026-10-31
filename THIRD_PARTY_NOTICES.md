@@ -15,5 +15,6 @@ requested for the initial component set.
 
 Local adaptations: relative imports; shared semantic color utilities; a scoped CSS baseline;
 consumer token mapping; optional portal containers; button loading, 1px press feedback from the current Nova style, and a default
-non-submit type; viewport bounds on dialogs; invalid-field styles; an accessible
+non-submit type; viewport bounds on dialogs and popovers; popover root positioning options,
+portal container refs, and an explicit close helper; invalid-field styles; an accessible
 toast close name; and a distinct indeterminate checkbox icon.

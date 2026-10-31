@@ -1,9 +1,14 @@
+// Adapted from shadcn/ui (New York). See upstream/shadcn-ui for source and MIT license.
 "use client";
 
 import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 
 import { cn } from "../../lib/utils";
+
+const PopoverAnchor = PopoverPrimitive.Anchor;
+
+export type PopoverAnchorProps = React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Anchor>;
 
 type Side = NonNullable<React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>["side"]>;
 type Align = NonNullable<React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>["align"]>;
@@ -70,7 +75,8 @@ const PopoverContent = React.forwardRef<
         collisionPadding={collisionPadding}
         forceMount={forceMount}
         className={cn(
-          "comal-ui z-popover w-72 max-w-[var(--radix-popover-content-available-width)] max-h-[var(--radix-popover-content-available-height)] overflow-y-auto rounded-md border bg-popover p-4 text-popover-foreground shadow-md",
+          "comal-ui",
+          "z-popover w-72 max-w-[var(--radix-popover-content-available-width)] max-h-[var(--radix-popover-content-available-height)] overflow-y-auto rounded-md border bg-popover p-4 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-popover-content-transform-origin]",
           className
         )}
         {...props}
@@ -94,4 +100,4 @@ const PopoverClose = React.forwardRef<
 ));
 PopoverClose.displayName = PopoverPrimitive.Close.displayName;
 
-export { Popover, PopoverTrigger, PopoverContent, PopoverClose };
+export { Popover, PopoverTrigger, PopoverContent, PopoverClose, PopoverAnchor };

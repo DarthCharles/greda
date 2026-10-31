@@ -71,6 +71,9 @@ registry responses, hashes, and the upstream license are preserved in
 `node scripts/fetch-shadcn.mjs` refreshes the snapshots and manifest without
 changing local components. Compare upstream changes against those snapshots and
 preserve local adaptations; review CLI updates before accepting overwrites.
+Pass component names, for example `node scripts/fetch-shadcn.mjs popover`, to
+refresh only those snapshots. Selective updates record retrieval dates on their
+manifest entries and preserve the other snapshots and their retrieval dates.
 
 ### Versioning and publishing
 

@@ -91,6 +91,15 @@
       "dependencies": [
         "@radix-ui/react-tooltip"
       ]
+    },
+    {
+      "name": "popover",
+      "url": "https://ui.shadcn.com/r/styles/new-york/popover.json",
+      "sha256": "75e60925ee38e1a686a2c990a95a7dae7b72cef447f2d4f1fe8a1aa306a9b1b1",
+      "dependencies": [
+        "@radix-ui/react-popover"
+      ],
+      "retrieved": "2026-10-31T17:55:48.443Z"
     }
   ]
 }

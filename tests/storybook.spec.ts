@@ -710,6 +710,21 @@ test("popover cycles focus and allows outside interaction only in non-modal mode
   await expect(page.getByRole("button", { name: "Review changes" })).toBeFocused();
 });
 
+test("popover supports a custom anchor and reduced motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/iframe.html?id=components-popover--custom-anchor&viewMode=story");
+  const anchor = page.getByRole("region", { name: "Delivery card" });
+  await page.getByRole("button", { name: "Delivery details" }).click();
+  const content = page.getByRole("dialog", { name: "Delivery details" });
+  await expect(content).toHaveCSS("animation-name", "none");
+  await expect.poll(async () => {
+    const cardBounds = await anchor.boundingBox();
+    const contentBounds = await content.boundingBox();
+    if (!cardBounds || !contentBounds) return null;
+    return Math.round(contentBounds.y - cardBounds.y - cardBounds.height);
+  }).toBe(4);
+});
+
 test("popover inherits scoped portal tokens and fits a narrow viewport using published CSS", async ({ page }) => {
   await page.setViewportSize({ width: 280, height: 320 });
   await page.goto("/iframe.html?id=components-popover--scoped-theme&viewMode=story");
