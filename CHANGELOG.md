@@ -1,5 +1,24 @@
 # @darthcharles/greda
 
+## 1.1.0
+
+### Minor Changes
+
+- f956784: Add the optional `themes/cobalto.css` export with scoped light/dark palettes,
+  Arial/Helvetica typography, and square corners. Keep the default theme neutral.
+  Include Storybook selection and a complete editorial composition recipe.
+
+  Export the existing Comal palette as `themes/comal.css`, shared with Storybook.
+  Font loading remains optional and belongs to the consuming application.
+  Include a Comal composition recipe with a responsive fictional workshop page,
+  font setup and copyable Tailwind JSX. Both recipes use consumer-generated
+  Tailwind utilities rather than separate layout stylesheets.
+
+- f956784: Add shared display, title, body, label, caption and eyebrow typography utilities
+  with themeable tokens. Ship them in compiled CSS and the Tailwind 4 token
+  integration, preserving size utilities and independent text colors. Update class
+  merging, token previews and both theme recipes to use the shared roles.
+
 ## 1.0.0
 
 ### Major Changes

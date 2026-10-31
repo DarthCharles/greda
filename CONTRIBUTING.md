@@ -11,7 +11,7 @@ npm run storybook
 ```
 
 Storybook runs at **http://localhost:6006** with component examples, automatic
-prop documentation, an axe panel, and base/Comal and light/dark toolbar options.
+prop documentation, an axe panel, and Base/Comal/Cobalto and light/dark toolbar options.
 
 ### Validation
 
