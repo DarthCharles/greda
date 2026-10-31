@@ -104,6 +104,12 @@ in the npm package's **Settings → Trusted publishing** section. Select GitHub 
 | Repository | `greda` |
 | Workflow filename | `release.yml` |
 | Environment name | Leave empty; this workflow does not select a GitHub environment |
+| Allowed actions | Enable **Allow npm publish** for direct publishing |
+
+New trusted publishers allow staged publishing by default. Without **Allow npm
+publish**, this workflow's direct publish fails with `OIDC permission denied for
+this action`. The configuration is validated by its first successful publish;
+complete that publish within npm's displayed validation deadline.
 
 The workflow must be present on GitHub before configuring it in npm. npm requires
 Node 22.14+ and npm CLI 11.5.1+; the workflow uses the current Node 24 release from
