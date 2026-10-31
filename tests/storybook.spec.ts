@@ -673,3 +673,69 @@ for (const consumer of ["compiled", "tailwind4"]) {
     }
   });
 }
+
+test("popover cycles focus and allows outside interaction only in non-modal mode", async ({ page }) => {
+  await page.goto("/iframe.html?id=components-popover--default&viewMode=story");
+  const trigger = page.getByRole("button", { name: "Edit dimensions" });
+  await trigger.focus();
+  await page.keyboard.press("Enter");
+  const content = page.getByRole("dialog", { name: "Dimensions" });
+  await expect(page.getByRole("textbox", { name: "Width" })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Done" })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("textbox", { name: "Width" })).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await expect(page.getByRole("button", { name: "Done" })).toBeFocused();
+  await page.getByRole("button", { name: "Continue editing" }).click();
+  await expect(content).not.toBeVisible();
+  await expect(page.getByRole("button", { name: "Continue editing" })).toBeFocused();
+  await trigger.click();
+  const results = await new AxeBuilder({ page }).include('[role="dialog"]').withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+  expect(results.violations).toEqual([]);
+  await page.keyboard.press("Escape");
+  await expect(trigger).toBeFocused();
+
+  await page.goto("/iframe.html?id=components-popover--modal&viewMode=story");
+  await page.getByRole("button", { name: "Review changes" }).click();
+  const close = page.getByRole("button", { name: "Finish review" });
+  await expect(close).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(close).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await expect(close).toBeFocused();
+  await page.getByText("Review changes", { exact: true }).focus();
+  await expect(close).toBeFocused();
+  await close.click();
+  await expect(page.getByRole("button", { name: "Review changes" })).toBeFocused();
+});
+
+test("popover inherits scoped portal tokens and fits a narrow viewport using published CSS", async ({ page }) => {
+  await page.setViewportSize({ width: 280, height: 320 });
+  await page.goto("/iframe.html?id=components-popover--scoped-theme&viewMode=story");
+  // Replace catalog CSS with the package CSS to exercise shipped utilities.
+  await page.evaluate(() => document.querySelectorAll('link[rel="stylesheet"], style').forEach((element) => element.remove()));
+  await page.addStyleTag({ content: readFileSync("dist/styles.css", "utf8") });
+  await page.addStyleTag({ content: readFileSync("dist/themes/comal.css", "utf8") });
+  const trigger = page.getByRole("button", { name: "Scoped details", exact: true });
+  await trigger.evaluate((element) => {
+    element.style.position = "fixed";
+    element.style.right = "0";
+    element.style.bottom = "0";
+  });
+  await trigger.click();
+  const content = page.getByRole("dialog", { name: "Scoped details" });
+  await expect(content).toHaveCSS("background-color", "rgb(43, 37, 31)");
+  await expect(content).toHaveCSS("z-index", "60");
+  await expect(content).toHaveAttribute("data-side", "top");
+  await expect(content).toBeVisible();
+  const bounds = await content.boundingBox();
+  expect(bounds).not.toBeNull();
+  expect(bounds!.x).toBeGreaterThanOrEqual(0);
+  expect(bounds!.y).toBeGreaterThanOrEqual(0);
+  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(280);
+  expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(320);
+  // Focus remains usable after collision handling and scrolling constraints.
+  await page.getByRole("button", { name: "Close scoped details" }).click();
+  await expect(trigger).toBeFocused();
+});

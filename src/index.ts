@@ -10,4 +10,5 @@ export * from "./components/ui/checkbox";
 export * from "./components/ui/tabs";
 export * from "./components/ui/toast";
 export * from "./components/ui/tooltip";
+export * from "./components/ui/popover";
 export { cn } from "./lib/utils";
