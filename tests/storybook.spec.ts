@@ -629,7 +629,10 @@ for (const recipe of [
 
 for (const consumer of ["compiled", "tailwind4"]) {
   test(`shared typography roles compose and inherit scoped tokens with ${consumer} CSS`, async ({ page }) => {
-    const { cn, Button } = await import("../dist/index.js");
+    // Load generated output at runtime so type checking works before the build.
+    const { cn, Button }: typeof import("../src/index") = await import(
+      new URL("../dist/index.js", import.meta.url).href
+    );
     const roles = ["display", "title", "body", "label", "caption", "eyebrow"];
     const candidates = [...roles.map((role) => `text-${role}`), "text-secondary", "font-medium", "md:text-title"];
     const css = consumer === "tailwind4"
