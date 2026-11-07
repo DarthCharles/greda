@@ -1,0 +1,68 @@
+import { Canvas, Meta, Source } from "@storybook/addon-docs/blocks";
+import * as MatrixStories from "./Matrix.stories";
+
+<Meta of={MatrixStories} name="Composition recipe" />
+
+# Matrix
+
+A terminal-inspired identity with phosphor-green actions, green-black surfaces,
+system monospace typography, fine borders and square controls. The recipe opens
+in dark mode; select **matrix** and **light / dark** in the toolbar to preview
+any component. Light mode uses pale green surfaces and deep green actions.
+
+## Install the theme
+
+Greda components work with the compiled package CSS, without Tailwind:
+
+```tsx
+import "@darthcharles/greda/styles.css";
+import "@darthcharles/greda/themes/matrix.css";
+```
+
+Select the theme and scheme on the same boundary:
+
+```html
+<html data-theme="matrix" data-color-scheme="dark">
+```
+
+Change the scheme to `light` for the complementary palette. Importing the theme
+alone leaves the base unchanged. The theme provides variables; your application
+sets page backgrounds, text and fonts using the role tokens. The font stack uses
+installed monospace fonts and downloads nothing. Override `--font-sans` and
+`--font-heading` after the theme to choose your own fonts.
+
+For a scoped theme, put both attributes on a wrapper, apply surface, text and
+font styles, and pass an element inside that wrapper as `container` to portaled
+DialogContent, SelectContent and TooltipContent. A document theme reaches portals
+mounted under body automatically.
+
+## Compose the console
+
+This recipe uses Tailwind layout utilities. With Tailwind 4 configured, use these
+imports in your application CSS entry point instead of the JavaScript CSS imports:
+
+```css
+@import "tailwindcss";
+@import "@darthcharles/greda/styles.css" layer(components);
+@import "@darthcharles/greda/tokens.css";
+@import "@darthcharles/greda/themes/matrix.css";
+```
+
+Import that entry point once. Your application Tailwind build must scan the copied
+JSX; recipe-only layout classes are not included in Greda's compiled CSS.
+The components layer lets application utilities override component defaults.
+Tailwind 3 consumers need corresponding token mappings in their configuration.
+
+<Canvas of={MatrixStories.Default} />
+<Source of={MatrixStories.Default} />
+
+Copy the markup and import Button and Badge from `@darthcharles/greda`. Shared
+typography roles supply the monospace scale; layout and terminal decoration stay
+in the recipe. The initialization log is static fictional content. There are no
+shell commands, network requests, authentication or saved sessions.
+
+The layout stacks on small screens. Tab focuses the protocol link; Enter moves
+focus to the protocol section with a visible outline. Button's `asChild` preserves
+link semantics. The cursor and log stay still, including with reduced motion.
+Status text accompanies color so the signal remains readable without color alone.
+See individual component stories for disabled, loading and validation states.

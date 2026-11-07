@@ -1,0 +1,48 @@
+/* Optional terminal identity. Import after Greda styles/tokens and put
+   data-theme="matrix" and data-color-scheme on the same boundary. */
+:where([data-theme="matrix"]) {
+  --base-white: 135 35% 96%;
+  --base-black: 150 40% 4%;
+  --base-gray-50: 135 40% 98%;
+  --base-gray-100: 135 25% 91%;
+  --base-gray-200: 145 20% 72%;
+  --base-gray-300: 140 22% 70%;
+  --base-gray-500: 145 18% 35%;
+  --base-gray-600: 145 22% 28%;
+  --base-gray-800: 150 28% 9%;
+  --base-gray-900: 150 40% 4%;
+  --base-primary: 140 85% 24%;
+  --base-primary-hover: 140 85% 18%;
+  --base-secondary: 135 25% 88%;
+  --base-tertiary: 140 30% 92%;
+  --base-accent: 135 30% 85%;
+  --base-destructive: 0 70% 40%;
+  --font-sans: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-heading: var(--font-sans);
+  --type-display-size: clamp(2.25rem, 6vw, 4.5rem);
+  --type-display-weight: 700;
+  --type-display-leading: 1.05;
+  --type-display-tracking: -0.055em;
+  --type-title-size: clamp(1.25rem, 3vw, 1.75rem);
+  --type-title-weight: 600;
+  --type-body-size: 0.9375rem;
+  --type-body-leading: 1.7;
+  --type-eyebrow-tracking: 0.12em;
+  --radius: 0;
+  --radius-sm: 0;
+  --radius-lg: 0;
+  --focus-width: 2px;
+  --focus-offset: 4px;
+}
+
+/* Dark mode is explicit, independent of the selected brand. */
+:where([data-theme="matrix"][data-color-scheme="dark"]) {
+  --base-white: 135 65% 88%;
+  --base-primary: 135 100% 65%;
+  --base-primary-hover: 135 100% 75%;
+  --base-secondary: 145 30% 14%;
+  --base-tertiary: 145 35% 7%;
+  --base-accent: 145 30% 18%;
+  --base-gray-600: 145 22% 40%;
+  --base-destructive: 0 90% 78%;
+}

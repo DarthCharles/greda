@@ -108,7 +108,7 @@ element. Importing it alone leaves the neutral base unchanged. The application
 still controls page backgrounds and fonts. Select **cobalto** in Storybook to
 preview components, and see the [composition recipe](src/stories/Cobalto.mdx)
 for large mixed-weight titles, an asterisk, a polaroid photo, scoped portals,
-and Tailwind 4 import order. Both recipes use Tailwind utilities directly in JSX;
+and Tailwind 4 import order. The recipes use Tailwind utilities directly in JSX;
 compile them with your application’s Tailwind 4 setup.
 
 Comal is also available as an optional theme. Import
@@ -117,9 +117,17 @@ Comal is also available as an optional theme. Import
 element. It uses warm neutrals, terracotta actions and rounded corners. Its font
 stacks reference DM Sans and Fraunces; load those fonts in your application or
 override `--font-sans` and `--font-heading`. No fonts are downloaded or bundled
-by either theme. Both exports can be imported together and selected by attribute.
+by these themes. Theme exports can be imported together and selected by attribute.
 See the [Comal composition recipe](src/stories/Comal.mdx) for a complete fictional
 workshop page, optional font setup, responsive layout and copyable Tailwind JSX.
+
+Matrix adds a terminal identity with green actions, system monospace fonts and
+square controls. Import `@darthcharles/greda/themes/matrix.css` after the package
+stylesheet and set `data-theme="matrix"` with `data-color-scheme="dark"` for
+green-black surfaces, or `"light"` for pale green surfaces. No font setup is
+required. Select **matrix** in Storybook to preview components, or see the
+[Matrix composition recipe](src/stories/Matrix.mdx) for a responsive console
+layout and Tailwind 4 setup.
 
 Customization is optional. To change the default theme, import your own
 `theme.css` after the package stylesheet and override the base colors or other

@@ -10,6 +10,7 @@ export default {
       "../src/components/ui/**/*.{ts,tsx}",
       "../src/stories/Comal.stories.tsx",
       "../src/stories/Cobalto.stories.tsx",
+      "../src/stories/Matrix.stories.tsx",
     ],
   },
 } satisfies Config;

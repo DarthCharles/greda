@@ -25,7 +25,7 @@ for (const story of stories.filter((story) =>
   });
 }
 
-for (const theme of ["base", "comal", "cobalto"]) {
+for (const theme of ["base", "comal", "cobalto", "matrix"]) {
   for (const scheme of ["light", "dark"]) {
     test(`applies ${theme} ${scheme} tokens to controls and portals`, async ({
       page,
@@ -38,14 +38,16 @@ for (const theme of ["base", "comal", "cobalto"]) {
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveCSS(
         "border-radius",
-        theme === "cobalto" ? "0px" : theme === "comal" ? "24px" : "12px"
+        theme === "cobalto" || theme === "matrix" ? "0px" : theme === "comal" ? "24px" : "12px"
       );
       const input = dialog.getByRole("textbox", { name: "Name" });
       await expect(input).toBeFocused();
       const button = dialog.getByRole("button", { name: "Done" });
       await expect(button).toHaveCSS(
         "background-color",
-        theme === "cobalto"
+        theme === "matrix"
+          ? scheme === "dark" ? "rgb(77, 255, 121)" : "rgb(9, 113, 44)"
+          : theme === "cobalto"
           ? scheme === "dark" ? "rgb(143, 179, 255)" : "rgb(7, 61, 181)"
           : theme === "comal"
           ? scheme === "dark"
@@ -561,6 +563,37 @@ for (const consumer of ["compiled", "tailwind4"]) {
   });
 }
 
+for (const consumer of ["compiled", "tailwind4"]) {
+  test(`Matrix scopes its palette and native color scheme with ${consumer} CSS`, async ({ page }) => {
+    const css = consumer === "tailwind4"
+      ? await buildConsumerCss(["surface-primary", "text-primary", "bg-primary", "text-primary-foreground"], true, "matrix")
+      : readFileSync("dist/styles.css", "utf8") + readFileSync("dist/themes/matrix.css", "utf8");
+    await page.goto("/iframe.html");
+    await page.setContent(`
+      <div id="neutral" class="comal-ui surface-primary text-primary">Neutral</div>
+      <section id="matrix" data-theme="matrix" data-color-scheme="dark">
+        <div id="terminal" class="comal-ui surface-primary text-primary">Terminal</div>
+        <button class="comal-ui bg-primary text-primary-foreground">Continue</button>
+        <input aria-label="Native field" />
+      </section>`);
+    await page.addStyleTag({ content: css });
+    const terminal = page.locator("#terminal");
+    const action = page.getByRole("button", { name: "Continue" });
+    await expect(terminal).toHaveCSS("background-color", "rgb(6, 14, 10)");
+    await expect(terminal).toHaveCSS("font-family", /monospace/);
+    await expect(action).toHaveCSS("background-color", "rgb(77, 255, 121)");
+    await expect(action).toHaveCSS("color", "rgb(6, 14, 10)");
+    await expect(page.getByRole("textbox")).toHaveCSS("color-scheme", "dark");
+    await page.locator("#matrix").evaluate((element) => { element.dataset.colorScheme = "light"; });
+    await expect(terminal).toHaveCSS("background-color", "rgb(241, 248, 243)");
+    await expect(action).toHaveCSS("background-color", "rgb(9, 113, 44)");
+    await expect(page.getByRole("textbox")).toHaveCSS("color-scheme", "light");
+    await expect(page.locator("#neutral")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await page.addStyleTag({ content: '[data-theme="matrix"] { --base-primary: 0 0% 0%; }' });
+    await expect(action).toHaveCSS("background-color", "rgb(0, 0, 0)");
+  });
+}
+
 test("Comal's public CSS import compiles with Tailwind 4", async ({ page }) => {
   const css = await buildConsumerCss(["bg-primary"], true, "comal");
   await page.goto("/iframe.html");
@@ -575,6 +608,7 @@ test("Comal's public CSS import compiles with Tailwind 4", async ({ page }) => {
 for (const recipe of [
   { theme: "cobalto", link: "Explorar el cuaderno", target: "#cobalto-details", width: "558px" },
   { theme: "comal", link: "Conocer el taller", target: "#comal-session", width: "1100px" },
+  { theme: "matrix", link: "Explore the protocol", target: "#matrix-protocol", width: "1100px" },
 ] as const) {
   for (const scheme of ["light", "dark"]) {
     for (const consumer of ["storybook", "tailwind4"]) {
