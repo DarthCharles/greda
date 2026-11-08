@@ -1,0 +1,149 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as ComboboxStories from "./Combobox.stories";
+
+<Meta of={ComboboxStories} name="Usage guide" />
+
+# Combobox usage
+
+Searchable single selection with local filtering, remote results, and optional
+option creation. Built with Greda Input and Radix Popover, using existing dependencies.
+
+## Composition
+
+<table>
+  <thead>
+    <tr><th scope="col">Part</th><th scope="col">Responsibility</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>Combobox</code></td><td>Options, selection, search state, and creation callbacks</td></tr>
+    <tr><td><code>ComboboxInput</code></td><td>Editable field, native input props, and forwarded ref</td></tr>
+    <tr><td><code>ComboboxContent</code></td><td>Results, creation action, loading, and error messages</td></tr>
+  </tbody>
+</table>
+
+## Basic usage
+
+Import `@darthcharles/greda/styles.css` once in your application, then compose the field:
+
+```tsx
+import {
+  Combobox, ComboboxInput, ComboboxContent, Label,
+} from "@darthcharles/greda";
+
+const materials = [
+  { value: "clay", label: "Clay", keywords: ["pottery"] },
+  { value: "linen", label: "Linen" },
+];
+
+export function MaterialField() {
+  return (
+    <>
+      <Label htmlFor="material">Material</Label>
+      <Combobox
+        options={materials}
+        name="material"
+        onCreate={(label) => ({ value: crypto.randomUUID(), label })}
+      >
+        <ComboboxInput id="material" placeholder="Choose or create" required />
+        <ComboboxContent />
+      </Combobox>
+    </>
+  );
+}
+```
+
+<Canvas of={ComboboxStories.Default} />
+
+## Options and filtering
+
+Options have unique string `value` IDs and text `label`s, with optional `disabled`
+and `keywords`. Local filtering matches labels and keywords without case
+sensitivity. Supply `filter(option, query)` to customize matching.
+
+## Controlled state
+
+<table>
+  <thead>
+    <tr><th scope="col">State</th><th scope="col">Controlled props</th><th scope="col">Uncontrolled default</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Selection</td><td><code>value</code>, <code>onValueChange</code></td><td><code>defaultValue</code></td></tr>
+    <tr><td>Search text</td><td><code>inputValue</code>, <code>onInputValueChange</code></td><td><code>defaultInputValue</code></td></tr>
+    <tr><td>Popup</td><td><code>open</code>, <code>onOpenChange</code></td><td><code>defaultOpen</code></td></tr>
+  </tbody>
+</table>
+
+Selection holds a full `ComboboxOption` or `null`, independently of the search
+text. Its label survives changes to remote results. Set a controlled `value` to
+`null` to clear selection.
+
+## Remote data
+
+1. Set `filter={false}` to preserve server results and ordering.
+2. Control `inputValue` and supply current results through `options`.
+3. Set `loading` immediately when a query changes, including during debounce.
+4. Set `error` when a request fails.
+
+Loading and failed searches hide stale results and prevent creation. Your
+application handles fetching, debounce, cancellation, caching, and ignoring
+outdated responses.
+
+## Creating options
+
+Omit `onCreate` to allow selection only. When supplied, it receives the trimmed
+query and returns the new option or a promise of it. Blank queries and known
+exact label matches do not offer creation. Use `isValidNewOption(query, options)`
+for additional rules, and enforce remote uniqueness on the server.
+
+- **Success:** select the returned option and retain it for local searches.
+- **Pending:** prevent edits and repeated submissions.
+- **Failure:** preserve the query for retry and show small destructive text.
+  Customize the message with `createErrorText` on `ComboboxContent`.
+- **Dismissal while pending:** ignore late selection effects. The application
+  still owns any server work already started.
+
+Typing and blur never create or select an option automatically.
+
+<Canvas of={ComboboxStories.Creatable} />
+
+## Forms and validation
+
+Put `name`, `form`, and `disabled` on `Combobox`. Forms submit the selected ID;
+native reset restores uncontrolled defaults.
+
+Put `required`, `aria-invalid`, `aria-describedby`, native input events, and the
+input ref on `ComboboxInput`. Required fields reject uncommitted search text.
+Provide a visible label and associate application validation errors through
+`aria-describedby`.
+
+<Canvas of={ComboboxStories.Invalid} />
+
+## Keyboard interaction
+
+<table>
+  <thead>
+    <tr><th scope="col">Action</th><th scope="col">Behavior</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Focus or click</td><td>Open the search</td></tr>
+    <tr><td>Type</td><td>Filter options</td></tr>
+    <tr><td>Arrow Up / Arrow Down</td><td>Highlight enabled options or the creation action</td></tr>
+    <tr><td>Enter</td><td>Activate the highlighted option or creation action</td></tr>
+    <tr><td>Escape</td><td>Cancel the search and close the popup</td></tr>
+    <tr><td>Tab / Shift+Tab</td><td>Close and move to the next or previous control</td></tr>
+  </tbody>
+</table>
+
+Focus stays on the input. Closing clears the query and restores the selected
+label; the filtered results stay in place until the closing animation finishes.
+Text editing and IME composition keep their normal behavior.
+
+## Appearance and content
+
+The field fills its container and uses existing theme tokens, with no size or
+visual variants. Use `className`
+for overrides and `container` on `ComboboxContent` for scoped theme portals.
+
+`ComboboxContent` accepts Popover positioning and dismissal props,
+`renderOption`, `renderCreateLabel`, and customizable `emptyText`, `loadingText`,
+`creatingText`, `createErrorText`, and `getStatusText`.

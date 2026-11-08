@@ -791,3 +791,68 @@ test("popover inherits scoped portal tokens and fits a narrow viewport using pub
   await page.getByRole("button", { name: "Close scoped details" }).click();
   await expect(trigger).toBeFocused();
 });
+
+test("combobox keeps filtered options while closing and preserves keyboard focus", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/iframe.html?id=components-combobox--default&viewMode=story");
+  const input = page.getByRole("combobox", { name: "Material" });
+  await input.focus();
+  await expect(page.getByRole("listbox")).toBeVisible();
+  await expect(input).toBeFocused();
+  await page.keyboard.press("ArrowUp");
+  const activeId = await input.getAttribute("aria-activedescendant");
+  expect(activeId).toBeTruthy();
+  await expect(page.getByRole("option", { name: "Paper" })).toHaveAttribute("id", activeId!);
+  await expect(page.getByRole("option", { name: "Paper" })).not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  const results = await new AxeBuilder({ page }).include(".catalog-canvas").include('[role="listbox"]')
+    .withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+  expect(results.violations).toEqual([]);
+  await input.fill("pa");
+  await page.keyboard.press("ArrowDown");
+  const closingOptions = await page.evaluateHandle(() => {
+    const list = document.querySelector('[role="listbox"]');
+    if (!list) throw new Error("Expected the filtered options to be open.");
+    const samples: string[][] = [];
+    const observer = new MutationObserver(() => {
+      if (!list.isConnected) {
+        observer.disconnect();
+      } else if (list.parentElement?.getAttribute("data-state") === "closed") {
+        samples.push([...list.querySelectorAll('[role="option"]')].map((option) => option.textContent ?? ""));
+      }
+    });
+    observer.observe(document.body, { subtree: true, childList: true, attributes: true });
+    return samples;
+  });
+  await page.keyboard.press("Enter");
+  await expect(input).toHaveValue("Paper");
+  await expect(input).toBeFocused();
+  await expect(page.getByRole("listbox")).toHaveCount(0);
+  const samples = await closingOptions.jsonValue();
+  expect(samples.length).toBeGreaterThan(0);
+  for (const options of samples) expect(options).toEqual(["Paper"]);
+  await closingOptions.dispose();
+  await input.click();
+  await expect(page.getByRole("option", { name: "Clay" })).toBeVisible();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Continue" })).toBeFocused();
+  await expect(page.getByRole("listbox")).toHaveCount(0);
+});
+
+test("combobox nested in a dialog dismisses its popup before the dialog", async ({ page }) => {
+  await page.goto("/iframe.html?id=components-combobox--inside-dialog&viewMode=story");
+  const trigger = page.getByRole("button", { name: "Edit material" });
+  await trigger.click();
+  const input = page.getByRole("combobox", { name: "Material" });
+  await expect(input).toBeFocused();
+  await input.fill("pa");
+  await page.getByRole("option", { name: "Paper" }).click();
+  await expect(input).toHaveValue("Paper");
+  await input.click();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("listbox")).toHaveCount(0);
+  await expect(page.getByRole("dialog", { name: "Edit material" })).toBeVisible();
+  await expect(input).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+});

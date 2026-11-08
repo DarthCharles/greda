@@ -45,6 +45,45 @@ Greda and application markup share unprefixed utility classes such as
 `className` to override component defaults. See the introduction guide for supported
 utilities and migration from `ds-*` classes.
 
+## Searchable selection
+
+Use `Combobox` for filtering as you type and optional option creation. It uses
+existing Radix dependencies. `Select` remains available for simple selection.
+
+Import the same package stylesheet shown in Quick start, then compose the field:
+
+```tsx
+import {
+  Combobox, ComboboxInput, ComboboxContent, Label,
+} from "@darthcharles/greda";
+
+const materials = [
+  { value: "clay", label: "Clay", keywords: ["pottery"] },
+  { value: "linen", label: "Linen" },
+];
+
+export function MaterialField() {
+  return (
+    <>
+      <Label htmlFor="material">Material</Label>
+      <Combobox
+        options={materials}
+        name="material"
+        onCreate={(label) => ({ value: crypto.randomUUID(), label })}
+      >
+        <ComboboxInput id="material" placeholder="Choose or create" required />
+        <ComboboxContent />
+      </Combobox>
+    </>
+  );
+}
+```
+
+See the [usage guide](src/stories/Combobox.mdx) for controlled state, remote
+search, creation callbacks, forms, and keyboard interaction. Explore the
+[Storybook examples](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/components-combobox--docs)
+for component states.
+
 ## With Tailwind 4
 
 Import Greda's tokens in your app's Tailwind CSS entry point. This registers the
