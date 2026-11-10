@@ -108,6 +108,79 @@ test("button moves down on press, excludes popup triggers, and respects reduced 
   await page.mouse.up();
 });
 
+for (const consumer of ["package", "tailwind4"] as const) {
+  test(`toggle buttons keep geometry and stay still with ${consumer} CSS`, async ({ page }) => {
+    const { Button, buttonVariants }: typeof import("../src/index") = await import(
+      new URL("../dist/index.js", import.meta.url).href
+    );
+    const examples = ["component", "helper"].map((kind) => ({
+      id: `${kind}-toggle`,
+      markup: [false, true].map((selected) => {
+        const variant = selected ? "secondary" : "outline";
+        return renderToStaticMarkup(kind === "component"
+          ? createElement(Button, {
+              id: `${kind}-toggle`, variant, "aria-pressed": selected,
+            }, "Weekend")
+          : createElement("button", {
+              id: `${kind}-toggle`, type: "button", "aria-pressed": selected,
+              className: buttonVariants({ variant }),
+            }, "Weekend"));
+      }),
+    }));
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.setContent(`<!doctype html>${examples.map(({ id, markup }) =>
+      `<div id="${id}-row" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:16px">${markup[0]}<span>Following content</span></div>`
+    ).join("")}`);
+    await page.addStyleTag({ content: consumer === "tailwind4"
+      ? await buildConsumerCss([], true)
+      : readFileSync("dist/styles.css", "utf8") });
+    await page.evaluate((examples) => {
+      for (const { id, markup } of examples) {
+        const button = document.getElementById(id)!;
+        const classes = markup.map((html) => {
+          const template = document.createElement("template");
+          template.innerHTML = html;
+          return template.content.firstElementChild!.getAttribute("class")!;
+        });
+        button.addEventListener("click", () => {
+          const selected = button.getAttribute("aria-pressed") !== "true";
+          button.setAttribute("aria-pressed", String(selected));
+          button.setAttribute("class", classes[Number(selected)]);
+        });
+      }
+    }, examples);
+    for (const { id } of examples) {
+      const toggle = page.locator(`#${id}`);
+      const row = page.locator(`#${id}-row`);
+      const geometry = () => row.evaluate((element) => Array.from(element.children, (child) => {
+        const { x, y, width, height } = child.getBoundingClientRect();
+        return { x, y, width, height };
+      }));
+      const before = await geometry();
+      await expect(toggle).toHaveCSS("border-width", "1px");
+      for (const pressed of [false, true]) {
+        await expect(toggle).toHaveAttribute("aria-pressed", String(pressed));
+        await expect(toggle).toHaveCSS("transition-duration", "0s");
+        await toggle.hover();
+        await page.mouse.down();
+        await expect(toggle).toHaveCSS("transform", "none");
+        expect(await geometry()).toEqual(before);
+        await page.mouse.up();
+        await expect(toggle).toHaveAttribute("aria-pressed", String(!pressed));
+        expect(await geometry()).toEqual(before);
+        expect(await toggle.evaluate((element) => element.getAnimations().length)).toBe(0);
+      }
+      await toggle.focus();
+      await page.keyboard.press("Space");
+      await expect(toggle).toHaveAttribute("aria-pressed", "true");
+      expect(await geometry()).toEqual(before);
+      await page.keyboard.press("Enter");
+      await expect(toggle).toHaveAttribute("aria-pressed", "false");
+      expect(await geometry()).toEqual(before);
+    }
+  });
+}
+
 test("spacing overrides update component padding", async ({ page }) => {
   await page.goto("/iframe.html?id=components-button--default&viewMode=story");
   const button = page.getByRole("button", { name: "Continue" });

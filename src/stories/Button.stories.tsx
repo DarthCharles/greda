@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button, buttonVariants } from "../index";
 
@@ -66,7 +67,7 @@ export const PressFeedback: Story = {
     docs: {
       description: {
         story:
-          "Press and hold to see the button move down 1px, matching shadcn’s current Nova style. Buttons with aria-haspopup stay still. Reduced-motion preferences disable the movement.",
+          "Press and hold to see the button move down 1px, matching shadcn’s current Nova style. Buttons with aria-haspopup or aria-pressed stay still. Toggle selection changes do not animate. Reduced-motion preferences disable the movement.",
       },
     },
   },
@@ -103,4 +104,30 @@ export const SharedUtilities: Story = {
       </div>
     </div>
   ),
+};
+
+export const ToggleSelection: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Use aria-pressed for toggle buttons. Switching outline and secondary keeps the same border space; both toggle states stay still and change without animation. Enter and Space toggle the selection.",
+      },
+    },
+  },
+  render: function ToggleSelectionExample() {
+    const [selected, setSelected] = useState(false);
+    return (
+      <div className="catalog-row">
+        <Button
+          variant={selected ? "secondary" : "outline"}
+          aria-pressed={selected}
+          onClick={() => setSelected(!selected)}
+        >
+          Weekend
+        </Button>
+        <Button variant="outline">Neighboring action</Button>
+      </div>
+    );
+  },
 };

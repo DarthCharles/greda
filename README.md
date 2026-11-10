@@ -45,6 +45,17 @@ Greda and application markup share unprefixed utility classes such as
 `className` to override component defaults. See the introduction guide for supported
 utilities and migration from `ds-*` classes.
 
+## Toggle buttons
+
+Use `aria-pressed` on `Button` (or markup styled with `buttonVariants`) for
+selection controls. Both `true` and `false` states disable the default selection
+transition and press movement. Ordinary action buttons retain press feedback;
+popup triggers and reduced-motion preferences continue to suppress movement.
+Button variants reserve the same border space, so switching `outline` and
+`secondary` does not change the button's size. Previously borderless auto-width
+buttons gain approximately 2px of width; fixed-size buttons reserve that space
+inside their existing bounds.
+
 ## Searchable selection
 
 Use `Combobox` for filtering as you type and optional option creation. It uses
