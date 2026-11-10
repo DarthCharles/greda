@@ -47,14 +47,9 @@ utilities and migration from `ds-*` classes.
 
 ## Toggle buttons
 
-Use `aria-pressed` on `Button` (or markup styled with `buttonVariants`) for
-selection controls. Both `true` and `false` states disable the default selection
-transition and press movement. Ordinary action buttons retain press feedback;
-popup triggers and reduced-motion preferences continue to suppress movement.
-Button variants reserve the same border space, so switching `outline` and
-`secondary` does not change the button's size. Previously borderless auto-width
-buttons gain approximately 2px of width; fixed-size buttons reserve that space
-inside their existing bounds.
+For toggle buttons, set `aria-pressed` to the current selection state and
+update that state in `onClick`. Users can activate the button with a click,
+Enter, or Space. This also applies to native buttons styled with `buttonVariants`.
 
 ## Searchable selection
 

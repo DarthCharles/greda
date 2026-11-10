@@ -2,10 +2,9 @@
 "@darthcharles/greda": patch
 ---
 
-Keep Button and buttonVariants geometry stable across variants by reserving a
-transparent border for previously borderless variants. Auto-width buttons may
-be approximately 2px wider; fixed-size buttons reserve the border inside their
-existing bounds.
+Fix Button and buttonVariants resizing when changing variants. Previously
+borderless auto-width buttons may be approximately 2px wider; fixed-size buttons
+retain their existing bounds.
 
 Buttons with aria-pressed, whether true or false, no longer animate selection
 changes or move while pressed. Ordinary action-button feedback, popup-trigger

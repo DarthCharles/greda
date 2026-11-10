@@ -111,7 +111,7 @@ export const ToggleSelection: Story = {
     docs: {
       description: {
         story:
-          "Use aria-pressed for toggle buttons. Switching outline and secondary keeps the same border space; both toggle states stay still and change without animation. Enter and Space toggle the selection.",
+          "A toggle button reports its selection with aria-pressed. Activate it with a click, Enter, or Space.",
       },
     },
   },
