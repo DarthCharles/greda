@@ -54,7 +54,7 @@ for (const theme of ["base", "comal", "cobalto", "matrix", "la-viuda"]) {
           : theme === "comal"
           ? scheme === "dark"
             ? "rgb(221, 166, 108)"
-            : "rgb(143, 72, 38)"
+            : "rgb(165, 71, 31)"
           : scheme === "dark"
           ? "rgb(110, 162, 247)"
           : "rgb(23, 84, 207)"
@@ -544,7 +544,7 @@ for (const layered of [false, true]) {
           await expect(roles).toHaveCSS("color", text);
           await expect(roles).toHaveCSS("border-color", border);
           const tertiary = theme === "comal"
-            ? dark ? "rgb(57, 41, 27)" : "rgb(220, 192, 154)"
+            ? dark ? "rgb(73, 90, 61)" : "rgb(206, 216, 196)"
             : dark ? "rgb(28, 41, 64)" : "rgb(239, 246, 255)";
           await expect(page.locator("#tertiary")).toHaveCSS("background-color", tertiary);
           await expect(page.locator("#tertiary")).toHaveCSS("color", text);
@@ -564,7 +564,7 @@ for (const layered of [false, true]) {
           expect(accent).not.toBe(secondary);
           await expect(page.locator("#scoped-tertiary")).toHaveCSS("background-color", "rgb(0, 128, 0)");
           const action = theme === "comal"
-            ? dark ? "rgb(221, 166, 108)" : "rgb(143, 72, 38)"
+            ? dark ? "rgb(221, 166, 108)" : "rgb(165, 71, 31)"
             : dark ? "rgb(110, 162, 247)" : "rgb(23, 84, 207)";
           await expect(page.locator("#brand")).toHaveCSS("background-color", action);
           await expect(page.locator("#component")).toHaveCSS("background-color", action);
@@ -683,15 +683,24 @@ for (const consumer of ["compiled", "tailwind4"]) {
   });
 }
 
-test("Comal's public CSS import compiles with Tailwind 4", async ({ page }) => {
-  const css = await buildConsumerCss(["bg-primary"], true, "comal");
+test("Comal's public CSS import preserves readable primary and hover states with Tailwind 4", async ({ page }) => {
+  const css = await buildConsumerCss(["bg-primary", "text-primary-foreground", "hover:bg-primary-hover"], true, "comal");
   await page.goto("/iframe.html");
-  await page.setContent('<section data-theme="comal" data-color-scheme="light"><button class="comal-ui bg-primary">Continue</button></section>');
+  await page.setContent('<section data-theme="comal" data-color-scheme="light"><button class="comal-ui bg-primary text-primary-foreground hover:bg-primary-hover">Continue</button></section>');
   await page.addStyleTag({ content: css });
   const button = page.getByRole("button", { name: "Continue" });
-  await expect(button).toHaveCSS("background-color", "rgb(143, 72, 38)");
-  await page.locator("section").evaluate((element) => { element.dataset.colorScheme = "dark"; });
-  await expect(button).toHaveCSS("background-color", "rgb(221, 166, 108)");
+  for (const scheme of ["light", "dark"]) {
+    await page.mouse.move(1000, 700);
+    await page.locator("section").evaluate((element, value) => { element.dataset.colorScheme = value; }, scheme);
+    await expect(button).toHaveCSS("background-color", scheme === "light" ? "rgb(165, 71, 31)" : "rgb(221, 166, 108)");
+    await button.hover();
+    await expect(button).toHaveCSS("background-color", scheme === "light" ? "rgb(150, 65, 29)" : "rgb(237, 190, 138)");
+    const results = await new AxeBuilder({ page })
+      .include("section")
+      .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+      .analyze();
+    expect(results.violations).toEqual([]);
+  }
 });
 
 for (const recipe of [

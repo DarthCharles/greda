@@ -160,7 +160,8 @@ Comal is also available as an optional theme. Import
 `@darthcharles/greda/themes/comal.css` after the package stylesheet and set
 `data-theme="comal"` with `data-color-scheme="light"` or `"dark"` on the same
 element. Inspired by Mexican cazuelas de barro, it uses clay-colored neutrals,
-sienna-brown actions, amber surfaces, moss-green accents, and rounded corners. Its font stacks reference DM Sans and Fraunces; load those fonts in your application or
+terracotta actions, pale sage tertiary surfaces, soft sage secondary controls, and rounded
+corners. Its font stacks reference DM Sans and Fraunces; load those fonts in your application or
 override `--font-sans` and `--font-heading`. No fonts are downloaded or bundled
 by these themes. Theme exports can be imported together and selected by attribute.
 See the [Comal composition recipe](src/stories/Comal.mdx) for a complete fictional
@@ -222,7 +223,7 @@ Dark assignments are built in. Define base overrides on `:root` or a
 `data-theme` element; scoped themes automatically rebind the role variables.
 Consumers do not need to declare surface, text, or border tokens.
 `surface-tertiary` uses `--base-tertiary`: soft blue (`#eff6ff`) in Base and
-warm amber (`#dcc09a`) in Comal, with darker counterparts in dark mode.
+pale sage (`#ced8c4`) in Comal, with darker counterparts in dark mode.
 Override `--base-tertiary` to customize this surface independently of accent
 backgrounds and hover states.
 
