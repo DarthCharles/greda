@@ -1,5 +1,20 @@
 # @darthcharles/greda
 
+## 1.4.1
+
+### Patch Changes
+
+- 2b0f08d: Give the default Base theme a distinct hover and focus accent in both light and
+  dark modes. Secondary controls keep their existing neutral surfaces, while
+  interactive highlights use a separate blue-gray shade. Token names and role
+  assignments remain unchanged.
+- 2b0f08d: Give Comal's accent its own green shade in light and dark modes, distinct from
+  secondary controls. Hover and focus backgrounds now provide a separate visual
+  cue while secondary buttons and badges retain their moss-green surfaces.
+- 2b0f08d: Separate La Viuda's hover and focus accent from its secondary surface in both
+  light and dark modes. Secondary controls retain their existing soft green;
+  interactive highlights now use a distinct green shade.
+
 ## 1.4.0
 
 ### Minor Changes
