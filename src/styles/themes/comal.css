@@ -15,7 +15,7 @@
   --base-primary-hover: 18.57143 57.53425% 28.62745%;
   --base-secondary: 94.00000 14.28571% 58.82353%;
   --base-tertiary: 34.54545 48.52941% 73.33333%;
-  --base-accent: 94.00000 14.28571% 58.82353%;
+  --base-accent: 90.00000 20.40816% 80.78431%;
   --base-destructive: 6.512 57.848% 43.725%;
   --font-sans: "DM Sans Variable", "DM Sans", sans-serif;
   --font-heading: "Fraunces Variable", "Fraunces", serif;
@@ -31,7 +31,7 @@
   --base-primary-hover: 31.51515 73.33333% 73.52941%;
   --base-secondary: 99.00000 17.85714% 21.96078%;
   --base-tertiary: 28.00000 35.71429% 16.47059%;
-  --base-accent: 99.00000 17.85714% 21.96078%;
+  --base-accent: 95.17241 19.20530% 29.60784%;
   --base-gray-600: 27.56757 29.36508% 49.41176%;
   --base-destructive: 7.174 79.31% 77.255%;
 }

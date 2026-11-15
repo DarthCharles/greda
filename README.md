@@ -215,6 +215,8 @@ the same names. Greda assigns them to independent roles and utilities:
 | Borders | `border-primary`, `border-secondary`, `border-inverse` | Gray-200, gray-100, gray-600 |
 
 `bg-primary` / `bg-secondary` use base primary/secondary action colors.
+Base uses distinct secondary and hover/focus accent shades in both color schemes;
+override `--base-secondary` and `--base-accent` independently to customize them.
 Primary text and borders use their neutral base assignments independently.
 Dark assignments are built in. Define base overrides on `:root` or a
 `data-theme` element; scoped themes automatically rebind the role variables.

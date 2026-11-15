@@ -15,7 +15,7 @@
   --base-primary-hover: 220 80% 38%;
   --base-secondary: 220 20% 94%;
   --base-tertiary: 214 100% 96.863%;
-  --base-accent: 220 20% 94%;
+  --base-accent: 220 30% 89%;
   --base-destructive: 0 72% 43%;
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
@@ -152,7 +152,7 @@
   --base-primary-hover: 217 90% 78%;
   --base-secondary: 222 20% 22%;
   --base-tertiary: 218 40% 18%;
-  --base-accent: 222 20% 22%;
+  --base-accent: 222 24% 28%;
   --base-destructive: 0 80% 72%;
   --surface-primary: var(--base-gray-900);
   --surface-secondary: var(--base-gray-800);

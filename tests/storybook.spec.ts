@@ -311,7 +311,7 @@ test("Tailwind 4 consumers get token utilities from one CSS import", async ({
   await page.locator("#state").hover();
   await expect(page.locator("#state")).toHaveCSS(
     "background-color",
-    "rgb(45, 52, 67)"
+    "rgb(54, 65, 89)"
   );
   await page.locator("#state").focus();
   await expect(page.locator("#state")).toHaveCSS("color", "rgb(255, 255, 255)");
@@ -500,7 +500,8 @@ for (const layered of [false, true]) {
   test(`category color roles stay independent in ${layered ? "layered components" : "standalone utilities"}`, async ({ page }) => {
     const api = await import(new URL("../dist/index.js", import.meta.url).href);
     const candidates = [
-      "bg-primary", "bg-accent", "text-primary-foreground",
+      "bg-primary", "bg-secondary", "bg-accent", "text-primary-foreground",
+      "text-secondary-foreground", "hover:bg-accent", "hover:text-accent-foreground",
       "surface-primary", "surface-tertiary", "surface-inverse", "text-primary", "text-inverse",
       "border-primary",
     ];
@@ -519,6 +520,8 @@ for (const layered of [false, true]) {
               <div id="inverse" class="surface-inverse text-inverse">Inverse roles</div>
               <div id="brand" class="bg-primary">Brand action</div>
               ${renderToStaticMarkup(createElement(api.Button, { id: "component" }, "Component action"))}
+              ${renderToStaticMarkup(createElement(api.Button, { id: "secondary-component", variant: "secondary" }, "Secondary action"))}
+              ${renderToStaticMarkup(createElement(api.Button, { id: "accent-component", variant: "outline" }, "Context action"))}
               <div id="scope" data-theme="custom" data-color-scheme="light" style="--base-white: 240 100% 25%; --base-black: 60 100% 75%; --base-gray-200: 120 100% 25%; --base-tertiary: 120 100% 25%">
                 <div id="scoped" class="surface-primary text-primary border-primary">Scoped roles</div>
                 <div id="scoped-tertiary" class="surface-tertiary">Scoped accent surface</div>
@@ -548,6 +551,17 @@ for (const layered of [false, true]) {
           const accent = await page.locator("#accent").evaluate((element) =>
             getComputedStyle(element).backgroundColor
           );
+          await page.mouse.move(0, 0);
+          const secondary = await page.getByRole("button", { name: "Secondary action", exact: true }).evaluate(
+            async (element) => {
+              await Promise.all(element.getAnimations().map((animation) => animation.finished));
+              return getComputedStyle(element).backgroundColor;
+            }
+          );
+          const contextAction = page.getByRole("button", { name: "Context action", exact: true });
+          await contextAction.hover();
+          await expect(contextAction).toHaveCSS("background-color", accent);
+          expect(accent).not.toBe(secondary);
           await expect(page.locator("#scoped-tertiary")).toHaveCSS("background-color", "rgb(0, 128, 0)");
           const action = theme === "comal"
             ? dark ? "rgb(221, 166, 108)" : "rgb(143, 72, 38)"
@@ -935,8 +949,13 @@ test("combobox nested in a dialog dismisses its popup before the dialog", async 
 
 for (const consumer of ["compiled", "tailwind4"]) {
   test(`La Viuda keeps scoped surfaces and actions readable with ${consumer} CSS`, async ({ page }) => {
+    const api = await import(new URL("../dist/index.js", import.meta.url).href);
     const css = consumer === "tailwind4"
-      ? await buildConsumerCss(["surface-primary", "text-primary", "bg-primary", "text-primary-foreground"], true, "la-viuda")
+      ? await buildConsumerCss([
+        "surface-primary", "text-primary", "bg-primary", "text-primary-foreground",
+        "bg-secondary", "text-secondary-foreground", "bg-accent", "text-accent-foreground",
+        "hover:bg-accent", "hover:text-accent-foreground",
+      ], true, "la-viuda")
       : readFileSync("dist/styles.css", "utf8") + readFileSync("dist/themes/la-viuda.css", "utf8");
     await page.goto("/iframe.html");
     await page.setContent(`
@@ -944,6 +963,9 @@ for (const consumer of ["compiled", "tailwind4"]) {
       <section id="brand" data-theme="la-viuda" data-color-scheme="light">
         <div id="paper" class="comal-ui surface-primary text-primary">Paper</div>
         <button class="comal-ui bg-primary text-primary-foreground">Continue</button>
+        ${renderToStaticMarkup(createElement(api.Button, { variant: "secondary" }, "Secondary action"))}
+        ${renderToStaticMarkup(createElement(api.Button, { variant: "outline" }, "Context action"))}
+        <div id="accent" class="bg-accent text-accent-foreground">Accent background</div>
         <input aria-label="Native field" />
       </section>`);
     await page.addStyleTag({ content: css });
@@ -960,6 +982,21 @@ for (const consumer of ["compiled", "tailwind4"]) {
     await expect(action).toHaveCSS("color", "rgb(41, 37, 31)");
     await expect(page.getByRole("textbox")).toHaveCSS("color-scheme", "dark");
     await expect(page.locator("#neutral")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    for (const scheme of ["light", "dark"]) {
+      await page.locator("#brand").evaluate((element, value) => { element.dataset.colorScheme = value; }, scheme);
+      await page.mouse.move(0, 0);
+      const secondary = await page.getByRole("button", { name: "Secondary action", exact: true }).evaluate(
+        async (element) => {
+          await Promise.all(element.getAnimations().map((animation) => animation.finished));
+          return getComputedStyle(element).backgroundColor;
+        }
+      );
+      const accent = await page.locator("#accent").evaluate((element) => getComputedStyle(element).backgroundColor);
+      const contextAction = page.getByRole("button", { name: "Context action", exact: true });
+      await contextAction.hover();
+      await expect(contextAction).toHaveCSS("background-color", accent);
+      expect(accent).not.toBe(secondary);
+    }
     await page.addStyleTag({ content: '[data-theme="la-viuda"] { --base-primary: 0 0% 100%; }' });
     await expect(action).toHaveCSS("background-color", "rgb(255, 255, 255)");
   });
