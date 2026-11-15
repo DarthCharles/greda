@@ -1,44 +1,49 @@
 import { Canvas, Meta, Source } from "@storybook/addon-docs/blocks";
-import * as MatrixStories from "./Matrix.stories";
+import * as RecipeStories from "./Matrix.stories";
+import recipeSource from "./Matrix.stories.tsx?raw";
 
-<Meta of={MatrixStories} name="Composition recipe" />
+<Meta of={RecipeStories} name="Composition recipe" />
 
 # Matrix
 
-A terminal-inspired identity with phosphor-green actions, green-black surfaces,
-system monospace typography, fine borders and square controls. The recipe opens
-in dark mode; select **matrix** and **light / dark** in the toolbar to preview
-any component. Light mode uses pale green surfaces and deep green actions.
+Matrix is technical, high-contrast, and deliberately spare. Phosphor-green
+actions sit against green-black surfaces in dark mode; light mode pairs pale
+greens with deeper green actions. System monospace type, tight display tracking,
+fine borders, and square controls reinforce its terminal character. Keep status
+labels explicit so color supports meaning without carrying it alone.
 
-## Install the theme
+Choose **matrix** and **light / dark** in the toolbar to preview the theme.
 
-Greda components work with the compiled package CSS, without Tailwind:
+## Install the theme and fonts
+
+Components work with Greda's compiled package CSS, without Tailwind:
 
 ```tsx
 import "@darthcharles/greda/styles.css";
 import "@darthcharles/greda/themes/matrix.css";
 ```
 
-Select the theme and scheme on the same boundary:
+Set the theme and scheme on the same boundary:
 
 ```html
 <html data-theme="matrix" data-color-scheme="dark">
 ```
 
-Change the scheme to `light` for the complementary palette. Importing the theme
-alone leaves the base unchanged. The theme provides variables; your application
-sets page backgrounds, text and fonts using the role tokens. The font stack uses
-installed monospace fonts and downloads nothing. Override `--font-sans` and
-`--font-heading` after the theme to choose your own fonts.
+Importing the theme alone leaves the neutral base unchanged. Switch the scheme
+to explore the complementary palette. Your application controls its page shell:
 
-For a scoped theme, put both attributes on a wrapper, apply surface, text and
-font styles, and pass an element inside that wrapper as `container` to portaled
-DialogContent, SelectContent and TooltipContent. A document theme reaches portals
-mounted under body automatically.
+```tsx
+<body className="m-0 surface-primary font-sans text-primary">
+  {/* Your application */}
+</body>
+```
 
-## Compose the console
+The theme uses installed system fonts and downloads nothing. Override
+`--font-sans` and `--font-heading` to use your own families.
 
-This recipe uses Tailwind layout utilities. With Tailwind 4 configured, use these
+## Compose the page
+
+The recipe uses Tailwind layout utilities. With Tailwind 4 configured, use these
 imports in your application CSS entry point instead of the JavaScript CSS imports:
 
 ```css
@@ -49,20 +54,48 @@ imports in your application CSS entry point instead of the JavaScript CSS import
 ```
 
 Import that entry point once. Your application Tailwind build must scan the copied
-JSX; recipe-only layout classes are not included in Greda's compiled CSS.
-The components layer lets application utilities override component defaults.
+JSX; recipe-only layout classes are not included in Greda's compiled CSS. The
+components layer lets application utilities override component defaults.
 Tailwind 3 consumers need corresponding token mappings in their configuration.
 
-<Canvas of={MatrixStories.Default} />
-<Source of={MatrixStories.Default} />
+Button, Badge, Tabs, Input, Label, and Select come from `@darthcharles/greda`.
+The console opens on its log. A Settings tab reveals a session-name field and
+an output selector, keeping these controls within the console context. Shared typography roles
+supply the monospace scale; terminal borders, the decorative prompt, and log
+layout stay local to the recipe. The initialization log is static fictional
+content. No shell commands run, and there are no network requests, authentication,
+or saved sessions.
 
-Copy the markup and import Button and Badge from `@darthcharles/greda`. Shared
-typography roles supply the monospace scale; layout and terminal decoration stay
-in the recipe. The initialization log is static fictional content. There are no
-shell commands, network requests, authentication or saved sessions.
+<Canvas of={RecipeStories.Default} />
+<Source code={recipeSource} language="tsx" />
 
-The layout stacks on small screens. Tab focuses the protocol link; Enter moves
-focus to the protocol section with a visible outline. Button's `asChild` preserves
-link semantics. The cursor and log stay still, including with reduced motion.
-Status text accompanies color so the signal remains readable without color alone.
-See individual component stories for disabled, loading and validation states.
+Copy the example into your application and replace its relative library import
+with `@darthcharles/greda`. Layout and decoration use Tailwind classes; there is
+no recipe stylesheet to copy. Shared typography roles set family, size, weight,
+line height, and tracking. Color utilities remain independent.
+
+## Responsive layout and interaction
+
+The introduction stacks below the medium breakpoint; protocol details stack
+below the small breakpoint. Header and footer content wrap on narrow screens.
+Status text accompanies color, and decorative terminal symbols are hidden from
+assistive technology.
+
+Tab focuses “Explore the protocol”; Enter moves focus to the protocol with a
+visible outline. Button retains anchor semantics through `asChild`; its loading
+and disabled props do not guarantee a disabled link. The cursor and log stay
+still, including with reduced motion. Arrow keys switch between Log and Settings;
+the settings fields are editable local examples and run no commands. See individual component stories for
+disabled, loading, and validation states.
+
+## Scoped themes
+
+Put `data-theme="matrix"` and `data-color-scheme="light"` or `"dark"` on the
+same wrapper. Apply surface, text, and font styles through the shared roles.
+For portaled DialogContent, SelectContent, and TooltipContent, pass an element
+inside that wrapper as `container` so the portal inherits the theme. A document
+theme naturally reaches portals mounted under body.
+
+Keep the theme's low-specificity selectors. Override base colors, typography,
+and shape tokens after importing the theme to customize the result. The theme
+provides variables; the consuming application controls page composition.

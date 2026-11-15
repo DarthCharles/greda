@@ -1,22 +1,21 @@
-/* Optional Comal theme: override generic base colors only. Greda owns
-   all surface, text, border, and component color assignments. Fonts and shape
-   are separate, optional customizations. */
+/* Optional Comal theme: Mexican glazed earthenware, cream slip, and fired clay.
+   Override generic base colors; Greda owns semantic role assignments. */
 :where([data-theme="comal"]) {
-  --base-white: 40 60% 96.078%;
-  --base-black: 37.5 10.256% 15.294%;
-  --base-gray-50: 42.857 100% 98.627%;
-  --base-gray-100: 36.923 37.143% 93.137%;
-  --base-gray-200: 38.824 27.869% 88.039%;
-  --base-gray-300: 33.103 19.205% 70.392%;
-  --base-gray-500: 41.25 7.273% 43.137%;
-  --base-gray-600: 30 15.476% 32.941%;
-  --base-gray-800: 30 16.216% 14.51%;
-  --base-gray-900: 30 17.857% 10.98%;
-  --base-primary: 9.5 55.556% 42.353%;
-  --base-primary-hover: 9.714 56.15% 36.667%;
-  --base-secondary: 25.385 56.522% 90.98%;
-  --base-tertiary: 85.714 29.167% 90.588%;
-  --base-accent: 85.714 29.167% 90.588%;
+  --base-white: 36.36364 50.76923% 87.25490%;
+  --base-black: 20.62500 37.20930% 16.86275%;
+  --base-gray-50: 38.57143 73.68421% 92.54902%;
+  --base-gray-100: 35.76923 49.05660% 79.21569%;
+  --base-gray-200: 32.57143 35.00000% 60.78431%;
+  --base-gray-300: 29.55224 36.21622% 63.72549%;
+  --base-gray-500: 26.31579 36.30573% 30.78431%;
+  --base-gray-600: 23.07692 38.80597% 26.27451%;
+  --base-gray-800: 20.00000 34.88372% 16.86275%;
+  --base-gray-900: 25.71429 41.17647% 10.00000%;
+  --base-primary: 19.42857 58.01105% 35.49020%;
+  --base-primary-hover: 18.57143 57.53425% 28.62745%;
+  --base-secondary: 94.00000 14.28571% 58.82353%;
+  --base-tertiary: 34.54545 48.52941% 73.33333%;
+  --base-accent: 94.00000 14.28571% 58.82353%;
   --base-destructive: 6.512 57.848% 43.725%;
   --font-sans: "DM Sans Variable", "DM Sans", sans-serif;
   --font-heading: "Fraunces Variable", "Fraunces", serif;
@@ -25,13 +24,14 @@
   --radius-lg: 1.5rem;
 }
 
-/* Complementary dark palette. Put both attributes on the theme boundary. */
+/* Complementary dark fired-clay and copper palette. Set both attributes on one boundary. */
 :where([data-theme="comal"][data-color-scheme="dark"]) {
-  --base-white: 34.286 51.22% 91.961%;
-  --base-primary: 15.625 75% 74.902%;
-  --base-primary-hover: 15.789 77.551% 80.784%;
-  --base-secondary: 22.5 24.49% 19.216%;
-  --base-tertiary: 108 14.286% 20.588%;
-  --base-accent: 108 14.286% 20.588%;
+  --base-white: 37.02128 62.66667% 85.29412%;
+  --base-primary: 30.79646 62.43094% 64.50980%;
+  --base-primary-hover: 31.51515 73.33333% 73.52941%;
+  --base-secondary: 99.00000 17.85714% 21.96078%;
+  --base-tertiary: 28.00000 35.71429% 16.47059%;
+  --base-accent: 99.00000 17.85714% 21.96078%;
+  --base-gray-600: 27.56757 29.36508% 49.41176%;
   --base-destructive: 7.174 79.31% 77.255%;
 }

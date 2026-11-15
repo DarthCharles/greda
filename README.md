@@ -159,8 +159,8 @@ compile them with your application’s Tailwind 4 setup.
 Comal is also available as an optional theme. Import
 `@darthcharles/greda/themes/comal.css` after the package stylesheet and set
 `data-theme="comal"` with `data-color-scheme="light"` or `"dark"` on the same
-element. It uses warm neutrals, terracotta actions and rounded corners. Its font
-stacks reference DM Sans and Fraunces; load those fonts in your application or
+element. Inspired by Mexican cazuelas de barro, it uses clay-colored neutrals,
+sienna-brown actions, amber surfaces, moss-green accents, and rounded corners. Its font stacks reference DM Sans and Fraunces; load those fonts in your application or
 override `--font-sans` and `--font-heading`. No fonts are downloaded or bundled
 by these themes. Theme exports can be imported together and selected by attribute.
 See the [Comal composition recipe](src/stories/Comal.mdx) for a complete fictional
@@ -173,6 +173,16 @@ green-black surfaces, or `"light"` for pale green surfaces. No font setup is
 required. Select **matrix** in Storybook to preview components, or see the
 [Matrix composition recipe](src/stories/Matrix.mdx) for a responsive console
 layout and Tailwind 4 setup.
+
+La Viuda combines cream surfaces, chile-red actions, soft green supporting
+surfaces, Geist typography, and modest corners. Import
+`@darthcharles/greda/themes/la-viuda.css` after the package stylesheet and set
+`data-theme="la-viuda"` with `data-color-scheme="light"` or `"dark"` on the same
+boundary. Load Geist in your application or supply `--font-geist-sans`; the theme
+also supports custom font overrides and falls back to Arial/Helvetica. Select
+**la-viuda** in Storybook to explore the theme and its Tokens palette, or see the
+[La Viuda composition recipe](src/stories/LaViuda.mdx) for a fictional ranch,
+font setup, and Tailwind 4 integration.
 
 Customization is optional. To change the default theme, import your own
 `theme.css` after the package stylesheet and override the base colors or other
@@ -210,7 +220,7 @@ Dark assignments are built in. Define base overrides on `:root` or a
 `data-theme` element; scoped themes automatically rebind the role variables.
 Consumers do not need to declare surface, text, or border tokens.
 `surface-tertiary` uses `--base-tertiary`: soft blue (`#eff6ff`) in Base and
-light green (`#e8eee0`) in Comal, with darker counterparts in dark mode.
+warm amber (`#dcc09a`) in Comal, with darker counterparts in dark mode.
 Override `--base-tertiary` to customize this surface independently of accent
 backgrounds and hover states.
 

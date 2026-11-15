@@ -1,0 +1,48 @@
+/* Optional La Viuda theme, based on the original application's base palette.
+   Greda owns role assignments; page layout and photography stay in the recipe. */
+:where([data-theme="la-viuda"]) {
+  --base-white: 34 100% 95%;
+  --base-black: 36 14% 14%;
+  --base-gray-50: 36 100% 98%;
+  --base-gray-100: 35 41% 90%;
+  --base-gray-200: 33 25% 78%;
+  --base-gray-300: 32 18% 66%;
+  --base-gray-500: 30 12% 40%;
+  --base-gray-600: 30 15% 32%;
+  --base-gray-800: 30 17% 20%;
+  --base-gray-900: 30 20% 12%;
+  --base-primary: 9 74% 41%;
+  --base-primary-hover: 9 76% 34%;
+  --base-secondary: 113 19% 88%;
+  --base-tertiary: 113 22% 94%;
+  --base-accent: 113 19% 88%;
+  --base-destructive: 0 72% 40%;
+  --font-sans: "Geist Variable", var(--font-geist-sans, "Geist"), Arial, Helvetica, sans-serif;
+  --font-heading: var(--font-sans);
+  --type-display-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  --type-display-weight: 550;
+  --type-display-leading: 1.04;
+  --type-display-tracking: -0.055em;
+  --type-title-size: clamp(1.5rem, 3vw, 2rem);
+  --type-title-weight: 550;
+  --type-title-leading: 1.15;
+  --type-title-tracking: -0.04em;
+  --type-body-leading: 1.7;
+  --radius: 0.5rem;
+  --radius-sm: 0.25rem;
+  --radius-lg: 0.75rem;
+  --focus-width: 3px;
+  --focus-offset: 4px;
+}
+
+/* Complement the original light palette; set both attributes on one boundary. */
+:where([data-theme="la-viuda"][data-color-scheme="dark"]) {
+  --base-white: 34 100% 95%;
+  --base-primary: 12.66055 78.41727% 72.74510%;
+  --base-primary-hover: 13.125 100% 81.17647%;
+  --base-secondary: 113 14% 20%;
+  --base-tertiary: 113 14% 16%;
+  --base-accent: 113 14% 20%;
+  --base-gray-600: 32 17% 50%;
+  --base-destructive: 6.94737 100% 81.37255%;
+}

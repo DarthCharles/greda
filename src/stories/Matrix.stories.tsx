@@ -1,5 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Badge, Button } from "../index";
+import {
+  Badge, Button, Input, Label,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Tabs, TabsContent, TabsList, TabsTrigger,
+} from "../index";
 
 const meta = {
   title: "Recipes/Matrix",
@@ -32,16 +36,40 @@ export const Default: Story = {
             <h2 id="matrix-terminal" className="m-0 text-label">boot_sequence.log</h2>
             <span className="text-caption text-muted">SIMULATION</span>
           </div>
-          <div className="space-y-5 p-5 text-label sm:p-6">
-            <p className="m-0 text-secondary"><span className="text-action" aria-hidden="true">$ </span>greda initialize</p>
-            <ul className="m-0 list-none space-y-3 p-0" aria-label="Initialization log">
-              <li><span className="text-action">[OK]</span> Tokens loaded</li>
-              <li><span className="text-action">[OK]</span> Components composed</li>
-              <li><span className="text-action">[OK]</span> Focus paths visible</li>
-              <li><span className="text-action">[OK]</span> Operator ready</li>
-            </ul>
-            <p className="m-0 border-0 border-t border-solid border-primary pt-5 text-action">Awaiting your next idea<span aria-hidden="true"> ▌</span></p>
-          </div>
+          <Tabs defaultValue="log" className="p-5 sm:p-6">
+            <TabsList aria-label="Console views">
+              <TabsTrigger value="log">Log</TabsTrigger>
+              <TabsTrigger value="settings">Settings</TabsTrigger>
+            </TabsList>
+            <TabsContent value="log" className="space-y-5 pt-4 text-label">
+              <p className="m-0 text-secondary"><span className="text-action" aria-hidden="true">$ </span>greda initialize</p>
+              <ul className="m-0 list-none space-y-3 p-0" aria-label="Initialization log">
+                <li><span className="text-action">[OK]</span> Tokens loaded</li>
+                <li><span className="text-action">[OK]</span> Components composed</li>
+                <li><span className="text-action">[OK]</span> Focus paths visible</li>
+                <li><span className="text-action">[OK]</span> Operator ready</li>
+              </ul>
+              <p className="m-0 border-0 border-t border-solid border-primary pt-5 text-action">Awaiting your next idea<span aria-hidden="true"> ▌</span></p>
+            </TabsContent>
+            <TabsContent value="settings" className="pt-4">
+              <div className="grid gap-5">
+                <div className="grid gap-2">
+                  <Label htmlFor="matrix-session-name">Session name</Label>
+                  <Input id="matrix-session-name" defaultValue="local-session" />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="matrix-output">Output</Label>
+                  <Select defaultValue="compact">
+                    <SelectTrigger id="matrix-output"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="compact">Compact</SelectItem>
+                      <SelectItem value="verbose">Verbose</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </section>
       </div>
       <section id="matrix-protocol" tabIndex={-1} className="border-0 border-t border-solid border-primary pt-6 focus:outline focus:outline-[length:var(--focus-width)] focus:outline-ring focus:outline-offset-[var(--focus-offset)]" aria-labelledby="matrix-protocol-title">

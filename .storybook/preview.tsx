@@ -4,9 +4,11 @@ import "../src/styles/tokens.css";
 import "./styles.css";
 import "@fontsource-variable/dm-sans";
 import "@fontsource-variable/fraunces";
+import "@fontsource-variable/geist";
 import "../src/styles/themes/comal.css";
 import "../src/styles/themes/cobalto.css";
 import "../src/styles/themes/matrix.css";
+import "../src/styles/themes/la-viuda.css";
 import "./preview.css";
 
 function Theme({
@@ -31,7 +33,7 @@ const preview: Preview = {
       description: "Consumer token overrides",
       toolbar: {
         icon: "paintbrush",
-        items: ["base", "comal", "cobalto", "matrix"],
+        items: ["base", "comal", "cobalto", "matrix", "la-viuda"],
         dynamicTitle: true,
       },
     },

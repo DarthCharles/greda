@@ -7,7 +7,7 @@ import { compile } from "tailwindcss-v4";
 export async function buildConsumerCss(
   candidates: string[],
   components = false,
-  theme?: "cobalto" | "comal" | "matrix"
+  theme?: "cobalto" | "comal" | "matrix" | "la-viuda"
 ) {
   const compiler = await compile(
     `@import "tailwindcss";

@@ -34,7 +34,8 @@
     "./tokens.css": "./dist/tokens.css",
     "./themes/cobalto.css": "./dist/themes/cobalto.css",
     "./themes/comal.css": "./dist/themes/comal.css",
-    "./themes/matrix.css": "./dist/themes/matrix.css"
+    "./themes/matrix.css": "./dist/themes/matrix.css",
+    "./themes/la-viuda.css": "./dist/themes/la-viuda.css"
   },
   "sideEffects": [
     "**/*.css"
@@ -82,6 +83,7 @@
     "@changesets/cli": "^2.29.0",
     "@fontsource-variable/dm-sans": "^5.3.0",
     "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource-variable/geist": "^5.3.0",
     "@playwright/test": "^1.56.0",
     "@storybook/addon-a11y": "^10.6.3",
     "@storybook/addon-docs": "^10.6.3",

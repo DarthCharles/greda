@@ -11,6 +11,7 @@ export default {
       "../src/stories/Comal.stories.tsx",
       "../src/stories/Cobalto.stories.tsx",
       "../src/stories/Matrix.stories.tsx",
+      "../src/stories/LaViuda.stories.tsx",
     ],
   },
 } satisfies Config;

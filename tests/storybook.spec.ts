@@ -25,7 +25,7 @@ for (const story of stories.filter((story) =>
   });
 }
 
-for (const theme of ["base", "comal", "cobalto", "matrix"]) {
+for (const theme of ["base", "comal", "cobalto", "matrix", "la-viuda"]) {
   for (const scheme of ["light", "dark"]) {
     test(`applies ${theme} ${scheme} tokens to controls and portals`, async ({
       page,
@@ -45,14 +45,16 @@ for (const theme of ["base", "comal", "cobalto", "matrix"]) {
       const button = dialog.getByRole("button", { name: "Done" });
       await expect(button).toHaveCSS(
         "background-color",
-        theme === "matrix"
+        theme === "la-viuda"
+          ? scheme === "dark" ? "rgb(240, 154, 131)" : "rgb(182, 50, 27)"
+          : theme === "matrix"
           ? scheme === "dark" ? "rgb(77, 255, 121)" : "rgb(9, 113, 44)"
           : theme === "cobalto"
           ? scheme === "dark" ? "rgb(143, 179, 255)" : "rgb(7, 61, 181)"
           : theme === "comal"
           ? scheme === "dark"
-            ? "rgb(239, 168, 143)"
-            : "rgb(168, 67, 48)"
+            ? "rgb(221, 166, 108)"
+            : "rgb(143, 72, 38)"
           : scheme === "dark"
           ? "rgb(110, 162, 247)"
           : "rgb(23, 84, 207)"
@@ -526,20 +528,20 @@ for (const layered of [false, true]) {
           await page.addStyleTag({ content: comal });
           const dark = scheme === "dark";
           const surface = theme === "comal"
-            ? dark ? "rgb(33, 28, 23)" : "rgb(251, 247, 239)"
+            ? dark ? "rgb(36, 24, 15)" : "rgb(239, 226, 206)"
             : dark ? "rgb(16, 20, 30)" : "rgb(255, 255, 255)";
           const text = theme === "comal"
-            ? dark ? "rgb(245, 236, 224)" : "rgb(43, 40, 35)"
+            ? dark ? "rgb(241, 223, 194)" : "rgb(59, 38, 27)"
             : dark ? "rgb(255, 255, 255)" : "rgb(15, 23, 41)";
           const border = theme === "comal"
-            ? dark ? "rgb(97, 84, 71)" : "rgb(233, 227, 216)"
+            ? dark ? "rgb(163, 123, 89)" : "rgb(190, 158, 120)"
             : dark ? "rgb(78, 87, 106)" : "rgb(202, 207, 216)";
           const roles = page.locator("#roles");
           await expect(roles).toHaveCSS("background-color", surface);
           await expect(roles).toHaveCSS("color", text);
           await expect(roles).toHaveCSS("border-color", border);
           const tertiary = theme === "comal"
-            ? dark ? "rgb(48, 60, 45)" : "rgb(232, 238, 224)"
+            ? dark ? "rgb(57, 41, 27)" : "rgb(220, 192, 154)"
             : dark ? "rgb(28, 41, 64)" : "rgb(239, 246, 255)";
           await expect(page.locator("#tertiary")).toHaveCSS("background-color", tertiary);
           await expect(page.locator("#tertiary")).toHaveCSS("color", text);
@@ -548,13 +550,13 @@ for (const layered of [false, true]) {
           );
           await expect(page.locator("#scoped-tertiary")).toHaveCSS("background-color", "rgb(0, 128, 0)");
           const action = theme === "comal"
-            ? dark ? "rgb(239, 168, 143)" : "rgb(168, 67, 48)"
+            ? dark ? "rgb(221, 166, 108)" : "rgb(143, 72, 38)"
             : dark ? "rgb(110, 162, 247)" : "rgb(23, 84, 207)";
           await expect(page.locator("#brand")).toHaveCSS("background-color", action);
           await expect(page.locator("#component")).toHaveCSS("background-color", action);
           const actionForeground = dark
-            ? theme === "comal" ? "rgb(43, 40, 35)" : "rgb(15, 23, 41)"
-            : theme === "comal" ? "rgb(251, 247, 239)" : "rgb(255, 255, 255)";
+            ? theme === "comal" ? "rgb(59, 38, 27)" : "rgb(15, 23, 41)"
+            : theme === "comal" ? "rgb(239, 226, 206)" : "rgb(255, 255, 255)";
           await expect(page.locator("#component")).toHaveCSS("color", actionForeground);
           await expect(page.locator("#inverse")).toHaveCSS("background-color", text);
           await expect(page.locator("#inverse")).toHaveCSS("color", actionForeground);
@@ -673,15 +675,16 @@ test("Comal's public CSS import compiles with Tailwind 4", async ({ page }) => {
   await page.setContent('<section data-theme="comal" data-color-scheme="light"><button class="comal-ui bg-primary">Continue</button></section>');
   await page.addStyleTag({ content: css });
   const button = page.getByRole("button", { name: "Continue" });
-  await expect(button).toHaveCSS("background-color", "rgb(168, 67, 48)");
+  await expect(button).toHaveCSS("background-color", "rgb(143, 72, 38)");
   await page.locator("section").evaluate((element) => { element.dataset.colorScheme = "dark"; });
-  await expect(button).toHaveCSS("background-color", "rgb(239, 168, 143)");
+  await expect(button).toHaveCSS("background-color", "rgb(221, 166, 108)");
 });
 
 for (const recipe of [
-  { theme: "cobalto", link: "Explorar el cuaderno", target: "#cobalto-details", width: "558px" },
-  { theme: "comal", link: "Conocer el taller", target: "#comal-session", width: "1100px" },
+  { theme: "cobalto", link: "Explore the notebook", target: "#cobalto-details", width: "558px" },
+  { theme: "comal", link: "Explore the workshop", target: "#comal-session", width: "1100px" },
   { theme: "matrix", link: "Explore the protocol", target: "#matrix-protocol", width: "1100px" },
+  { theme: "la-viuda", link: "Explore the ranch", target: "#la-viuda-ranch", width: "1100px" },
 ] as const) {
   for (const scheme of ["light", "dark"]) {
     for (const consumer of ["storybook", "tailwind4"]) {
@@ -850,7 +853,7 @@ test("popover inherits scoped portal tokens and fits a narrow viewport using pub
   });
   await trigger.click();
   const content = page.getByRole("dialog", { name: "Scoped details" });
-  await expect(content).toHaveCSS("background-color", "rgb(43, 37, 31)");
+  await expect(content).toHaveCSS("background-color", "rgb(58, 38, 28)");
   await expect(content).toHaveCSS("z-index", "60");
   await expect(content).toHaveAttribute("data-side", "top");
   await expect(content).toBeVisible();
@@ -927,5 +930,89 @@ test("combobox nested in a dialog dismisses its popup before the dialog", async 
   await expect(input).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+});
+
+for (const consumer of ["compiled", "tailwind4"]) {
+  test(`La Viuda keeps scoped surfaces and actions readable with ${consumer} CSS`, async ({ page }) => {
+    const css = consumer === "tailwind4"
+      ? await buildConsumerCss(["surface-primary", "text-primary", "bg-primary", "text-primary-foreground"], true, "la-viuda")
+      : readFileSync("dist/styles.css", "utf8") + readFileSync("dist/themes/la-viuda.css", "utf8");
+    await page.goto("/iframe.html");
+    await page.setContent(`
+      <div id="neutral" class="comal-ui surface-primary text-primary">Neutral</div>
+      <section id="brand" data-theme="la-viuda" data-color-scheme="light">
+        <div id="paper" class="comal-ui surface-primary text-primary">Paper</div>
+        <button class="comal-ui bg-primary text-primary-foreground">Continue</button>
+        <input aria-label="Native field" />
+      </section>`);
+    await page.addStyleTag({ content: css });
+    const paper = page.locator("#paper");
+    const action = page.getByRole("button", { name: "Continue" });
+    await expect(paper).toHaveCSS("background-color", "rgb(255, 244, 230)");
+    await expect(paper).toHaveCSS("color", "rgb(41, 37, 31)");
+    await expect(action).toHaveCSS("background-color", "rgb(182, 50, 27)");
+    await expect(action).toHaveCSS("color", "rgb(255, 244, 230)");
+    await page.locator("#brand").evaluate((element) => { element.dataset.colorScheme = "dark"; });
+    await expect(paper).toHaveCSS("background-color", "rgb(37, 31, 24)");
+    await expect(paper).toHaveCSS("color", "rgb(255, 244, 230)");
+    await expect(action).toHaveCSS("background-color", "rgb(240, 154, 131)");
+    await expect(action).toHaveCSS("color", "rgb(41, 37, 31)");
+    await expect(page.getByRole("textbox")).toHaveCSS("color-scheme", "dark");
+    await expect(page.locator("#neutral")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await page.addStyleTag({ content: '[data-theme="la-viuda"] { --base-primary: 0 0% 100%; }' });
+    await expect(action).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  });
+}
+
+test("Comal workshop preferences use keyboard selection and native checkbox state", async ({ page }) => {
+  await page.goto("/iframe.html?id=recipes-comal--default&viewMode=story");
+  const session = page.getByRole("combobox", { name: "Choose a session" });
+  await session.focus();
+  await page.keyboard.press("Space");
+  await expect(page.getByRole("option", { name: "Hand-building", exact: true })).toBeFocused();
+  await page.keyboard.press("End");
+  await expect(page.getByRole("option", { name: "Glazing and finishing", exact: true })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(session).toHaveText("Glazing and finishing");
+  const kit = page.getByRole("checkbox", { name: "Include a starter kit" });
+  await expect(kit).toBeChecked();
+  await kit.focus();
+  await page.keyboard.press("Space");
+  await expect(kit).not.toBeChecked();
+});
+
+test("Matrix console reveals its local settings through keyboard tabs", async ({ page }) => {
+  await page.goto("/iframe.html?id=recipes-matrix--default&viewMode=story");
+  await page.getByRole("tab", { name: "Log", exact: true }).focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByRole("tab", { name: "Settings", exact: true })).toBeFocused();
+  await page.getByRole("textbox", { name: "Session name" }).fill("night-session");
+  await page.getByRole("combobox", { name: "Output", exact: true }).click();
+  await page.getByRole("option", { name: "Verbose", exact: true }).click();
+  await expect(page.getByRole("combobox", { name: "Output", exact: true })).toHaveText("Verbose");
+  const results = await new AxeBuilder({ page }).include("article")
+    .withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+  expect(results.violations).toEqual([]);
+});
+
+test("ranch visit planner keeps its modal and selection inside the theme boundary", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/iframe.html?id=recipes-la-viuda--default&viewMode=story");
+  const trigger = page.getByRole("button", { name: "Plan your day" });
+  await trigger.click();
+  const dialog = page.getByRole("article").getByRole("dialog", { name: "A little time outdoors" });
+  await expect(dialog).toBeVisible();
+  const activity = dialog.getByRole("combobox", { name: "Activity", exact: true });
+  await expect(activity).toBeFocused();
+  await activity.click();
+  await page.getByRole("article").getByRole("option", { name: "Trail ride", exact: true }).click();
+  await expect(activity).toHaveText("Trail ride");
+  await dialog.getByRole("spinbutton", { name: "Guests", exact: true }).fill("3");
+  const results = await new AxeBuilder({ page }).include('[role="dialog"]')
+    .withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+  expect(results.violations).toEqual([]);
+  await page.keyboard.press("Escape");
+  await expect(dialog).toHaveCount(0);
   await expect(trigger).toBeFocused();
 });

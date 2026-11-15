@@ -22,7 +22,7 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
 | `src/styles/tailwind-theme.ts` | Shared token mappings for package CSS and Tailwind 4 consumers |
 | `scripts/tailwind-theme.mjs` | Generating Tailwind 4 theme directives for `tokens.css` |
 | `src/stories/` | Examples, documentation, and token catalog |
-| `src/styles/themes/` | Optional exported brand themes (Comal, Cobalto, and Matrix) |
+| `src/styles/themes/` | Optional exported brand themes (Comal, Cobalto, Matrix, and La Viuda) |
 | `.storybook/` | Configuration, catalog styles, and example font loading |
 | `src/components/behavior.test.tsx` | Interaction tests with Testing Library |
 | `tests/storybook.spec.ts` | Browser, axe, theme, and package CSS tests |
@@ -76,7 +76,7 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
   including hover, focus, and focus-visible variants. Complete typography roles
   are also shipped through the shared mapping; keep their class merging and
   Tailwind 4 utilities in sync. Storybook additionally scans
-  the Comal, Cobalto, and Matrix recipe stories through the explicit `@config` in
+  the Comal, Cobalto, Matrix, and La Viuda recipe stories through the explicit `@config` in
   `.storybook/styles.css`, using the shared PostCSS transforms.
   Other catalog-only styles belong in Storybook CSS; a class used only in a story is not guaranteed to appear in the
   published CSS.
@@ -108,6 +108,15 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
 
 ## Accessibility and documentation
 
+- Write all examples, recipe content, and documentation in English. Preserve
+  public theme names and identifiers.
+- Keep recipe documentation consistent: a theme-focused overview, Install the
+  theme and fonts, Compose the page, Responsive layout and interaction, and
+  Scoped themes. Describe colors, typography, shape, and visual emphasis in the
+  overview; introduce the fictional site only as a composition example. Keep
+  example layouts distinct. Color palettes belong in the Tokens catalog; do not
+  repeat reference palettes in recipe guides. When tables are needed, use
+  semantic HTML tables in MDX, as in the existing component guides.
 - Use semantic elements and accessible names. Associate labels with controls and
   errors with `aria-invalid` and `aria-describedby`. Icon buttons need an
   accessible name.

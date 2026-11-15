@@ -347,7 +347,7 @@ export function TokenCatalog({ page, theme, scheme }: {
         <p className="tokens-eyebrow">Design tokens</p>
         <h1>{current.title}</h1>
         <p>{current.description}</p>
-        <p className="tokens-theme">{theme === "cobalto" ? "Cobalto" : theme === "comal" ? "Comal" : "Base"} · {scheme === "dark" ? "Dark" : "Light"}</p>
+        <p className="tokens-theme">{theme === "la-viuda" ? "La Viuda" : theme === "matrix" ? "Matrix" : theme === "cobalto" ? "Cobalto" : theme === "comal" ? "Comal" : "Base"} · {scheme === "dark" ? "Dark" : "Light"}</p>
       </header>
       {page === "overview" ? (
         <>
