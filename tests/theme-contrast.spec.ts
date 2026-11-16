@@ -66,7 +66,10 @@ for (const theme of ["base", "comal", "cobalto", "matrix", "la-viuda"] as const)
           ...(["default", "destructive", "secondary"] as const).flatMap((variant) => [
             createElement(Button, { key: `button-${variant}`, variant, ...textAttributes }, `${variant} button`),
             createElement(Badge, { key: `badge-${variant}`, variant, ...textAttributes }, `${variant} badge`),
-          ])
+          ]),
+          createElement(Button, {
+            variant: "ghost", ...textAttributes, ...{ "data-feedback": "" },
+          }, "Context action")
         ));
         const markup = surfaces.map((surface) => `<section class="comal-ui ${surface} text-primary" style="padding: 16px">
           ${textRoles.map((role) => `<p class="${role}" data-contrast="text">${role}</p>`).join("")}
@@ -86,6 +89,19 @@ for (const theme of ["base", "comal", "cobalto", "matrix", "la-viuda"] as const)
         for (const control of await page.locator("[data-hover]").all()) {
           await control.hover();
           measurements.push(...(await measureColors(control)).map((sample) => ({ ...sample, state: "hover" })));
+          if (await control.getAttribute("data-feedback") !== null) {
+            const feedback = await control.evaluate((element) => {
+              const surface = element.closest("section");
+              return {
+                check: surface?.classList.contains("surface-tertiary") || surface?.classList.contains("bg-secondary"),
+                background: getComputedStyle(element).backgroundColor,
+                surrounding: surface ? getComputedStyle(surface).backgroundColor : "",
+              };
+            });
+            if (feedback.check) {
+              expect.soft(feedback.background, `${theme} ${scheme}: context action hover must remain visible on its supporting surface`).not.toBe(feedback.surrounding);
+            }
+          }
         }
         await test.info().attach("contrast-measurements", {
           body: JSON.stringify({ theme, scheme, consumer, measurements }, null, 2),

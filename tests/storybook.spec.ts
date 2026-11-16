@@ -640,7 +640,7 @@ for (const consumer of ["compiled", "tailwind4"]) {
     await expect(page.locator("#neutral")).toHaveCSS("background-color", "rgb(255, 255, 255)");
     await expect(page.locator("#paper")).toHaveCSS("background-color", "rgb(249, 248, 242)");
     await expect(page.locator("#paper")).toHaveCSS("color", "rgb(7, 61, 181)");
-    await expect(page.locator("#ink")).toHaveCSS("color", "rgb(67, 94, 144)");
+    await expect(page.locator("#ink")).toHaveCSS("color", "rgb(60, 84, 129)");
     await expect(page.getByRole("button", { name: "Control" })).toHaveCSS("border-radius", "0px");
     await expect(page.locator("#paper")).toHaveCSS("font-family", "Arial, Helvetica, sans-serif");
     await page.locator("#cobalto").evaluate((element) => { element.dataset.colorScheme = "dark"; });

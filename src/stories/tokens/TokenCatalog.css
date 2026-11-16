@@ -327,6 +327,13 @@
   padding: 1.25rem;
   border-radius: var(--radius);
 }
+.tokens-role-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
 .tokens-role-examples h2 {
   font-family: var(--font-heading);
   font-size: var(--font-size-lg);

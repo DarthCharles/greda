@@ -48,7 +48,9 @@ The contrast matrix has 20 cases: five themes × two schemes × two CSS consumer
 layer). It checks real computed styles and composites translucent fills over
 their ancestors. Canvas resolves browser CSS colors, including the modern color
 formats emitted by Tailwind 4; an RGB-only string parser cannot measure those
-reliably. Assertions use unrounded ratios.
+reliably. Assertions use unrounded ratios. A ghost Button also checks that its hover fill
+differs from the surrounding tertiary panel or secondary-control surface. This
+prevents complete feedback collisions; it does not quantify perceived separation.
 
 | Contract | Threshold and coverage |
 | --- | --- |
@@ -76,16 +78,25 @@ role previews plus the corresponding recipe and interactive components:
 1. Confirm brand identity, readable supporting surfaces, and the light neutral
    scale's progression. Dark palettes explicitly reassign neutral steps to text
    and border roles; their step numbers are not a dark tonal ramp.
-2. Inspect buttons and badges at rest and on hover. Check error text, placeholder
+2. Review visual hierarchy separately from text contrast. Compare a tertiary
+   panel, a secondary control, and a hover/focus fill in context. The Tokens
+   role preview includes real controls on the tertiary surface. Hover the context
+   action to compare its fill, then Tab to inspect its focus indicator. The
+   interaction fill should be perceptible without competing with the primary
+   action. Compare secondary controls and interaction fills side by
+   side too. Related hues are appropriate; identical or nearly identical fills
+   can flatten the hierarchy. Record this visual judgment separately from WCAG
+   contrast results; there is no additional WCAG ratio asserted for these roles.
+3. Inspect buttons and badges at rest and on hover. Check error text, placeholder
    text, checked/indeterminate indicators, and selected/disabled states. Inactive
    controls have contrast exemptions; enabled controls do not.
-3. Tab through fields, buttons, selects, dialogs, and popovers. Check visible
+4. Tab through fields, buttons, selects, dialogs, and popovers. Check visible
    focus, focus restoration, Escape handling, and portal colors inside a scoped
    theme. The color matrix measures text and field borders, not focus geometry
    or every icon.
-4. Check narrow viewports, zoom, text resizing, and reduced motion. Verify that
+5. Check narrow viewports, zoom, text resizing, and reduced motion. Verify that
    errors and state changes remain understandable without color alone.
-5. Review semantic token assignments, dark overrides, CSS import order, and
+6. Review semantic token assignments, dark overrides, CSS import order, and
    documentation. Preserve low-specificity selectors and theme/scheme attributes
    on the same boundary. Custom consumer token overrides need their own review.
 
@@ -130,3 +141,24 @@ themes; buttons retain hover feedback.
 Visual review also found that the Matrix recipe forced dark mode even when light
 was requested. The recipe now follows the selected scheme, and recipe browser
 checks assert the effective color scheme before evaluating layout and focus.
+
+
+## Visual hierarchy refinement
+
+The first contrast audit preserved readable labels but missed role collisions:
+Comal used the same fill for tertiary panels and context highlights; Cobalto
+used the same fill for secondary controls and context highlights. A ghost
+Button could therefore lose its hover fill on those surrounding surfaces.
+The added browser check reproduces both collisions in light and dark modes.
+
+Comal now reserves sage/olive for tertiary panels, uses warm neutral secondary
+controls, and uses clay-tinted interaction fills. Cobalto keeps its blue identity
+with stronger interaction fills than its soft secondary controls; supporting
+text, errors, and borders were adjusted to retain contrast on that stronger fill.
+Base, Matrix, and La Viuda retain their existing distinct tonal steps.
+
+The current matrix includes ghost Button labels and hover states as well as
+its earlier checks: 20 cases and 2,540 contrast measurements. The preceding
+recorded minimums describe the earlier audit snapshot. Visual review remains
+necessary to judge emphasis and subtle differences that a color inequality
+assertion cannot establish.

@@ -160,8 +160,8 @@ Comal is also available as an optional theme. Import
 `@darthcharles/greda/themes/comal.css` after the package stylesheet and set
 `data-theme="comal"` with `data-color-scheme="light"` or `"dark"` on the same
 element. Inspired by Mexican cazuelas de barro, it uses clay-colored neutrals,
-terracotta actions, pale sage tertiary surfaces, soft sage secondary controls, and rounded
-corners. Its standard text roles and field borders support the primary, secondary,
+terracotta actions, pale sage tertiary panels, warm neutral secondary controls,
+clay-tinted interaction fills, and rounded corners. Its standard text roles and field borders support the primary, secondary,
 raised, tertiary, accent, and secondary-control surfaces in both color schemes.
 Badge backgrounds stay stable on hover; buttons retain their hover feedback.
 Its font stacks reference DM Sans and Fraunces; load those fonts in your application or

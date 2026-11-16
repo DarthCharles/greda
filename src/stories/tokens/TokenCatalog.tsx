@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { tokens, tokenPages, tokenPageHref, type DesignToken, type TokenPage } from "./catalog";
 import "./TokenCatalog.css";
+import { Button } from "../../index";
 import { typographyRoles } from "../../styles/tailwind-theme";
 
 function styleFor(token: DesignToken): CSSProperties {
@@ -225,7 +226,12 @@ function RoleExamples() {
       </div>
       <div className="comal-ui surface-tertiary text-primary border border-secondary">
         <h2>Tertiary surface</h2>
-        <p>A separate surface color, independent of accents.</p>
+        <p>A supporting panel, with separate control and interaction fills.</p>
+        <div className="tokens-role-actions">
+          <Button size="sm">Primary</Button>
+          <Button size="sm" variant="secondary">Secondary</Button>
+          <Button size="sm" variant="ghost">Context action</Button>
+        </div>
         <code>surface-tertiary · text-primary</code>
       </div>
       <div className="comal-ui surface-inverse text-inverse border border-inverse">
