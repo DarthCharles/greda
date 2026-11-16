@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button, buttonVariants } from "../index";
+import { Plus } from "../icons";
 
 const meta = {
   title: "Components/Button",
@@ -45,7 +46,7 @@ export const Sizes: Story = {
       <Button>Medium</Button>
       <Button size="lg">Large</Button>
       <Button size="icon" aria-label="Add item">
-        +
+        <Plus aria-hidden="true" />
       </Button>
     </div>
   ),

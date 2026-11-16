@@ -5,7 +5,11 @@ export default defineConfig({
   plugins: [react()],
   build: {
     lib: {
-      entry: { index: "src/index.ts", utils: "src/lib/utils.ts" },
+      entry: {
+        index: "src/index.ts",
+        utils: "src/lib/utils.ts",
+        icons: "src/icons.ts",
+      },
       formats: ["es"],
     },
     rollupOptions: {

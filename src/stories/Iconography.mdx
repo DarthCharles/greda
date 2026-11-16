@@ -1,0 +1,98 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as IconographyStories from "./Iconography.stories";
+
+<Meta of={IconographyStories} name="Usage guide" />
+
+# Iconography
+
+Greda uses Lucide's outline icons. Import icons and their TypeScript types from
+`@darthcharles/greda/icons`; installing Greda also installs the Lucide dependency.
+The entry point preserves Lucide's named exports, SVG props, and refs.
+
+## Import icons
+
+```tsx
+import { Search, type LucideIcon, type LucideProps } from "@darthcharles/greda/icons";
+
+const iconProps = { size: 20, strokeWidth: 2 } satisfies LucideProps;
+const SearchIcon: LucideIcon = Search;
+
+export function SearchHint() {
+  return (
+    <span>
+      <SearchIcon {...iconProps} aria-hidden="true" /> Search by name
+    </span>
+  );
+}
+```
+
+Use named imports so your bundler can remove unused icons. Standalone icons do
+not require Greda's stylesheet. Import `@darthcharles/greda/styles.css` once when
+using Greda components such as Button.
+
+## Common icons
+
+Use familiar symbols consistently: Plus for adding, Search for finding, and X
+for closing. Pair less familiar symbols with visible text.
+
+<Canvas of={IconographyStories.Default} />
+
+Browse the [full Lucide catalog](https://lucide.dev/icons/) for more icons, then
+check that your installed Greda version exports the icon you choose. The latest
+Lucide catalog can include icons added after Greda's installed dependency version.
+
+## Size, stroke, and color
+
+Standalone icons default to 24px with a stroke width of 2. Use `size` to match the
+surrounding text or control and `strokeWidth` to adjust visual weight. Keep stroke
+width consistent among icons in the same context. The `absoluteStrokeWidth` prop
+keeps the stroke width constant when scaling an icon.
+
+<Canvas of={IconographyStories.SizeAndStroke} />
+
+Icons inherit `currentColor`. Put the color on the surrounding text or control
+so the icon follows the selected theme and disabled state. Use a semantic text
+color for a standalone icon rather than a fixed brand color.
+
+```tsx
+<span className="text-secondary">
+  <CircleCheck size={20} aria-hidden="true" /> Changes saved
+</span>
+```
+
+## Buttons and text
+
+Greda buttons size their SVG icons to 16px and provide spacing between the icon
+and label. Place the icon before or after the text to suit the action. Use
+`size="icon"` for a button that contains only an icon.
+
+<Canvas of={IconographyStories.InContext} />
+
+```tsx
+import { Button } from "@darthcharles/greda";
+import { Download, Search } from "@darthcharles/greda/icons";
+
+<Button>
+  <Download aria-hidden="true" /> Download
+</Button>
+
+<Button size="icon" variant="outline" aria-label="Search">
+  <Search aria-hidden="true" />
+</Button>
+```
+
+## Accessibility
+
+Hide decorative icons with `aria-hidden="true"` when nearby text already explains
+their meaning. Give icon-only buttons an accessible name on the button with
+`aria-label`; a tooltip can supplement that name.
+
+When a standalone icon conveys information by itself, provide an accessible name:
+
+```tsx
+<CircleCheck role="img" aria-label="Saved" />
+```
+
+Do not rely on color or an icon alone for critical errors. Include visible text
+that describes the problem. Icons do not add keyboard behavior; compose them
+inside native links or Greda buttons for interactive actions.

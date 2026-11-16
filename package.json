@@ -30,6 +30,10 @@
       "types": "./dist/lib/utils.d.ts",
       "import": "./dist/utils.js"
     },
+    "./icons": {
+      "types": "./dist/icons.d.ts",
+      "import": "./dist/icons.js"
+    },
     "./styles.css": "./dist/styles.css",
     "./tokens.css": "./dist/tokens.css",
     "./themes/cobalto.css": "./dist/themes/cobalto.css",

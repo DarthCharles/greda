@@ -45,6 +45,37 @@ Greda and application markup share unprefixed utility classes such as
 `className` to override component defaults. See the introduction guide for supported
 utilities and migration from `ds-*` classes.
 
+## Icons
+
+Import Lucide icons and types through Greda's dedicated entry point. No separate
+`lucide-react` installation is required:
+
+```tsx
+import { Button } from "@darthcharles/greda";
+import { Plus, type LucideProps } from "@darthcharles/greda/icons";
+
+const iconProps = { strokeWidth: 1.5 } satisfies LucideProps;
+
+export function AddButton() {
+  return (
+    <Button size="icon" aria-label="Add item">
+      <Plus {...iconProps} aria-hidden="true" />
+    </Button>
+  );
+}
+```
+
+This entry point re-exports the installed Lucide API, including `LucideIcon` and
+`LucideProps`, with the original SVG props and refs. Use named icon imports so
+your bundler can remove unused icons. Icons inherit the current text color;
+standalone icons accept `size`, `color`, and `strokeWidth`. Greda buttons size
+their SVG icons automatically. Standalone icons do not require Greda's CSS.
+Give icon-only controls an accessible name and hide decorative icons with
+`aria-hidden="true"`.
+
+See the [Iconography guide](src/stories/Iconography.mdx) for common icons, sizing,
+stroke weight, color inheritance, and accessible composition examples.
+
 ## Toggle buttons
 
 For toggle buttons, set `aria-pressed` to the current selection state and
