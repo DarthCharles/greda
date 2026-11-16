@@ -5,9 +5,9 @@
   --base-black: 222 47% 11%;
   --base-gray-50: 220 15% 96%;
   --base-gray-100: 220 20% 94%;
-  --base-gray-200: 220 15% 82%;
-  --base-gray-300: 220 15% 72%;
-  --base-gray-500: 220 10% 42%;
+  --base-gray-200: 220 15% 50%;
+  --base-gray-300: 220 15% 47%;
+  --base-gray-500: 220 10% 39.5%;
   --base-gray-600: 220 15% 36%;
   --base-gray-800: 222 20% 18%;
   --base-gray-900: 222 30% 9%;
@@ -148,12 +148,14 @@
 /* Opt in independently of the consumer's brand theme. */
 :where([data-color-scheme="dark"]) {
   color-scheme: dark;
-  --base-primary: 217 90% 70%;
+  --base-gray-300: 220 15% 72%;
+  --base-gray-600: 220 15% 59%;
+  --base-primary: 217 90% 74.5%;
   --base-primary-hover: 217 90% 78%;
   --base-secondary: 222 20% 22%;
   --base-tertiary: 218 40% 18%;
   --base-accent: 222 24% 28%;
-  --base-destructive: 0 80% 72%;
+  --base-destructive: 0 80% 77%;
   --surface-primary: var(--base-gray-900);
   --surface-secondary: var(--base-gray-800);
   --surface-raised: var(--base-gray-800);

@@ -7,8 +7,8 @@
   --base-black: 221.37931 92.55319% 36.86275%;
   --base-gray-50: 48 100% 99.01961%;
   --base-gray-100: 218.70968 49.20635% 87.64706%;
-  --base-gray-200: 221.25 32% 83%;
-  --base-gray-300: 218.18182 45.83333% 81.17647%;
+  --base-gray-200: 221.25 32% 52%;
+  --base-gray-300: 218.18182 45.83333% 49%;
   --base-gray-500: 218.96104 36.49289% 41.37255%; /* #435e90 */
   --base-gray-600: 218.96104 36.49289% 41.37255%;
   --base-gray-800: 218.64407 56.19048% 20.58824%;
@@ -16,7 +16,7 @@
   --base-secondary: 218.70968 49.20635% 87.64706%;
   --base-tertiary: 210 15% 92.15686%;
   --base-accent: 218.70968 49.20635% 87.64706%;
-  --base-destructive: 0 72% 43%;
+  --base-destructive: 0 72% 41.5%;
   --font-sans: Arial, Helvetica, sans-serif;
   --font-heading: var(--font-sans);
   --type-display-size: clamp(2.2rem, 8.7vw, 3.75rem);
@@ -42,6 +42,7 @@
 
 /* Put both attributes on the same theme boundary, including scoped themes. */
 :where([data-theme="cobalto"][data-color-scheme="dark"]) {
+  --base-gray-300: 218.18182 45.83333% 81.17647%;
   --base-black: 219.42857 66.03774% 10.39216%;
   --base-primary: 220.71429 100% 78.03922%;
   --base-primary-hover: 219.49367 100% 84.50980%;

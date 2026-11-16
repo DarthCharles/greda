@@ -46,7 +46,7 @@ for (const theme of ["base", "comal", "cobalto", "matrix", "la-viuda"]) {
       await expect(button).toHaveCSS(
         "background-color",
         theme === "la-viuda"
-          ? scheme === "dark" ? "rgb(240, 154, 131)" : "rgb(182, 50, 27)"
+          ? scheme === "dark" ? "rgb(243, 173, 155)" : "rgb(169, 47, 25)"
           : theme === "matrix"
           ? scheme === "dark" ? "rgb(77, 255, 121)" : "rgb(9, 113, 44)"
           : theme === "cobalto"
@@ -54,9 +54,9 @@ for (const theme of ["base", "comal", "cobalto", "matrix", "la-viuda"]) {
           : theme === "comal"
           ? scheme === "dark"
             ? "rgb(221, 166, 108)"
-            : "rgb(165, 71, 31)"
+            : "rgb(133, 58, 25)"
           : scheme === "dark"
-          ? "rgb(110, 162, 247)"
+          ? "rgb(131, 176, 248)"
           : "rgb(23, 84, 207)"
       );
       const results = await new AxeBuilder({ page })
@@ -282,7 +282,7 @@ test("Tailwind 4 consumers get token utilities from one CSS import", async ({
   const panel = page.locator("#panel");
   await expect(panel).toHaveCSS("background-color", "rgb(23, 84, 207)");
   await expect(panel).toHaveCSS("color", "rgb(255, 255, 255)");
-  await expect(panel).toHaveCSS("border-color", "rgb(202, 207, 216)");
+  await expect(panel).toHaveCSS("border-color", "rgb(108, 121, 147)");
   await expect(panel).toHaveCSS("border-width", "1px");
   for (const property of ["padding", "margin", "gap"]) {
     await expect(panel).toHaveCSS(property, "16px");
@@ -303,7 +303,7 @@ test("Tailwind 4 consumers get token utilities from one CSS import", async ({
   await page.evaluate(() => {
     document.documentElement.dataset.colorScheme = "dark";
   });
-  await expect(panel).toHaveCSS("background-color", "rgb(110, 162, 247)");
+  await expect(panel).toHaveCSS("background-color", "rgb(131, 176, 248)");
   await expect(page.locator("#state")).toHaveCSS(
     "background-color",
     "rgb(37, 42, 55)"
@@ -537,14 +537,14 @@ for (const layered of [false, true]) {
             ? dark ? "rgb(241, 223, 194)" : "rgb(59, 38, 27)"
             : dark ? "rgb(255, 255, 255)" : "rgb(15, 23, 41)";
           const border = theme === "comal"
-            ? dark ? "rgb(163, 123, 89)" : "rgb(190, 158, 120)"
-            : dark ? "rgb(78, 87, 106)" : "rgb(202, 207, 216)";
+            ? dark ? "rgb(176, 140, 110)" : "rgb(127, 97, 61)"
+            : dark ? "rgb(135, 145, 166)" : "rgb(108, 121, 147)";
           const roles = page.locator("#roles");
           await expect(roles).toHaveCSS("background-color", surface);
           await expect(roles).toHaveCSS("color", text);
           await expect(roles).toHaveCSS("border-color", border);
           const tertiary = theme === "comal"
-            ? dark ? "rgb(73, 90, 61)" : "rgb(206, 216, 196)"
+            ? dark ? "rgb(57, 70, 47)" : "rgb(206, 216, 196)"
             : dark ? "rgb(28, 41, 64)" : "rgb(239, 246, 255)";
           await expect(page.locator("#tertiary")).toHaveCSS("background-color", tertiary);
           await expect(page.locator("#tertiary")).toHaveCSS("color", text);
@@ -564,8 +564,8 @@ for (const layered of [false, true]) {
           expect(accent).not.toBe(secondary);
           await expect(page.locator("#scoped-tertiary")).toHaveCSS("background-color", "rgb(0, 128, 0)");
           const action = theme === "comal"
-            ? dark ? "rgb(221, 166, 108)" : "rgb(165, 71, 31)"
-            : dark ? "rgb(110, 162, 247)" : "rgb(23, 84, 207)";
+            ? dark ? "rgb(221, 166, 108)" : "rgb(133, 58, 25)"
+            : dark ? "rgb(131, 176, 248)" : "rgb(23, 84, 207)";
           await expect(page.locator("#brand")).toHaveCSS("background-color", action);
           await expect(page.locator("#component")).toHaveCSS("background-color", action);
           const actionForeground = dark
@@ -609,7 +609,7 @@ test("Tailwind 4 category roles support opacity, interaction, and responsive var
   await page.addStyleTag({ content: css });
   await expect(page.locator("#alpha")).toHaveCSS("background-color", "rgba(255, 255, 255, 0.5)");
   await expect(page.locator("#alpha")).toHaveCSS("color", "rgba(15, 23, 41, 0.5)");
-  await expect(page.locator("#alpha")).toHaveCSS("border-color", "rgba(202, 207, 216, 0.5)");
+  await expect(page.locator("#alpha")).toHaveCSS("border-color", "rgba(108, 121, 147, 0.5)");
   await expect(page.locator("#arbitrary-alpha")).toHaveCSS("background-color", "rgba(255, 255, 255, 0.25)");
   await page.locator("#state").hover();
   await expect(page.locator("#state")).toHaveCSS("background-color", "rgb(237, 239, 243)");
@@ -692,9 +692,9 @@ test("Comal's public CSS import preserves readable primary and hover states with
   for (const scheme of ["light", "dark"]) {
     await page.mouse.move(1000, 700);
     await page.locator("section").evaluate((element, value) => { element.dataset.colorScheme = value; }, scheme);
-    await expect(button).toHaveCSS("background-color", scheme === "light" ? "rgb(165, 71, 31)" : "rgb(221, 166, 108)");
+    await expect(button).toHaveCSS("background-color", scheme === "light" ? "rgb(133, 58, 25)" : "rgb(221, 166, 108)");
     await button.hover();
-    await expect(button).toHaveCSS("background-color", scheme === "light" ? "rgb(150, 65, 29)" : "rgb(237, 190, 138)");
+    await expect(button).toHaveCSS("background-color", scheme === "light" ? "rgb(120, 52, 23)" : "rgb(237, 190, 138)");
     const results = await new AxeBuilder({ page })
       .include("section")
       .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
@@ -730,6 +730,7 @@ for (const recipe of [
         }
         const article = page.getByRole("article");
         await expect(article).toHaveCSS("max-width", recipe.width);
+        await expect(article).toHaveCSS("color-scheme", scheme);
         await page.setViewportSize({ width: 1100, height: 900 });
         expect(await article.getByRole("heading", { level: 1 }).evaluate(
           (element) => parseFloat(getComputedStyle(element).fontSize)
@@ -982,12 +983,12 @@ for (const consumer of ["compiled", "tailwind4"]) {
     const action = page.getByRole("button", { name: "Continue" });
     await expect(paper).toHaveCSS("background-color", "rgb(255, 244, 230)");
     await expect(paper).toHaveCSS("color", "rgb(41, 37, 31)");
-    await expect(action).toHaveCSS("background-color", "rgb(182, 50, 27)");
+    await expect(action).toHaveCSS("background-color", "rgb(169, 47, 25)");
     await expect(action).toHaveCSS("color", "rgb(255, 244, 230)");
     await page.locator("#brand").evaluate((element) => { element.dataset.colorScheme = "dark"; });
     await expect(paper).toHaveCSS("background-color", "rgb(37, 31, 24)");
     await expect(paper).toHaveCSS("color", "rgb(255, 244, 230)");
-    await expect(action).toHaveCSS("background-color", "rgb(240, 154, 131)");
+    await expect(action).toHaveCSS("background-color", "rgb(243, 173, 155)");
     await expect(action).toHaveCSS("color", "rgb(41, 37, 31)");
     await expect(page.getByRole("textbox")).toHaveCSS("color-scheme", "dark");
     await expect(page.locator("#neutral")).toHaveCSS("background-color", "rgb(255, 255, 255)");

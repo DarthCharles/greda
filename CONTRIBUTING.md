@@ -11,7 +11,7 @@ npm run storybook
 ```
 
 Storybook runs at **http://localhost:6006** with component examples, automatic
-prop documentation, an axe panel, and Base/Comal/Cobalto and light/dark toolbar options.
+prop documentation, an axe panel, and Base, Comal, Cobalto, Matrix, and La Viuda themes with light/dark toolbar options.
 
 ### Validation
 
@@ -42,6 +42,13 @@ Google Chrome; CI installs Playwright Chromium.
 | `npm run validate:package` | Validate the built package |
 | `npm run build-storybook` | Build the catalog into `storybook-static/` |
 | `npm pack` | Build and create a local package archive |
+
+### Theme accessibility audit
+
+Run `npm run audit:themes` for fresh builds and the browser suite, including
+contrast checks for every theme in both schemes with package and Tailwind 4 CSS.
+The [theme audit runbook](docs/theme-audit.md) explains coverage, report files,
+manual review, and the recorded findings. These checks also run in normal CI.
 
 ### Hosting on Netlify
 

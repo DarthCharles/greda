@@ -161,7 +161,10 @@ Comal is also available as an optional theme. Import
 `data-theme="comal"` with `data-color-scheme="light"` or `"dark"` on the same
 element. Inspired by Mexican cazuelas de barro, it uses clay-colored neutrals,
 terracotta actions, pale sage tertiary surfaces, soft sage secondary controls, and rounded
-corners. Its font stacks reference DM Sans and Fraunces; load those fonts in your application or
+corners. Its standard text roles and field borders support the primary, secondary,
+raised, tertiary, accent, and secondary-control surfaces in both color schemes.
+Badge backgrounds stay stable on hover; buttons retain their hover feedback.
+Its font stacks reference DM Sans and Fraunces; load those fonts in your application or
 override `--font-sans` and `--font-heading`. No fonts are downloaded or bundled
 by these themes. Theme exports can be imported together and selected by attribute.
 See the [Comal composition recipe](src/stories/Comal.mdx) for a complete fictional
@@ -267,6 +270,9 @@ npm run storybook
 
 Storybook runs at [localhost:6006](http://localhost:6006). Run `npm run check`
 for project validation, then `npm run test:browser` for Playwright checks.
+
+For repeatable palette, contrast, and theme validation, see the
+[theme audit runbook](docs/theme-audit.md) and run `npm run audit:themes`.
 
 See [Contributing](CONTRIBUTING.md) for build commands, Netlify hosting, upstream
 sources, and release guidance.

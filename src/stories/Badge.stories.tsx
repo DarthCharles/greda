@@ -9,7 +9,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Noninteractive status text. No keyboard, disabled, or loading behavior; convey status using text as well as color. Override tokens or className for sizing. The toolbar previews theme overrides and dark mode.",
+          "Noninteractive status text with a stable background on hover. No keyboard, disabled, or loading behavior; convey status using text as well as color. Override tokens or className for sizing. The toolbar previews theme overrides and dark mode.",
       },
     },
   },

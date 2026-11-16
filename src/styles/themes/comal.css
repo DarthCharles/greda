@@ -5,18 +5,18 @@
   --base-black: 20.62500 37.20930% 16.86275%;
   --base-gray-50: 38.57143 73.68421% 92.54902%;
   --base-gray-100: 35.76923 49.05660% 79.21569%;
-  --base-gray-200: 32.57143 35.00000% 60.78431%;
-  --base-gray-300: 29.55224 36.21622% 63.72549%;
-  --base-gray-500: 26.31579 36.30573% 30.78431%;
+  --base-gray-200: 32.57143 35% 37%;
+  --base-gray-300: 29.55224 36% 35%;
+  --base-gray-500: 26.31579 36.30573% 30%;
   --base-gray-600: 23.07692 38.80597% 26.27451%;
   --base-gray-800: 20.00000 34.88372% 16.86275%;
   --base-gray-900: 25.71429 41.17647% 10.00000%;
-  --base-primary: 18 68% 38.5%;
-  --base-primary-hover: 18 68% 35%;
+  --base-primary: 18 68% 31%;
+  --base-primary-hover: 18 68% 28%;
   --base-secondary: 94 18% 74%;
   --base-tertiary: 90.00000 20.40816% 80.78431%;
   --base-accent: 90.00000 20.40816% 80.78431%;
-  --base-destructive: 6.512 57.848% 43.725%;
+  --base-destructive: 6.512 57.848% 35%;
   --font-sans: "DM Sans Variable", "DM Sans", sans-serif;
   --font-heading: "Fraunces Variable", "Fraunces", serif;
   --radius: 0.75rem;
@@ -30,8 +30,9 @@
   --base-primary: 30.79646 62.43094% 64.50980%;
   --base-primary-hover: 31.51515 73.33333% 73.52941%;
   --base-secondary: 99.00000 17.85714% 21.96078%;
-  --base-tertiary: 95.17241 19.20530% 29.60784%;
-  --base-accent: 95.17241 19.20530% 29.60784%;
-  --base-gray-600: 27.56757 29.36508% 49.41176%;
+  --base-tertiary: 95.17241 19.20530% 23%;
+  --base-accent: 95.17241 19.20530% 23%;
+  --base-gray-300: 29.55224 36% 70%;
+  --base-gray-600: 27.56757 29.36508% 56%;
   --base-destructive: 7.174 79.31% 77.255%;
 }

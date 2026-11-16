@@ -4,7 +4,9 @@ export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
   workers: 2,
-  reporter: "list",
+  reporter: process.env.GREDA_THEME_AUDIT
+    ? [["list"], ["html", { open: "never" }], ["json", { outputFile: "test-results/theme-audit.json" }]]
+    : "list",
   use: {
     baseURL: "http://127.0.0.1:6007",
     browserName: "chromium",

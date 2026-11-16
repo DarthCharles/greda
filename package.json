@@ -61,6 +61,7 @@
     "release": "npm run check && changeset publish",
     "prepack": "npm run build",
     "test:browser": "playwright test",
+    "audit:themes": "npm run check && GREDA_THEME_AUDIT=1 playwright test",
     "validate:stories": "node scripts/validate-stories.mjs"
   },
   "dependencies": {

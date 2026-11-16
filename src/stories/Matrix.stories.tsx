@@ -8,7 +8,7 @@ import {
 const meta = {
   title: "Recipes/Matrix",
   tags: ["!autodocs"],
-  globals: { theme: "matrix", scheme: "dark" },
+  globals: { theme: "matrix" },
   parameters: { layout: "fullscreen" },
 } satisfies Meta;
 export default meta;
