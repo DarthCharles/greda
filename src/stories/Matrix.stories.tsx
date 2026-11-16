@@ -6,7 +6,8 @@ import {
 } from "../index";
 
 const meta = {
-  title: "Recipes/Matrix",
+  id: "recipes-matrix",
+  title: "Theming/Matrix",
   tags: ["!autodocs"],
   globals: { theme: "matrix" },
   parameters: { layout: "fullscreen" },

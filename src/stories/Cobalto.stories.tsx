@@ -3,7 +3,8 @@ import { Button, Label, Textarea } from "../index";
 import landscape from "./assets/cobalto/landscape.jpg";
 
 const meta = {
-  title: "Recipes/Cobalto",
+  id: "recipes-cobalto",
+  title: "Theming/Cobalto",
   tags: ["!autodocs"],
   globals: { theme: "cobalto" },
   parameters: { layout: "fullscreen" },

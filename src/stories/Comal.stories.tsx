@@ -16,7 +16,8 @@ import {
 } from "../index";
 
 const meta = {
-  title: "Recipes/Comal",
+  id: "recipes-comal",
+  title: "Theming/Comal",
   tags: ["!autodocs"],
   globals: { theme: "comal" },
   parameters: { layout: "fullscreen" },

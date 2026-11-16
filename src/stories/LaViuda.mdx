@@ -72,17 +72,20 @@ JSX; recipe-only layout classes are not included in Greda's compiled CSS. The
 components layer lets application utilities override component defaults.
 Tailwind 3 consumers need corresponding token mappings in their configuration.
 
-This fictional ranch demonstrates a cream-led page with a wide horse
-photograph, a restrained primary action, thin activity dividers, and a soft
-green supporting section. Import the shown Button, Badge, Dialog, Input, Label,
-and Select APIs from `@darthcharles/greda`, and copy VisitPlanner with the page.
-A quiet “Plan your day” action opens the activity and group-size controls only
-when needed.
-The ranch and its activities are fictional. The local reference photograph is
-stored in `src/stories/assets/la-viuda/ranch-horse.jpg` and comes from
+This fictional ranch market demonstrates a cream-led storefront with a featured
+harvest box, three product cards, a green ranch-story panel, and a two-item
+basket summary. Produce, pantry staples, and practical ranch goods give the
+layout a clear shop identity. Import Button and Badge from
+`@darthcharles/greda`; the page uses static product data and requires no local
+cart state.
+
+The product images are generated catalog photography, stored alongside the
+example in `src/stories/assets/la-viuda/`. Their final prompts and provenance are
+recorded in that directory's README. The supporting ranch photograph,
+`ranch-horse.jpg`, comes from
 [Unsplash](https://images.unsplash.com/photo-1553284965-83fd3e82fa5a).
-Copy the image alongside the example or replace it with your own licensed
-photograph and descriptive alt text. The image belongs to the catalog and is
+Copy the images alongside the example or replace them with your own licensed
+photography and descriptive alt text. Images belong to the catalog and are
 not included in the published package. Layout and image proportions stay local
 to the example, while typography, colors, and corners come from the theme.
 
@@ -96,19 +99,21 @@ line height, and tracking. Color utilities remain independent.
 
 ## Responsive layout and interaction
 
-The page follows a single editorial column. The photograph uses a wider crop
-on desktop; activity rows stack below the medium breakpoint. Header, caption,
-and footer content wrap on narrow screens. Text remains separate from the image
-so it stays readable across both color schemes.
+The introduction uses two columns on desktop. Product cards form a three-column
+grid, followed by a ranch-story panel and basket summary side by side. These
+sections stack below the medium breakpoint; product actions align to the bottom
+of each card. Header, caption, and footer content wrap on narrow screens. Text
+stays outside the photographs so it remains readable in both color schemes.
 
-Tab focuses “Explore the ranch”; Enter moves focus to the activities with a
-visible outline. Button retains anchor semantics through `asChild`; its loading
-and disabled props do not guarantee a disabled link. This composition has no
-booking, payment, animation, or saved state. “Plan your day” opens a dialog;
-Escape or “Keep exploring” closes it and restores focus to the trigger. The
-dialog and its select use a local portal container so scoped themes carry
-through. Activity and guest values are temporary preview choices. See individual component stories
-for disabled, loading, and validation states.
+The header's “Basket (2)” link moves focus to the basket summary. “Shop the
+harvest” moves focus to the product section with a visible outline. Button
+retains anchor semantics through `asChild`; its loading and disabled props do
+not guarantee a disabled link.
+
+The basket is a fixed two-item summary. “Add to basket” and “Checkout” illustrate
+button placement and have no handlers. Products, prices, and ranch details are
+fictional. See individual component stories for interactive behavior, disabled,
+loading, and validation states.
 
 ## Scoped themes
 

@@ -138,6 +138,7 @@ reference. Each style has a live preview and expandable token details.
 
 ## Theming
 
+The **Theming** section in Storybook documents the optional brand themes.
 For an optional ready-made identity, import Cobalto after the package stylesheet
 and select it on the document root:
 
@@ -185,8 +186,9 @@ surfaces, Geist typography, and modest corners. Import
 boundary. Load Geist in your application or supply `--font-geist-sans`; the theme
 also supports custom font overrides and falls back to Arial/Helvetica. Select
 **la-viuda** in Storybook to explore the theme and its Tokens palette, or see the
-[La Viuda composition recipe](src/stories/LaViuda.mdx) for a fictional ranch,
-font setup, and Tailwind 4 integration.
+[La Viuda composition recipe](src/stories/LaViuda.mdx) for a static ranch shop
+with produce and ranch goods, product photography, a sample basket, font setup,
+and Tailwind 4 integration.
 
 Customization is optional. To change the default theme, import your own
 `theme.css` after the package stylesheet and override the base colors or other

@@ -707,7 +707,7 @@ for (const recipe of [
   { theme: "cobalto", link: "Explore the notebook", target: "#cobalto-details", width: "558px" },
   { theme: "comal", link: "Explore the workshop", target: "#comal-session", width: "1100px" },
   { theme: "matrix", link: "Explore the protocol", target: "#matrix-protocol", width: "1100px" },
-  { theme: "la-viuda", link: "Explore the ranch", target: "#la-viuda-ranch", width: "1100px" },
+  { theme: "la-viuda", link: "Shop the harvest", target: "#la-viuda-ranch", width: "1100px" },
 ] as const) {
   for (const scheme of ["light", "dark"]) {
     for (const consumer of ["storybook", "tailwind4"]) {
@@ -747,6 +747,10 @@ for (const recipe of [
         }
         expect(await article.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
         await page.keyboard.press("Tab");
+        if (recipe.theme === "la-viuda") {
+          await expect(page.getByRole("link", { name: "Basket (2)" })).toBeFocused();
+          await page.keyboard.press("Tab");
+        }
         await expect(page.getByRole("link", { name: recipe.link })).toBeFocused();
         await page.keyboard.press("Enter");
         const target = page.locator(recipe.target);
@@ -1041,25 +1045,4 @@ test("Matrix console reveals its local settings through keyboard tabs", async ({
   const results = await new AxeBuilder({ page }).include("article")
     .withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
   expect(results.violations).toEqual([]);
-});
-
-test("ranch visit planner keeps its modal and selection inside the theme boundary", async ({ page }) => {
-  await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto("/iframe.html?id=recipes-la-viuda--default&viewMode=story");
-  const trigger = page.getByRole("button", { name: "Plan your day" });
-  await trigger.click();
-  const dialog = page.getByRole("article").getByRole("dialog", { name: "A little time outdoors" });
-  await expect(dialog).toBeVisible();
-  const activity = dialog.getByRole("combobox", { name: "Activity", exact: true });
-  await expect(activity).toBeFocused();
-  await activity.click();
-  await page.getByRole("article").getByRole("option", { name: "Trail ride", exact: true }).click();
-  await expect(activity).toHaveText("Trail ride");
-  await dialog.getByRole("spinbutton", { name: "Guests", exact: true }).fill("3");
-  const results = await new AxeBuilder({ page }).include('[role="dialog"]')
-    .withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
-  expect(results.violations).toEqual([]);
-  await page.keyboard.press("Escape");
-  await expect(dialog).toHaveCount(0);
-  await expect(trigger).toBeFocused();
 });
