@@ -1,5 +1,14 @@
 # @darthcharles/greda
 
+## 1.5.0
+
+### Minor Changes
+
+- 4349a97: Expose Lucide icons and types through `@darthcharles/greda/icons`, preserving
+  native SVG props, refs, and tree shaking without a separate consumer dependency.
+  Add an Iconography guide with common icons, sizing, stroke, and accessible
+  composition examples.
+
 ## 1.4.3
 
 ### Patch Changes
