@@ -1,5 +1,16 @@
 # @darthcharles/greda
 
+## 1.4.3
+
+### Patch Changes
+
+- a715c85: Fix field-border and supporting-surface text contrast in Base, Cobalto, Matrix, and La Viuda in light and dark schemes. Preserve the light neutral palettes' tonal ordering and explicitly retain readable dark supporting text. Token names, theme attributes, and component APIs remain compatible; affected palettes render stronger borders and adjusted text/action colors.
+
+  The Matrix composition recipe now respects the selected light/dark scheme.
+
+- eff3c6b: Separate Comal's sage supporting panels, warm neutral secondary controls, and clay interaction fills. Give Cobalto a stronger blue interaction fill while retaining readable supporting text, errors, and borders. Preserve existing token names and APIs. Extend the saved theme audit with rendered hover-feedback checks and an interactive role preview for reviewing visual hierarchy.
+- a715c85: Fix Comal text, field-border, and button hover contrast across light and dark supporting surfaces, and restore the light gray palette's tonal ordering. Remove hover background changes from noninteractive Badge variants so status text retains its contrast. Existing theme attributes, tokens, and component props remain compatible.
+
 ## 1.4.2
 
 ### Patch Changes
