@@ -531,13 +531,13 @@ for (const layered of [false, true]) {
           await page.addStyleTag({ content: comal });
           const dark = scheme === "dark";
           const surface = theme === "comal"
-            ? dark ? "rgb(36, 24, 15)" : "rgb(239, 226, 206)"
+            ? dark ? "rgb(30, 25, 21)" : "rgb(245, 240, 235)"
             : dark ? "rgb(16, 20, 30)" : "rgb(255, 255, 255)";
           const text = theme === "comal"
-            ? dark ? "rgb(241, 223, 194)" : "rgb(59, 38, 27)"
+            ? dark ? "rgb(239, 233, 225)" : "rgb(49, 40, 33)"
             : dark ? "rgb(255, 255, 255)" : "rgb(15, 23, 41)";
           const border = theme === "comal"
-            ? dark ? "rgb(176, 140, 110)" : "rgb(127, 97, 61)"
+            ? dark ? "rgb(163, 141, 123)" : "rgb(113, 99, 86)"
             : dark ? "rgb(135, 145, 166)" : "rgb(108, 121, 147)";
           const roles = page.locator("#roles");
           await expect(roles).toHaveCSS("background-color", surface);
@@ -569,8 +569,8 @@ for (const layered of [false, true]) {
           await expect(page.locator("#brand")).toHaveCSS("background-color", action);
           await expect(page.locator("#component")).toHaveCSS("background-color", action);
           const actionForeground = dark
-            ? theme === "comal" ? "rgb(59, 38, 27)" : "rgb(15, 23, 41)"
-            : theme === "comal" ? "rgb(239, 226, 206)" : "rgb(255, 255, 255)";
+            ? theme === "comal" ? "rgb(49, 40, 33)" : "rgb(15, 23, 41)"
+            : theme === "comal" ? "rgb(245, 240, 235)" : "rgb(255, 255, 255)";
           await expect(page.locator("#component")).toHaveCSS("color", actionForeground);
           await expect(page.locator("#inverse")).toHaveCSS("background-color", text);
           await expect(page.locator("#inverse")).toHaveCSS("color", actionForeground);
@@ -881,7 +881,7 @@ test("popover inherits scoped portal tokens and fits a narrow viewport using pub
   });
   await trigger.click();
   const content = page.getByRole("dialog", { name: "Scoped details" });
-  await expect(content).toHaveCSS("background-color", "rgb(58, 38, 28)");
+  await expect(content).toHaveCSS("background-color", "rgb(51, 42, 36)");
   await expect(content).toHaveCSS("z-index", "60");
   await expect(content).toHaveAttribute("data-side", "top");
   await expect(content).toBeVisible();
