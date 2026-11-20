@@ -76,6 +76,22 @@ Give icon-only controls an accessible name and hide decorative icons with
 See the [Iconography guide](src/stories/Iconography.mdx) for common icons, sizing,
 stroke weight, color inheritance, and accessible composition examples.
 
+## Buttons
+
+`Button` defaults to `type="button"`, `variant="default"`, and `size="default"`.
+Set `type="submit"` explicitly for form submission. Use the default variant for
+the main action, secondary or outline for alternatives, and ghost for actions
+that need less emphasis. Destructive identifies actions with destructive
+consequences. The link variant changes styling; use `asChild` with an anchor for
+navigation.
+
+`loading` sets `aria-busy` and disables native buttons. Supply a useful label,
+such as “Saving…”. With `asChild`, the child retains its semantics; disabled and
+loading do not prevent an anchor from navigating.
+
+See the [Button reference](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/components-button--docs)
+for variant guidance, defaults, sizes, keyboard interaction, and a form example.
+
 ## Toggle buttons
 
 For toggle buttons, set `aria-pressed` to the current selection state and

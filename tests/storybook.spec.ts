@@ -7,6 +7,48 @@ import { buildConsumerCss } from "./tailwind-consumer";
 
 const index = JSON.parse(readFileSync("storybook-static/index.json", "utf8"));
 const stories = Object.values(index.entries) as { id: string; type: string }[];
+
+test("getting started composition fits a phone without horizontal panning", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/iframe.html?id=introduction-overview--getting-started&viewMode=docs");
+  const composition = page.locator(".docs-story .catalog-stack").first();
+  await expect(composition).toBeVisible();
+  expect(await composition.evaluate((element) =>
+    element.scrollWidth - element.clientWidth
+  )).toBeLessThanOrEqual(1);
+  const cards = composition.locator(".catalog-grid > *");
+  expect(await cards.count()).toBeGreaterThan(0);
+  for (const card of await cards.all()) {
+    const bounds = await card.boundingBox();
+    expect(bounds).not.toBeNull();
+    expect(bounds!.x).toBeGreaterThanOrEqual(0);
+    expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(390);
+    expect(await card.evaluate((element) =>
+      element.scrollWidth - element.clientWidth
+    )).toBeLessThanOrEqual(1);
+  }
+  expect(await page.evaluate(() =>
+    document.documentElement.scrollWidth - document.documentElement.clientWidth
+  )).toBeLessThanOrEqual(1);
+});
+
+test("component props stay within the phone viewport and scroll with the keyboard", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/iframe.html?id=components-button--docs&viewMode=docs");
+  const props = page.getByRole("region", { name: "Component props" });
+  await expect(props.getByRole("table")).toBeVisible();
+  expect(await page.evaluate(() =>
+    document.documentElement.scrollWidth - document.documentElement.clientWidth
+  )).toBeLessThanOrEqual(1);
+  expect(await props.evaluate((element) =>
+    element.scrollWidth > element.clientWidth
+  )).toBe(true);
+  await props.focus();
+  await expect(props).toBeFocused();
+  await page.keyboard.press("ArrowRight");
+  await expect.poll(() => props.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0);
+});
+
 // Sweep public component states for runtime errors and accessibility regressions.
 for (const story of stories.filter((story) =>
   story.type === "story" && story.id.startsWith("components-")

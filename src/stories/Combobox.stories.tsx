@@ -33,7 +33,7 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Local filtering matches labels and search keywords without case sensitivity. Oak is disabled and skipped during keyboard navigation.",
+        story: "Local filtering matches labels and search keywords without case sensitivity. Oak is disabled and skipped during keyboard navigation. Customize emptyText to suggest another search when no options match.",
       },
     },
   },
@@ -42,7 +42,7 @@ export const Default: Story = {
       <Label htmlFor="combobox-material">Material</Label>
       <Combobox options={materials} name="material">
         <ComboboxInput id="combobox-material" placeholder="Choose a material" />
-        <ComboboxContent />
+        <ComboboxContent emptyText="No matches. Try a different search." />
       </Combobox>
       <Button variant="outline">Continue</Button>
     </div>

@@ -8,6 +8,7 @@ body {
 }
 .catalog-stack {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
   max-width: 36rem;
 }
@@ -19,6 +20,7 @@ body {
 }
 .catalog-field {
   display: grid;
+  min-width: 0;
   gap: 0.5rem;
   max-width: 24rem;
 }
@@ -32,7 +34,24 @@ body {
 }
 .catalog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
   gap: 1.5rem;
   max-width: 70rem;
+}
+.catalog-grid > * {
+  min-width: 0;
+}
+.catalog-controls {
+  max-width: 100%;
+  overflow-x: auto;
+  margin-block: 1.5rem;
+}
+.catalog-controls:focus-visible {
+  outline: var(--focus-width) solid hsl(var(--ring));
+  outline-offset: var(--focus-offset);
+}
+.sbdocs-content p code,
+.sbdocs-content li code {
+  white-space: normal;
+  overflow-wrap: anywhere;
 }

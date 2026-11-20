@@ -1,5 +1,14 @@
 import * as React from "react";
 import type { Preview } from "@storybook/react-vite";
+import {
+  Controls,
+  Description,
+  Primary,
+  Stories,
+  Subtitle,
+  Title,
+  useOf,
+} from "@storybook/addon-docs/blocks";
 import "../src/styles/tokens.css";
 import "./styles.css";
 import "@fontsource-variable/dm-sans";
@@ -56,6 +65,48 @@ const preview: Preview = {
   ],
   parameters: {
     layout: "padded",
+    options: {
+      storySort: {
+        method: "alphabetical",
+        order: [
+          "Introduction",
+          ["Getting started", "Components"],
+          "Design Tokens",
+          [
+            "Overview", "Base colors", "Color roles", "Typography", "Spacing",
+            "Shape & elevation", "Sizing & states",
+          ],
+          "Iconography",
+          ["Usage guide", "*"],
+          "Theming",
+          "Components",
+        ],
+      },
+    },
+    docs: {
+      page: function CatalogDocs() {
+        const { csfFile } = useOf("meta", ["meta"]);
+        const isSingleStory = Object.keys(csfFile.stories).length === 1;
+        return (
+          <>
+            <Title />
+            <Subtitle />
+            <Description />
+            {isSingleStory && <Description of="story" />}
+            <Primary />
+            <div
+              className="catalog-controls"
+              role="region"
+              aria-label="Component props"
+              tabIndex={0}
+            >
+              <Controls />
+            </div>
+            {!isSingleStory && <Stories includePrimary={false} />}
+          </>
+        );
+      },
+    },
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     a11y: { test: "error" },
   },

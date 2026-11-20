@@ -69,7 +69,7 @@ export const Components: Story = {
               </div>
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="catalog-row">
             <Button>Create workspace</Button>
             <Button variant="ghost">Cancel</Button>
           </CardFooter>
@@ -83,7 +83,7 @@ export const Components: Story = {
           </CardHeader>
           <CardContent>
             <pre
-              style={{ whiteSpace: "pre-wrap" }}
+              style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
             >{`:root {
   --base-primary: 9.500 55.556% 42.353%;
   --base-primary-hover: 9.714 56.150% 36.667%;
