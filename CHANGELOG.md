@@ -1,5 +1,16 @@
 # @darthcharles/greda
 
+## 1.6.0
+
+### Minor Changes
+
+- 3c20abd: Add RadioGroup and RadioGroupItem with public prop types, Radix keyboard navigation, controlled and uncontrolled selection, native form support, and themed focus, disabled, and validation styles.
+- f292c57: Add Collapsible, CollapsibleTrigger, and CollapsibleContent with public prop types, controlled and uncontrolled disclosure state, keyboard interaction, disabled support, and Button composition through asChild.
+
+### Patch Changes
+
+- d406b73: Use the existing surface-raised background for Input, Textarea, SelectTrigger, ComboboxInput, Checkbox, and RadioGroupItem across all themes. Preserve checkbox checked and indeterminate fills, existing borders, focus, disabled, and invalid states, with no palette changes.
+
 ## 1.5.1
 
 ### Patch Changes
