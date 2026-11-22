@@ -52,7 +52,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Choose one option from a visible set. Give RadioGroup an aria-label or aria-labelledby and associate each item with a Label. Tab enters or leaves the group; arrow keys move focus and selection, skipping disabled items. Space selects the focused item. Items have one default size and no visual variants; use className for overrides. Compare themes and color schemes using the toolbar.",
+          "Items use a surface-raised background across themes. Choose one option from a visible set. Give RadioGroup an aria-label or aria-labelledby and associate each item with a Label. Tab enters or leaves the group; arrow keys move focus and selection, skipping disabled items. Space selects the focused item. Items have one default size and no visual variants; use className for overrides. Compare themes and color schemes using the toolbar.",
       },
     },
   },

@@ -19,7 +19,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Radix checkbox with boolean or indeterminate state. Space toggles a focused checkbox. Use Label with htmlFor and onCheckedChange for controlled state. Disabled blocks interaction; form loading should disable it. Size and state colors come from tokens.",
+          "Radix checkbox with boolean or indeterminate state. Space toggles a focused checkbox. Use Label with htmlFor and onCheckedChange for controlled state. Disabled blocks interaction; form loading should disable it. The unchecked control uses surface-raised; checked and indeterminate states retain their primary fill. Size and state colors come from tokens.",
       },
     },
   },

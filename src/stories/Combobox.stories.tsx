@@ -21,7 +21,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composable searchable single selection, built with Radix Popover. Arrow keys highlight enabled options, Enter selects, Escape cancels, and Tab continues to the next control. Focus stays on the input. Provide a visible Label. Supports local filtering, remote results, and optional creation. See the [usage guide](?path=/docs/components-combobox--usage-guide) for composition, state, and data handling.",
+          "Composable searchable single selection, built with Radix Popover. Arrow keys highlight enabled options, Enter selects, Escape cancels, and Tab continues to the next control. Focus stays on the input. Provide a visible Label. Supports local filtering, remote results, and optional creation. The field uses a surface-raised background across themes. See the [usage guide](?path=/docs/components-combobox--usage-guide) for composition, state, and data handling.",
       },
     },
   },

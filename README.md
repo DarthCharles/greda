@@ -117,6 +117,13 @@ or `open` and `onOpenChange` for controlled state. Compose the trigger with
 See the [Collapsible reference](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/components-collapsible--docs)
 for keyboard interaction, composition, and disabled states.
 
+## Form fields
+
+`Input`, `Textarea`, `SelectTrigger`, `ComboboxInput`, `Checkbox`, and
+`RadioGroupItem` use `surface-raised` backgrounds across all themes. Checked and
+indeterminate checkboxes retain their primary fill. Override their `className` for a different
+surface. Existing border, validation, and focus styles are preserved.
+
 ## Searchable selection
 
 Use `Combobox` for filtering as you type and optional option creation. It uses

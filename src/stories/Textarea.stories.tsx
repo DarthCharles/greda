@@ -9,7 +9,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Native field with forwarded props and ref. Provide a visible Label; associate validation messages with aria-describedby. Tab focuses the control with a visible ring. Field sizing follows the container; use rows for textarea height. Loading is managed by the form. Compare themes using the toolbar.",
+          "Native field with forwarded props and ref. Provide a visible Label; associate validation messages with aria-describedby. Tab focuses the control with a visible ring. Field sizing follows the container; use rows for textarea height. Loading is managed by the form. The field uses a surface-raised background across themes. Compare themes using the toolbar.",
       },
     },
   },

@@ -29,7 +29,7 @@ const RadioGroupItem = React.forwardRef<
   <RadioGroupPrimitive.Item
     ref={ref}
     className={cn(
-      "comal-ui grid place-content-center peer h-4 w-4 shrink-0 rounded-full border border-action text-action shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-disabled aria-[invalid=true]:border-destructive",
+      "comal-ui grid place-content-center peer h-4 w-4 shrink-0 rounded-full border border-action surface-raised text-action shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-disabled aria-[invalid=true]:border-destructive",
       className
     )}
     {...props}

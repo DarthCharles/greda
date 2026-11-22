@@ -16,7 +16,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composable single select. Arrow keys navigate, typeahead finds options, Enter selects, and Escape closes. Supply a Label for the trigger. Disabled items are skipped. Use disabled while options load and a descriptive placeholder. Portals inherit the document theme; use content container for scoped themes.",
+          "Composable single select. Arrow keys navigate, typeahead finds options, Enter selects, and Escape closes. Supply a Label for the trigger. Disabled items are skipped. Use disabled while options load and a descriptive placeholder. The field uses a surface-raised background across themes. Portals inherit the document theme; use content container for scoped themes.",
       },
     },
   },
