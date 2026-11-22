@@ -8,6 +8,34 @@ import { buildConsumerCss } from "./tailwind-consumer";
 const index = JSON.parse(readFileSync("storybook-static/index.json", "utf8"));
 const stories = Object.values(index.entries) as { id: string; type: string }[];
 
+test("collapsible keyboard toggling keeps closed fields out of the tab order", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/iframe.html?id=components-collapsible--default&viewMode=story&globals=theme:comal;scheme:dark");
+  const trigger = page.getByRole("button", { name: "Delivery instructions" });
+  const next = page.getByRole("button", { name: "Continue" });
+  const note = page.getByRole("textbox", { name: "Where should we leave your order?" });
+  await expect(trigger).toBeVisible();
+  await page.keyboard.press("Tab");
+  await expect(trigger).toBeFocused();
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
+  await page.keyboard.press("Tab");
+  await expect(next).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await page.keyboard.press("Enter");
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  await expect(note).toBeVisible();
+  await page.keyboard.press("Tab");
+  await expect(note).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await page.keyboard.press("Space");
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
+  await expect(note).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(next).toBeFocused();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+});
+
 test("radio selection follows keyboard focus, skips disabled options, and displays its indicator", async ({ page }) => {
   await page.goto("/iframe.html?id=components-radio-group--default&viewMode=story");
   const standard = page.getByRole("radio", { name: "Standard delivery" });

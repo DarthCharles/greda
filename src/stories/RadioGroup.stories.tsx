@@ -7,11 +7,52 @@ const meta = {
   component: RadioGroup,
   subcomponents: { RadioGroupItem },
   tags: ["autodocs"],
+  args: { disabled: false, required: false },
+  argTypes: {
+    asChild: {
+      description: "Applies the group's props and ref to one child element. This example renders options directly inside the group.",
+      control: false,
+      table: { defaultValue: { summary: "false" } },
+    },
+    value: {
+      description: "Selected item value in controlled mode. Update it in onValueChange.",
+      control: "text",
+    },
+    defaultValue: {
+      description: "Initially selected item value in uncontrolled mode. Each RadioGroupItem needs a unique value.",
+      control: "text",
+    },
+    onValueChange: {
+      description: "Called with the selected item value when selection changes.",
+    },
+    name: {
+      description: "Form field name. The selected item's value is submitted under this name.",
+      control: "text",
+    },
+    required: {
+      description: "Requires a selection for native form validation. Associate application errors with aria-invalid and aria-describedby.",
+      table: { defaultValue: { summary: "false" } },
+    },
+    disabled: {
+      description: "Disables every item. Disable the group while its form is loading; individual items also accept disabled.",
+      table: { defaultValue: { summary: "false" } },
+    },
+    orientation: {
+      description: "Restricts arrow-key navigation to the layout direction. Set the visual layout separately with className.",
+      control: "select",
+      options: ["horizontal", "vertical"],
+    },
+    loop: {
+      description: "Wraps keyboard navigation from the last enabled item to the first and back.",
+      control: "boolean",
+      table: { defaultValue: { summary: "true" } },
+    },
+  },
   parameters: {
     docs: {
       description: {
         component:
-          "Choose one option from a labeled group. Use aria-label or aria-labelledby on RadioGroup and Label with htmlFor for each item. Tab enters or leaves the group; arrow keys move focus and selection, skipping disabled items and looping by default. Space selects a focused item. Use defaultValue for uncontrolled state or value/onValueChange for controlled state; name and required support forms. Set orientation for directional keyboard navigation and use className for horizontal layout. One default size, no visual variants or indeterminate state. Disable the group while its form is loading. For validation, associate an error with aria-describedby and aria-invalid on the group and affected items.",
+          "Choose one option from a visible set. Give RadioGroup an aria-label or aria-labelledby and associate each item with a Label. Tab enters or leaves the group; arrow keys move focus and selection, skipping disabled items. Space selects the focused item. Items have one default size and no visual variants; use className for overrides. Compare themes and color schemes using the toolbar.",
       },
     },
   },
@@ -20,8 +61,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
-    <RadioGroup aria-label="Delivery method" name="delivery" defaultValue="standard">
+  args: { name: "delivery", defaultValue: "standard" },
+  render: (args) => (
+    <RadioGroup {...args} aria-label="Delivery method">
       <div className="catalog-row">
         <RadioGroupItem id="delivery-standard" value="standard" />
         <Label htmlFor="delivery-standard">Standard delivery</Label>
@@ -39,6 +81,9 @@ export const Default: Story = {
 };
 
 export const Controlled: Story = {
+  parameters: {
+    docs: { description: { story: "Use value and onValueChange to keep selection in application state. Select a contact method to update the value shown below." } },
+  },
   render: function ControlledExample() {
     const [value, setValue] = useState("email");
     return (
@@ -53,13 +98,16 @@ export const Controlled: Story = {
             <Label htmlFor="contact-phone">Phone</Label>
           </div>
         </RadioGroup>
-        <p className="catalog-note">Selected: {value}</p>
+        <p className="catalog-muted">Selected: {value}</p>
       </div>
     );
   },
 };
 
 export const Horizontal: Story = {
+  parameters: {
+    docs: { description: { story: "Set orientation to horizontal for Left/Right keyboard navigation and use className to arrange the options. The layout wraps when space is limited." } },
+  },
   render: () => (
     <RadioGroup aria-label="View density" orientation="horizontal" defaultValue="comfortable" className="flex flex-wrap gap-4">
       <div className="catalog-row">
@@ -75,6 +123,9 @@ export const Horizontal: Story = {
 };
 
 export const Disabled: Story = {
+  parameters: {
+    docs: { description: { story: "Set disabled on RadioGroup to prevent changes to every option while preserving the selection." } },
+  },
   render: () => (
     <RadioGroup aria-label="Billing interval" defaultValue="monthly" disabled>
       <div className="catalog-row">
@@ -90,6 +141,9 @@ export const Disabled: Story = {
 };
 
 export const Invalid: Story = {
+  parameters: {
+    docs: { description: { story: "Use required for native form validation. For application errors, set aria-invalid and associate a visible message through aria-describedby on the group and affected items." } },
+  },
   render: () => (
     <div className="catalog-field">
       <RadioGroup aria-label="Shipping address" name="address" required aria-invalid="true" aria-describedby="address-error">

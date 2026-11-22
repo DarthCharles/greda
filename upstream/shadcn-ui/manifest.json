@@ -109,6 +109,15 @@
         "@radix-ui/react-radio-group"
       ],
       "retrieved": "2026-11-22T02:36:34.957Z"
+    },
+    {
+      "name": "collapsible",
+      "url": "https://ui.shadcn.com/r/styles/new-york/collapsible.json",
+      "sha256": "c38039a887ff5629e7cccdd0c7c162c8ded637a8b893e4c9e93048b3aab8ad41",
+      "dependencies": [
+        "@radix-ui/react-collapsible"
+      ],
+      "retrieved": "2026-11-22T02:44:16.997Z"
     }
   ]
 }

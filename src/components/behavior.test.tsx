@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { createRef, useState } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
@@ -10,6 +10,9 @@ import {
   Checkbox,
   RadioGroup,
   RadioGroupItem,
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
   Dialog,
   DialogTrigger,
   DialogContent,
@@ -33,6 +36,83 @@ import {
 } from "../index";
 
 describe("accessible component behavior", () => {
+  it("connects a collapsible trigger to its content, forwards refs, and does not submit its form", async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn((event) => event.preventDefault());
+    const rootRef = createRef<HTMLDivElement>();
+    const triggerRef = createRef<HTMLButtonElement>();
+    const contentRef = createRef<HTMLDivElement>();
+    render(
+      <form onSubmit={onSubmit}>
+        <Collapsible ref={rootRef} data-testid="disclosure">
+          <CollapsibleTrigger ref={triggerRef}>Details</CollapsibleTrigger>
+          <CollapsibleContent ref={contentRef}>
+            <Input aria-label="Delivery note" />
+          </CollapsibleContent>
+        </Collapsible>
+      </form>
+    );
+    const trigger = screen.getByRole("button", { name: "Details" });
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+    await user.click(trigger);
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(contentRef.current).toHaveAttribute("id", trigger.getAttribute("aria-controls"));
+    expect(contentRef.current).toContainElement(screen.getByRole("textbox", { name: "Delivery note" }));
+    expect(rootRef.current).toBe(screen.getByTestId("disclosure"));
+    expect(triggerRef.current).toBe(trigger);
+    expect(onSubmit).not.toHaveBeenCalled();
+    await user.click(trigger);
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+  });
+
+  it("supports controlled disclosure state and composes the child's click handler", async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    function ControlledDisclosure() {
+      const [open, setOpen] = useState(false);
+      return (
+        <Collapsible open={open} onOpenChange={setOpen}>
+          <CollapsibleTrigger asChild>
+            <Button onClick={onClick}>Options</Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent>Optional settings</CollapsibleContent>
+          <Button onClick={() => setOpen(false)}>Close options</Button>
+        </Collapsible>
+      );
+    }
+    render(<ControlledDisclosure />);
+    const trigger = screen.getByRole("button", { name: "Options" });
+    await user.click(trigger);
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("Optional settings")).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Close options" }));
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByText("Optional settings")).not.toBeInTheDocument();
+  });
+
+  it.each([false, true])("preserves open=%s while a collapsible is disabled", async (defaultOpen) => {
+    const user = userEvent.setup();
+    const onOpenChange = vi.fn();
+    render(
+      <Collapsible defaultOpen={defaultOpen} disabled onOpenChange={onOpenChange}>
+        <CollapsibleTrigger>Details</CollapsibleTrigger>
+        <CollapsibleContent>Order details</CollapsibleContent>
+      </Collapsible>
+    );
+    const trigger = screen.getByRole("button", { name: "Details" });
+    expect(trigger).toBeDisabled();
+    await user.click(trigger);
+    expect(trigger).toHaveAttribute("aria-expanded", String(defaultOpen));
+    expect(onOpenChange).not.toHaveBeenCalled();
+    if (defaultOpen) {
+      expect(screen.getByText("Order details")).toBeVisible();
+    } else {
+      expect(screen.queryByText("Order details")).not.toBeInTheDocument();
+    }
+  });
+
   it("updates controlled radio selection through labels and submits only the selected value", async () => {
     const user = userEvent.setup();
     function DeliveryForm() {

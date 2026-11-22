@@ -100,33 +100,22 @@ Enter, or Space. This also applies to native buttons styled with `buttonVariants
 
 ## Radio groups
 
-Use `RadioGroup` and `RadioGroupItem` to choose one option from a visible set:
+Use `RadioGroup` and `RadioGroupItem` to choose one option from a visible set.
+Label the group and each item. Use `defaultValue` for an initial selection or
+`value` and `onValueChange` for controlled state; `name` and `required` support forms.
 
-```tsx
-import { Label, RadioGroup, RadioGroupItem } from "@darthcharles/greda";
-
-export function DeliveryField() {
-  return (
-    <RadioGroup aria-label="Delivery method" name="delivery" defaultValue="standard">
-      <div>
-        <RadioGroupItem id="standard" value="standard" />
-        <Label htmlFor="standard">Standard delivery</Label>
-      </div>
-      <div>
-        <RadioGroupItem id="express" value="express" />
-        <Label htmlFor="express">Express delivery</Label>
-      </div>
-    </RadioGroup>
-  );
-}
-```
-
-Tab enters the group; arrow keys move selection and Space selects the focused
-option. Use `value` and `onValueChange` for controlled state, `disabled` on the
-group or individual items, and `required` for native form validation. Associate
-errors using `aria-invalid` and `aria-describedby` on the group and affected items.
 See the [Radio Group reference](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/components-radio-group--docs)
-for states and horizontal layout.
+for composition, keyboard interaction, horizontal layout, and validation examples.
+
+## Collapsible content
+
+Use `Collapsible`, `CollapsibleTrigger`, and `CollapsibleContent` for optional
+content that expands in place. Use `defaultOpen` for an initially expanded panel
+or `open` and `onOpenChange` for controlled state. Compose the trigger with
+`Button` through `asChild` for button variants and sizes.
+
+See the [Collapsible reference](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/components-collapsible--docs)
+for keyboard interaction, composition, and disabled states.
 
 ## Searchable selection
 

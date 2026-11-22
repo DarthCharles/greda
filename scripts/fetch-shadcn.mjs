@@ -12,6 +12,7 @@ const componentNames = [
   "badge",
   "checkbox",
   "radio-group",
+  "collapsible",
   "tabs",
   "toast",
   "tooltip",
