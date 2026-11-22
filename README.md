@@ -98,6 +98,36 @@ For toggle buttons, set `aria-pressed` to the current selection state and
 update that state in `onClick`. Users can activate the button with a click,
 Enter, or Space. This also applies to native buttons styled with `buttonVariants`.
 
+## Radio groups
+
+Use `RadioGroup` and `RadioGroupItem` to choose one option from a visible set:
+
+```tsx
+import { Label, RadioGroup, RadioGroupItem } from "@darthcharles/greda";
+
+export function DeliveryField() {
+  return (
+    <RadioGroup aria-label="Delivery method" name="delivery" defaultValue="standard">
+      <div>
+        <RadioGroupItem id="standard" value="standard" />
+        <Label htmlFor="standard">Standard delivery</Label>
+      </div>
+      <div>
+        <RadioGroupItem id="express" value="express" />
+        <Label htmlFor="express">Express delivery</Label>
+      </div>
+    </RadioGroup>
+  );
+}
+```
+
+Tab enters the group; arrow keys move selection and Space selects the focused
+option. Use `value` and `onValueChange` for controlled state, `disabled` on the
+group or individual items, and `required` for native form validation. Associate
+errors using `aria-invalid` and `aria-describedby` on the group and affected items.
+See the [Radio Group reference](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/components-radio-group--docs)
+for states and horizontal layout.
+
 ## Searchable selection
 
 Use `Combobox` for filtering as you type and optional option creation. It uses

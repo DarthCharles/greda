@@ -116,6 +116,8 @@ for (const name of [
   "Card",
   "Badge",
   "Checkbox",
+  "RadioGroup",
+  "RadioGroupItem",
   "Tabs",
   "Toast",
   "Tooltip",

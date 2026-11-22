@@ -8,6 +8,30 @@ import { buildConsumerCss } from "./tailwind-consumer";
 const index = JSON.parse(readFileSync("storybook-static/index.json", "utf8"));
 const stories = Object.values(index.entries) as { id: string; type: string }[];
 
+test("radio selection follows keyboard focus, skips disabled options, and displays its indicator", async ({ page }) => {
+  await page.goto("/iframe.html?id=components-radio-group--default&viewMode=story");
+  const standard = page.getByRole("radio", { name: "Standard delivery" });
+  const express = page.getByRole("radio", { name: "Express delivery" });
+  await expect(page.getByRole("radiogroup", { name: "Delivery method" })).toBeVisible();
+  const unfocusedShadow = await standard.evaluate((element) => getComputedStyle(element).boxShadow);
+  await page.keyboard.press("Tab");
+  await expect(standard).toBeFocused();
+  await expect(standard).toBeChecked();
+  await expect(standard.locator("svg")).toBeVisible();
+  await expect(standard).toHaveCSS("border-radius", "9999px");
+  await expect(standard).toHaveCSS("width", "16px");
+  await expect(standard).not.toHaveCSS("box-shadow", unfocusedShadow);
+  await page.keyboard.press("ArrowDown");
+  await expect(express).toBeFocused();
+  await expect(express).toBeChecked();
+  await expect(express.locator("svg")).toBeVisible();
+  await expect(standard.locator("svg")).toHaveCount(0);
+  await page.keyboard.press("ArrowDown");
+  await expect(standard).toBeFocused();
+  await expect(standard).toBeChecked();
+  await expect(page.getByRole("radio", { name: "Pickup (unavailable)" })).toBeDisabled();
+});
+
 test("getting started composition fits a phone without horizontal panning", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/iframe.html?id=introduction-overview--getting-started&viewMode=docs");

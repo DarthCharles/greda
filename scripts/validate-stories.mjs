@@ -8,7 +8,7 @@ const stories = await readdir("src/stories");
 for (const file of components) {
   const name = file.replace(".tsx", "");
   const story = stories.find(
-    (entry) => entry.toLowerCase() === `${name}.stories.tsx`
+    (entry) => entry.toLowerCase() === `${name.replaceAll("-", "")}.stories.tsx`
   );
   assert(story, `${name} needs its own Storybook file`);
   const content = await readFile(`src/stories/${story}`, "utf8");

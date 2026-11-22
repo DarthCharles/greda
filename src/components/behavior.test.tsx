@@ -8,6 +8,8 @@ import {
   Input,
   Label,
   Checkbox,
+  RadioGroup,
+  RadioGroupItem,
   Dialog,
   DialogTrigger,
   DialogContent,
@@ -31,6 +33,47 @@ import {
 } from "../index";
 
 describe("accessible component behavior", () => {
+  it("updates controlled radio selection through labels and submits only the selected value", async () => {
+    const user = userEvent.setup();
+    function DeliveryForm() {
+      const [value, setValue] = useState("standard");
+      return (
+        <form aria-label="Delivery">
+          <RadioGroup aria-label="Delivery method" name="delivery" value={value} onValueChange={setValue} required>
+            <RadioGroupItem id="standard" value="standard" />
+            <Label htmlFor="standard">Standard</Label>
+            <RadioGroupItem id="express" value="express" />
+            <Label htmlFor="express">Express</Label>
+            <RadioGroupItem value="pickup" disabled aria-label="Pickup" />
+          </RadioGroup>
+        </form>
+      );
+    }
+    render(<DeliveryForm />);
+    await user.click(screen.getByText("Express"));
+    expect(screen.getByRole("radio", { name: "Express" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "Standard" })).not.toBeChecked();
+    await user.click(screen.getByRole("radio", { name: "Pickup" }));
+    expect(new FormData(screen.getByRole("form") as HTMLFormElement).getAll("delivery")).toEqual(["express"]);
+  });
+
+  it("disables every radio when the group is disabled", async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <RadioGroup aria-label="Delivery" defaultValue="standard" disabled onValueChange={onValueChange}>
+        <RadioGroupItem value="standard" aria-label="Standard" />
+        <RadioGroupItem value="express" aria-label="Express" />
+      </RadioGroup>
+    );
+    for (const radio of screen.getAllByRole("radio")) {
+      expect(radio).toBeDisabled();
+      await user.click(radio);
+    }
+    expect(screen.getByRole("radio", { name: "Standard" })).toBeChecked();
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
   it("lets consumer utility overrides replace conflicting defaults", () => {
     expect(cn("px-3 text-sm", false, "px-6")).toBe("text-sm px-6");
     expect(cn("text-caption", "text-secondary")).toBe("text-caption text-secondary");

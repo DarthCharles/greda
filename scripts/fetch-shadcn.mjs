@@ -11,6 +11,7 @@ const componentNames = [
   "card",
   "badge",
   "checkbox",
+  "radio-group",
   "tabs",
   "toast",
   "tooltip",

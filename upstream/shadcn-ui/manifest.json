@@ -100,6 +100,15 @@
         "@radix-ui/react-popover"
       ],
       "retrieved": "2026-10-31T17:55:48.443Z"
+    },
+    {
+      "name": "radio-group",
+      "url": "https://ui.shadcn.com/r/styles/new-york/radio-group.json",
+      "sha256": "7f524b5b30c7b92f21895b52b8ec01e847d16cef12c9a4ebab5be19d2e5be722",
+      "dependencies": [
+        "@radix-ui/react-radio-group"
+      ],
+      "retrieved": "2026-11-22T02:36:34.957Z"
     }
   ]
 }
