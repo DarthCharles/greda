@@ -49,14 +49,23 @@ test("radio selection follows keyboard focus, skips disabled options, and displa
   await expect(standard).toHaveCSS("border-radius", "9999px");
   await expect(standard).toHaveCSS("width", "16px");
   await expect(standard).not.toHaveCSS("box-shadow", unfocusedShadow);
-  await page.keyboard.press("ArrowDown");
-  await expect(express).toBeFocused();
-  await expect(express).toBeChecked();
+  // Radix defers focus movement and selects on focus while the arrow is held.
+  await page.keyboard.down("ArrowDown");
+  try {
+    await expect(express).toBeFocused();
+    await expect(express).toBeChecked();
+  } finally {
+    await page.keyboard.up("ArrowDown");
+  }
   await expect(express.locator("svg")).toBeVisible();
   await expect(standard.locator("svg")).toHaveCount(0);
-  await page.keyboard.press("ArrowDown");
-  await expect(standard).toBeFocused();
-  await expect(standard).toBeChecked();
+  await page.keyboard.down("ArrowDown");
+  try {
+    await expect(standard).toBeFocused();
+    await expect(standard).toBeChecked();
+  } finally {
+    await page.keyboard.up("ArrowDown");
+  }
   await expect(page.getByRole("radio", { name: "Pickup (unavailable)" })).toBeDisabled();
 });
 
