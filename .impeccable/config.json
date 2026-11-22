@@ -20,6 +20,15 @@
         ],
         "createdAt": "2026-11-22T05:33:31.118Z",
         "reason": "Agent review: generated Storybook third-party react-colorful color picker uses borders for saturation and pointer controls; this is not a rounded card accent."
+      },
+      {
+        "rule": "border-accent-on-rounded",
+        "value": "*",
+        "files": [
+          "storybook-static/assets/Color-6AOWCN3U-DSsddL7D.js"
+        ],
+        "createdAt": "2026-11-22T05:57:12.114Z",
+        "reason": "Agent review: generated Storybook react-colorful color-picker controls, matching the previously reviewed false positive; not a rounded card accent."
       }
     ]
   }
