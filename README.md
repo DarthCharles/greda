@@ -333,10 +333,11 @@ or read the defaults in [tokens.css](src/styles/tokens.css).
 ## Spacing
 
 Use `3xs`, `2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, and `3xl` for spacing,
-control and icon sizes, and offsets. The precompiled `styles.css` includes padding,
-margin, and gap utilities such as
-`p-3xs`, `px-md`, `mt-lg`, `-mt-xs`, and `gap-sm`. With the Tailwind 4 token
-import, you can generate responsive variants such as `md:gap-lg`.
+control and icon sizes, and offsets. The precompiled `styles.css` includes
+utilities such as `p-sm`, `mt-md`, `gap-sm`, `size-md`, `h-xl`, `min-w-xs`,
+`top-xs`, and `-translate-y-xs`. The scale also covers flex basis, sibling
+spacing, scroll spacing, border spacing, and text indent. With the Tailwind 4
+token import, you can generate responsive variants such as `md:gap-lg`.
 
 ```tsx
 <div className="grid p-md gap-sm">Your content</div>
@@ -345,9 +346,13 @@ import, you can generate responsive variants such as `md:gap-lg`.
 Both CSS exports include the custom properties. In plain CSS, use
 `gap: var(--space-sm)` or override `--space-sm` on a wrapper to change that
 named step for its descendants. Use a named token for dimensions and offsets
-where it fits, such as `width: var(--space-xl)`. Use an explicit pixel value for
-a measurement outside the scale, such as `width: 288px`. The named defaults
+where it fits, such as `width: var(--space-xl)`. For a fixed measurement above
+the scale, use an explicit pixel value such as `width: 288px` in CSS or
+`w-[288px]` in Tailwind. The named defaults
 use `rem` and range from 2px to 64px at a 16px root font size.
+
+For a named 24px width cap, use `max-w-[var(--space-lg)]` in a Tailwind build.
+The precompiled stylesheet uses `max-w-lg` for the Dialog width.
 
 **Deprecated.** Numeric spacing tokens such as `--space-0`, `--space-1-5`, and
 `--space-4` remain exported and continue to affect existing components and

@@ -156,6 +156,9 @@ describe("accessible component behavior", () => {
 
   it("lets consumer utility overrides replace conflicting defaults", () => {
     expect(cn("px-3 text-sm", false, "px-6")).toBe("text-sm px-6");
+    expect(cn("px-md h-xl", "px-4 h-[72px]")).toBe("px-4 h-[72px]");
+    expect(cn("w-6 h-8", "size-md")).toBe("size-md");
+    expect(cn("md:-translate-y-xs", "md:translate-y-2")).toBe("md:translate-y-2");
     expect(cn("text-caption", "text-secondary")).toBe("text-caption text-secondary");
     expect(cn("text-secondary", "text-caption")).toBe("text-secondary text-caption");
     expect(cn("font-heading text-sm font-medium leading-none tracking-tight text-action", "text-label"))

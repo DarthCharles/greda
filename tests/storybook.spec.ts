@@ -305,10 +305,19 @@ for (const source of ["precompiled CSS", "Tailwind 4"] as const) {
     await page.setViewportSize({ width: 640, height: 800 });
     await page.setContent(`<!doctype html><div id="scope">
       <div id="layout" class="p-md -mt-xs gap-sm md:gap-lg">${button}</div>
+      <div id="square" class="size-md"></div>
+      <div id="sized" class="w-3xl h-xl max-w-sm"></div>
+      <div id="offset-row"><div id="offset" style="position: relative" class="-top-xs -translate-y-xs"></div></div>
+      <div id="siblings" class="space-y-sm"><div>First</div><div>Second</div></div>
+      <table class="border-spacing-x-md"><tbody><tr><td>Cell</td></tr></tbody></table>
     </div>`);
     await page.addStyleTag({
       content: source === "Tailwind 4"
-        ? await buildConsumerCss(["p-md", "-mt-xs", "gap-sm", "md:gap-lg", "p-3xs"], true)
+        ? await buildConsumerCss([
+            "p-md", "-mt-xs", "gap-sm", "md:gap-lg", "p-3xs",
+            "size-md", "w-3xl", "h-xl", "max-w-sm", "-top-xs", "-translate-y-xs", "space-y-sm",
+            "border-spacing-x-md",
+          ], true)
         : readFileSync("dist/styles.css", "utf8"),
     });
 
@@ -317,6 +326,22 @@ for (const source of ["precompiled CSS", "Tailwind 4"] as const) {
     await expect(layout).toHaveCSS("margin-top", "-8px");
     await expect(layout).toHaveCSS("gap", "12px");
     await expect(page.getByRole("button", { name: "Continue" })).toHaveCSS("padding", "2px");
+    const square = page.locator("#square");
+    await expect(square).toHaveCSS("width", "16px");
+    await expect(square).toHaveCSS("height", "16px");
+    await expect(page.locator("#sized")).toHaveCSS("width", "12px");
+    await expect(page.locator("#sized")).toHaveCSS("height", "32px");
+    await expect(page.locator("#offset")).toHaveCSS("top", "-8px");
+    const offset = await page.locator("#offset").evaluate((element) =>
+      element.getBoundingClientRect().top - element.parentElement!.getBoundingClientRect().top
+    );
+    expect(offset).toBe(-16);
+    const siblingGap = await page.locator("#siblings").evaluate((element) =>
+      element.lastElementChild!.getBoundingClientRect().top -
+      element.firstElementChild!.getBoundingClientRect().bottom
+    );
+    expect(siblingGap).toBe(12);
+    await expect(page.getByRole("table")).toHaveCSS("border-spacing", "16px 0px");
 
     await page.locator("#scope").evaluate((element) => {
       element.style.setProperty("--space-md", "20px");
@@ -324,6 +349,7 @@ for (const source of ["precompiled CSS", "Tailwind 4"] as const) {
     });
     await expect(layout).toHaveCSS("padding", "20px");
     await expect(layout).toHaveCSS("gap", "10px");
+    await expect(square).toHaveCSS("width", "20px");
 
     if (source === "Tailwind 4") {
       await page.setViewportSize({ width: 900, height: 800 });
