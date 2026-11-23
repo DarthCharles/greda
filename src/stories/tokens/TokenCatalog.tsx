@@ -406,7 +406,13 @@ export function TokenCatalog({ page, theme, scheme }: {
       {page !== "palette" && page !== "roles" && page !== "typography" && current.groups.map((group) => (
         <section className="tokens-section" key={group}>
           <h2>{group}</h2>
-          {group === "Spacing" && <p className="tokens-section-description">Use named steps from <code>3xs</code> to <code>3xl</code> for padding, margin, and gaps. For example, <code>p-md</code> and <code>gap-md</code> use <code>--space-md</code>, which defaults to 16px at a 16px root font size. Override a named token on a wrapper to adjust spacing within it. Existing components use the numeric steps shown below.</p>}
+          {group === "Spacing" && (
+            <p className="tokens-section-description">
+              Use named steps from <code>3xs</code> to <code>3xl</code> for spacing,
+              dimensions, and offsets. Use pixels for measurements outside the scale.
+              Numeric steps are deprecated and still used by existing components.
+            </p>
+          )}
           <div className="tokens-grid">
             {tokens.filter((token) => token.group === group).map((token) => <TokenCard key={token.name} token={token} themeKey={themeKey} />)}
           </div>

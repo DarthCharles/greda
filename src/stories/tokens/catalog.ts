@@ -57,7 +57,9 @@ function classify(name: string): [TokenKind, TokenGroup, string] | undefined {
       "Spacing",
       name === "--spacing-unit"
         ? "The base unit used to calculate the spacing scale."
-        : "Use for padding, margins, gaps, and control dimensions.",
+        : /^--space-\d+(?:-\d+)?$/.test(name)
+          ? "Deprecated. Use the named scale for new styles."
+          : "Use for padding, margins, gaps, dimensions, and offsets.",
     ];
   if (name === "--font-sans" || name === "--font-heading")
     return [

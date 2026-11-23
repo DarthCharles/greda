@@ -332,8 +332,9 @@ or read the defaults in [tokens.css](src/styles/tokens.css).
 
 ## Spacing
 
-Use `3xs`, `2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, and `3xl` for padding,
-margin, and gaps. The precompiled `styles.css` includes utilities such as
+Use `3xs`, `2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, and `3xl` for spacing,
+control and icon sizes, and offsets. The precompiled `styles.css` includes padding,
+margin, and gap utilities such as
 `p-3xs`, `px-md`, `mt-lg`, `-mt-xs`, and `gap-sm`. With the Tailwind 4 token
 import, you can generate responsive variants such as `md:gap-lg`.
 
@@ -343,9 +344,15 @@ import, you can generate responsive variants such as `md:gap-lg`.
 
 Both CSS exports include the custom properties. In plain CSS, use
 `gap: var(--space-sm)` or override `--space-sm` on a wrapper to change that
-named step for its descendants. The defaults use `rem` and range from 2px to
-64px at a 16px root font size. Existing components use numeric tokens such as
-`--space-4`, which you can override independently. See the
+named step for its descendants. Use a named token for dimensions and offsets
+where it fits, such as `width: var(--space-xl)`. Use an explicit pixel value for
+a measurement outside the scale, such as `width: 288px`. The named defaults
+use `rem` and range from 2px to 64px at a 16px root font size.
+
+**Deprecated.** Numeric spacing tokens such as `--space-0`, `--space-1-5`, and
+`--space-4` remain exported and continue to affect existing components and
+consumer styles. For new styles, use the named scale, such as `--space-md` for
+the default value of `--space-4`, or plain `0` for a reset. See the
 [spacing catalog](https://elegant-hotteok-cbb834.netlify.app/?path=/story/design-tokens--spacing)
 for the full scale.
 

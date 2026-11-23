@@ -66,8 +66,8 @@ Greda styles and set `data-theme="comal"` with `data-color-scheme="light"`
 or `"dark"` on the same element. Its source lives in `src/styles/themes/comal.css`.
 
 Other token customizations are optional. For example, `--radius: 0.75rem` changes
-the default corner radius, and `--space-4: 1.25rem` changes one spacing step.
-Use tokens directly in application CSS, such as `gap: var(--space-4)`.
+the default corner radius, and `--space-md: 1.25rem` changes one spacing step.
+Use tokens directly in application CSS, such as `gap: var(--space-md)`.
 
 ## Dark mode and theme scope
 
@@ -175,8 +175,9 @@ unmarked descendant with a base-color override alone does not rebind inherited
 roles; mark the theme boundary with `data-theme`.
 
 Spacing steps are computed where they are declared. To adjust a subtree, override
-the step it uses, such as `--space-md` for `gap-md` or `--space-4` for `gap-4`.
-Changing only `--spacing-unit` on that subtree does not recalculate inherited steps.
+the step it uses, such as `--space-md` for `gap-md`. Existing components may still
+use deprecated numeric steps such as `--space-4`. Changing only `--spacing-unit`
+on a subtree does not recalculate inherited steps.
 
 </details>
 
