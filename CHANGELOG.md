@@ -1,5 +1,20 @@
 # @darthcharles/greda
 
+## 2.0.0
+
+### Major Changes
+
+- 315cf52: Migrate component spacing, dimensions, and offsets to the named scale. Some defaults change as values snap to the nearest named step. Update component overrides from numeric tokens to the named step the component uses. For example, override `--space-md` for Button’s horizontal padding and `--space-xl` for its default height.
+
+  Remove the 19 deprecated numeric `--space-*` custom properties and their Tailwind 4 aliases from the CSS exports. Replace references such as `var(--space-4)` with `var(--space-md)`. Numeric utilities such as `p-4` still use `--spacing-unit` when compiled with Greda’s Tailwind 4 token import. See the README for the token migration map.
+
+  `max-w-lg` now resolves to `--space-lg` in the precompiled and Tailwind 4 builds. Use `--dialog-width` to customize Dialog, or `max-w-[var(--dialog-width)]` when applying the same cap to other elements in a Tailwind build.
+
+### Minor Changes
+
+- 88d0a96: Extend the named spacing scale to sizing, positioning, and other spacing-based Tailwind utilities in the precompiled stylesheet. Classes such as `size-md`, `h-xl`, and `-translate-y-xs` use the same named tokens as the Tailwind 4 integration. Greda's `cn` helper merges these classes with numeric and arbitrary overrides.
+- d0dcaa2: Add nine named spacing tokens from `--space-3xs` to `--space-3xl`. Use them in plain CSS or with padding, margin, and gap utilities such as `p-md`, `-mt-xs`, and `gap-sm`. The utilities ship in the precompiled stylesheet and are available through the Tailwind 4 token import.
+
 ## 1.6.0
 
 ### Minor Changes
