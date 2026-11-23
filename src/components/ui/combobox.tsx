@@ -313,7 +313,7 @@ const ComboboxInput = React.forwardRef<HTMLInputElement, ComboboxInputProps>(
               if (typeof ref === "function") ref(element);
               else if (ref) ref.current = element;
             }}
-            className={cn("pr-8", className)}
+            className={cn("pr-xl", className)}
             type="text"
             role="combobox"
             autoComplete="off"
@@ -357,7 +357,7 @@ const ComboboxInput = React.forwardRef<HTMLInputElement, ComboboxInputProps>(
               onCompositionEnd?.(event);
             }}
           />
-          <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+          <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-sm top-1/2 size-md -translate-y-1/2 text-muted" />
         </div>
       </PopoverAnchor>
     );
@@ -409,7 +409,7 @@ const ComboboxContent = React.forwardRef<HTMLDivElement, ComboboxContentProps>(
         {...props}
         ref={ref}
         role="presentation"
-        className={cn("w-[var(--radix-popover-trigger-width)] p-1", className)}
+        className={cn("w-[var(--radix-popover-trigger-width)] p-2xs", className)}
         onOpenAutoFocus={(event) => {
           onOpenAutoFocus?.(event);
           // Editable combobox focus stays on the input; options use active-descendant.
@@ -442,7 +442,7 @@ const ComboboxContent = React.forwardRef<HTMLDivElement, ComboboxContentProps>(
                 aria-selected={context.selected?.value === option.value}
                 aria-disabled={option.disabled || display.creating || undefined}
                 data-highlighted={display.activeId === id ? "" : undefined}
-                className="comal-ui relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground aria-disabled:opacity-disabled"
+                className="comal-ui relative flex w-full cursor-default select-none items-center rounded-sm py-xs pl-xs pr-xl text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground aria-disabled:opacity-disabled"
                 onPointerMove={() => {
                   if (!option.disabled && !context.creating) context.setActiveId(id);
                 }}
@@ -450,7 +450,7 @@ const ComboboxContent = React.forwardRef<HTMLDivElement, ComboboxContentProps>(
               >
                 {renderOption(option)}
                 {context.selected?.value === option.value && (
-                  <Check aria-hidden="true" className="absolute right-2 h-4 w-4" />
+                  <Check aria-hidden="true" className="absolute right-xs size-md" />
                 )}
               </div>
             );
@@ -458,7 +458,7 @@ const ComboboxContent = React.forwardRef<HTMLDivElement, ComboboxContentProps>(
           {display.createId && (
             <div id={display.createId} role="option" aria-selected="false"
               data-highlighted={display.activeId === display.createId ? "" : undefined}
-              className="comal-ui cursor-default select-none rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground"
+              className="comal-ui cursor-default select-none rounded-sm px-xs py-xs text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground"
               onPointerMove={() => context.setActiveId(display.createId)}
               onClick={() => context.select({ id: display.createId! })}
             >
@@ -467,7 +467,7 @@ const ComboboxContent = React.forwardRef<HTMLDivElement, ComboboxContentProps>(
           )}
         </div>
         <div id={context.statusId} role="status" aria-live="polite" aria-atomic="true"
-          className={cn("comal-ui", status ? "px-2 py-1.5 text-sm" : "sr-only",
+          className={cn("comal-ui", status ? "px-xs py-xs text-sm" : "sr-only",
             status && (display.creationFailed ? "text-destructive" : "text-muted"))}>
           {status ?? getStatusText(display.options.length, Boolean(display.createId))}
         </div>

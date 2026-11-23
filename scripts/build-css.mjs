@@ -10,7 +10,7 @@ const scoped = await postcss([scopeTailwindDefaults()]).process(utilities, {
   map: false,
 });
 await writeFile("dist/styles.css", `${tokens}\n${scoped.css}`);
-await writeFile("dist/tokens.css", `${tokens}\n${createTailwindTheme(tokens)}`);
+await writeFile("dist/tokens.css", `${tokens}\n${createTailwindTheme()}`);
 await mkdir("dist/themes", { recursive: true });
 await copyFile("src/styles/themes/cobalto.css", "dist/themes/cobalto.css");
 await copyFile("src/styles/themes/comal.css", "dist/themes/comal.css");

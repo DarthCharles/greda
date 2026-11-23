@@ -109,7 +109,7 @@ export const Horizontal: Story = {
     docs: { description: { story: "Set orientation to horizontal for Left/Right keyboard navigation and use className to arrange the options. The layout wraps when space is limited." } },
   },
   render: () => (
-    <RadioGroup aria-label="View density" orientation="horizontal" defaultValue="comfortable" className="flex flex-wrap gap-4">
+    <RadioGroup aria-label="View density" orientation="horizontal" defaultValue="comfortable" className="flex flex-wrap gap-md">
       <div className="catalog-row">
         <RadioGroupItem id="density-comfortable" value="comfortable" />
         <Label htmlFor="density-comfortable">Comfortable</Label>

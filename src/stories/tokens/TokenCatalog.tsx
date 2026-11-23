@@ -409,8 +409,7 @@ export function TokenCatalog({ page, theme, scheme }: {
           {group === "Spacing" && (
             <p className="tokens-section-description">
               Use named steps from <code>3xs</code> to <code>3xl</code> for spacing,
-              dimensions, and offsets. Use pixels for measurements outside the scale.
-              Numeric steps are deprecated and still used by existing components.
+              dimensions, and offsets. Use pixels for fixed measurements above the scale.
             </p>
           )}
           <div className="tokens-grid">

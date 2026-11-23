@@ -351,13 +351,25 @@ the scale, use an explicit pixel value such as `width: 288px` in CSS or
 `w-[288px]` in Tailwind. The named defaults
 use `rem` and range from 2px to 64px at a 16px root font size.
 
-For a named 24px width cap, use `max-w-[var(--space-lg)]` in a Tailwind build.
-The precompiled stylesheet uses `max-w-lg` for the Dialog width.
+Use `max-w-lg` for a width cap of `--space-lg` (24px by default). Customize
+Dialog’s width through `--dialog-width`.
 
-**Deprecated.** Numeric spacing tokens such as `--space-0`, `--space-1-5`, and
-`--space-4` remain exported and continue to affect existing components and
-consumer styles. For new styles, use the named scale, such as `--space-md` for
-the default value of `--space-4`, or plain `0` for a reset. See the
+**Migrating numeric spacing tokens.** Both CSS exports now use the named scale.
+Replace numeric variable references and overrides with the named step the
+component or utility uses. For example, use `--space-md` for Button’s horizontal
+padding and `--space-xl` for its 32px default height. Numeric classes such as
+`p-4` compiled with Greda’s Tailwind 4 token import still use `--spacing-unit`.
+Use `p-md` to apply an override of `--space-md`.
+
+| Former token suffix | Replacement |
+| --- | --- |
+| `0` | `0` in CSS or a zero utility such as `p-0` |
+| `0-5`, `1`, `2`, `3`, `4` | `3xs`, `2xs`, `xs`, `sm`, `md`, respectively |
+| `6`, `8`, `12`, `16` | `lg`, `xl`, `2xl`, `3xl`, respectively |
+| `1-5`, `2-5`, `3-5`, `5`, `9`, `10` | Choose the nearest named step for the layout |
+| `20`, `24`, `32` | Use explicit lengths such as `gap-[80px]`, `gap-[96px]`, or `gap-[128px]` |
+
+See the
 [spacing catalog](https://elegant-hotteok-cbb834.netlify.app/?path=/story/design-tokens--spacing)
 for the full scale.
 

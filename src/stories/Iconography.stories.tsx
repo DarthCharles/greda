@@ -45,7 +45,7 @@ export const Default: Story = {
     <ul style={{
       display: "grid",
       gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 10rem), 1fr))",
-      gap: "var(--space-4)",
+      gap: "var(--space-md)",
       padding: 0,
       margin: 0,
       listStyle: "none",

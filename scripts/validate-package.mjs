@@ -24,7 +24,13 @@ for (const value of Object.values(pkg.exports)) {
   }
 }
 // Check the actual compiled stylesheet, including minified pseudo selectors.
-const stylesheet = postcss.parse(await readFile("dist/styles.css", "utf8"));
+const styles = await readFile("dist/styles.css", "utf8");
+const tokens = await readFile("dist/tokens.css", "utf8");
+const numericSpacingToken = /--(?:space|spacing)-\d+(?:(?:\\?\.|-)\d+)?(?![\w.-])/;
+for (const [name, css] of [["styles.css", styles], ["tokens.css", tokens]]) {
+  assert.doesNotMatch(css, numericSpacingToken, "Removed numeric spacing token in " + name);
+}
+const stylesheet = postcss.parse(styles);
 const selectors = new Set();
 const globalSelectors = new Set([
   "*",
@@ -46,7 +52,6 @@ stylesheet.walkRules((rule) => {
   );
 });
 // Semantic color utilities are public even if a component never uses them.
-const tokens = await readFile("dist/tokens.css", "utf8");
 const colors = new Set(Object.keys(semanticColors));
 assert(colors.has("primary"), "Missing semantic color tokens");
 for (const name of colors) {

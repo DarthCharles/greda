@@ -13,10 +13,7 @@ const spacing = Object.fromEntries(
   Object.entries(defaultTheme.spacing).map(([key, value]) => [
     key,
     Number.isFinite(Number(key))
-      ? `var(--space-${key.replace(
-          ".",
-          "-"
-        )}, calc(var(--spacing-unit) * ${key}))`
+      ? `calc(var(--spacing-unit) * ${key})`
       : value,
   ])
 );
@@ -64,7 +61,7 @@ export default {
     extend: {
       ...theme.extend,
       // Tailwind 3's container widths override spacing keys by default.
-      maxWidth: { ...namedSpacing, ...theme.extend.maxWidth },
+      maxWidth: namedSpacing,
     },
   },
   plugins: [
@@ -93,6 +90,15 @@ export default {
         ":where(.space-x-reverse > :not(:last-child))": { "--tw-space-x-reverse": "1" },
         ":where(.space-y-reverse > :not(:last-child))": { "--tw-space-y-reverse": "1" },
       });
+      // The animation plugin prepends a minus sign, which cannot negate var().
+      addUtilities(Object.fromEntries(
+        Object.entries(namedSpacing).flatMap(([step, value]) => [
+          [`.slide-in-from-top-${step}`, { "--tw-enter-translate-y": `calc(${value} * -1)` }],
+          [`.slide-in-from-bottom-${step}`, { "--tw-enter-translate-y": value }],
+          [`.slide-in-from-left-${step}`, { "--tw-enter-translate-x": `calc(${value} * -1)` }],
+          [`.slide-in-from-right-${step}`, { "--tw-enter-translate-x": value }],
+        ])
+      ));
       // Tables using an axis utility can sit outside Greda's scoped defaults.
       const borderSpacing = "var(--tw-border-spacing-x, 0px) var(--tw-border-spacing-y, 0px)";
       addUtilities(Object.fromEntries(namedSpacingSteps.flatMap((step) => [

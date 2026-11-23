@@ -1,9 +1,9 @@
-import postcss from "postcss";
+import { namedSpacingSteps } from "../src/styles/spacing.ts";
 import { colors, colorRoles, theme, typographyUtilities } from "../src/styles/tailwind-theme.ts";
 
 // Keep Tailwind 4 aliases in a layer so the runtime token defaults (and consumer
 // overrides) take precedence, including tokens sharing a Tailwind theme name.
-export function createTailwindTheme(tokens) {
+export function createTailwindTheme() {
   const aliases = new Map();
   const utilities = new Map();
   for (const [name, style] of Object.entries(typographyUtilities)) {
@@ -42,14 +42,9 @@ export function createTailwindTheme(tokens) {
     ].join("\n  "));
   }
   aliases.set("--spacing", "var(--spacing-unit)");
-  const source = postcss.parse(tokens);
-  source.walkDecls(/^--space-/, (declaration) => {
-    const step = declaration.prop.slice("--space-".length).replace(/(\d)-(\d)/, "$1.$2");
-    aliases.set(
-      `--spacing-${step.replace(".", "\\.")}`,
-      `var(${declaration.prop})`
-    );
-  });
+  for (const step of namedSpacingSteps) {
+    aliases.set(`--spacing-${step}`, `var(--space-${step})`);
+  }
   for (const [name, value] of Object.entries(theme.fontFamily)) {
     aliases.set(`--font-${name}`, value.join(", "));
   }
@@ -65,9 +60,6 @@ export function createTailwindTheme(tokens) {
   }
   for (const [name, value] of Object.entries(theme.extend.boxShadow)) {
     aliases.set(name === "DEFAULT" ? "--shadow" : `--shadow-${name}`, value);
-  }
-  for (const [name, value] of Object.entries(theme.extend.maxWidth)) {
-    aliases.set(`--container-${name}`, value);
   }
   aliases.set(
     "--default-transition-duration",

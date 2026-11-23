@@ -116,7 +116,6 @@ export const theme = {
     borderWidth: { DEFAULT: "var(--border-width)" },
     ringWidth: { 1: "var(--focus-width)", 2: "var(--focus-width)" },
     ringOffsetWidth: { 2: "var(--focus-offset)" },
-    maxWidth: { lg: "var(--dialog-width)" },
     boxShadow: {
       DEFAULT: "var(--shadow)",
       sm: "var(--shadow-sm)",

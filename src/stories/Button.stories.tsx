@@ -179,7 +179,7 @@ export const SharedUtilities: Story = {
   },
   render: () => (
     <div className="catalog-stack">
-      <div className="comal-ui rounded-md border border-primary bg-accent p-4 text-accent-foreground">
+      <div className="comal-ui rounded-md border border-primary bg-accent p-md text-accent-foreground">
         Application markup using the same color utilities as Greda.
       </div>
       <div className="catalog-row">

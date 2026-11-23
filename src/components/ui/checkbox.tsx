@@ -15,7 +15,7 @@ const Checkbox = React.forwardRef<
     ref={ref}
     className={cn(
       "comal-ui",
-      "grid place-content-center peer h-4 w-4 shrink-0 rounded-sm border border-action surface-raised shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-disabled aria-[invalid=true]:border-destructive data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-primary-foreground",
+      "grid place-content-center peer size-md shrink-0 rounded-sm border border-action surface-raised shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-disabled aria-[invalid=true]:border-destructive data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-primary-foreground",
       className
     )}
     {...props}
@@ -27,8 +27,8 @@ const Checkbox = React.forwardRef<
         "grid place-content-center text-current"
       )}
     >
-      <Check className="h-4 w-4" data-check-icon="" />
-      <Minus className="h-4 w-4" data-mixed-icon="" />
+      <Check className="size-md" data-check-icon="" />
+      <Minus className="size-md" data-mixed-icon="" />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));

@@ -331,8 +331,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-3);
-  margin: var(--space-4) 0;
+  gap: var(--space-sm);
+  margin: var(--space-md) 0;
 }
 .tokens-role-examples h2 {
   font-family: var(--font-heading);
@@ -393,8 +393,8 @@
 .typography-navigation {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
-  margin-block: var(--space-6);
+  gap: var(--space-md);
+  margin-block: var(--space-lg);
   font-size: var(--font-size-sm);
 }
 .typography-navigation a {
@@ -404,8 +404,8 @@
 .typography-code {
   box-sizing: border-box;
   max-width: 100%;
-  margin-block: var(--space-5);
-  padding: var(--space-5);
+  margin-block: var(--space-lg);
+  padding: var(--space-lg);
   border: var(--border-width) solid hsl(var(--border-primary));
   border-radius: var(--radius);
   background: hsl(var(--surface-secondary));
@@ -425,8 +425,8 @@
   display: grid;
   grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
   align-items: start;
-  gap: var(--space-5) var(--space-8);
-  padding: var(--space-6);
+  gap: var(--space-lg) var(--space-xl);
+  padding: var(--space-lg);
   border-bottom: var(--border-width) solid hsl(var(--border-primary));
 }
 .typography-style:last-child { border-bottom: 0; }
@@ -436,7 +436,7 @@
   font-weight: var(--font-weight-medium);
 }
 .typography-style-header p {
-  margin: var(--space-2) 0 0;
+  margin: var(--space-xs) 0 0;
   color: hsl(var(--text-secondary));
   font-size: var(--font-size-sm);
   line-height: var(--line-height);
@@ -461,12 +461,12 @@
   table-layout: fixed;
   border-collapse: collapse;
   text-align: left;
-  margin-top: var(--space-4);
+  margin-top: var(--space-md);
   font-size: var(--font-size-xs);
 }
 .typography-token-table th,
 .typography-token-table td {
-  padding: var(--space-3);
+  padding: var(--space-sm);
   border-bottom: var(--border-width) solid hsl(var(--border-primary));
   vertical-align: top;
   overflow-wrap: anywhere;
@@ -475,8 +475,8 @@
 .typography-token-table thead { background: hsl(var(--surface-secondary)); }
 .typography-token-table tbody tr:last-child > * { border-bottom: 0; }
 .typography-foundation {
-  margin-top: var(--space-3);
-  padding: var(--space-4);
+  margin-top: var(--space-sm);
+  padding: var(--space-md);
   border: var(--border-width) solid hsl(var(--border-primary));
   border-radius: var(--radius);
   background: hsl(var(--surface-raised));
@@ -485,11 +485,11 @@
   color: hsl(var(--text-primary));
   font-weight: var(--font-weight-medium);
 }
-.typography-foundation[open] > summary { margin-bottom: var(--space-4); }
+.typography-foundation[open] > summary { margin-bottom: var(--space-md); }
 @media (max-width: 700px) {
   .typography-style {
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-4);
-    padding: var(--space-4);
+    gap: var(--space-md);
+    padding: var(--space-md);
   }
 }

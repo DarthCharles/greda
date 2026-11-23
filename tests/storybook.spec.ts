@@ -186,6 +186,10 @@ test("dialog fits a mobile viewport", async ({ page }) => {
   expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(375);
   expect(bounds!.y).toBeGreaterThanOrEqual(0);
   expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(667);
+  await page.getByRole("dialog").evaluate((element) => {
+    element.style.setProperty("--dialog-width", "280px");
+  });
+  await expect(page.getByRole("dialog")).toHaveCSS("max-width", "280px");
 });
 
 test("button moves down on press, excludes popup triggers, and respects reduced motion", async ({
@@ -286,12 +290,12 @@ for (const consumer of ["package", "tailwind4"] as const) {
   });
 }
 
-test("spacing overrides update component padding", async ({ page }) => {
+test("named spacing overrides update component padding", async ({ page }) => {
   await page.goto("/iframe.html?id=components-button--default&viewMode=story");
   const button = page.getByRole("button", { name: "Continue" });
   await expect(button).toHaveCSS("padding-left", "16px");
   await page.evaluate(() =>
-    document.documentElement.style.setProperty("--space-4", "28px")
+    document.documentElement.style.setProperty("--space-md", "28px")
   );
   await expect(button).toHaveCSS("padding-left", "28px");
 });
@@ -306,7 +310,7 @@ for (const source of ["precompiled CSS", "Tailwind 4"] as const) {
     await page.setContent(`<!doctype html><div id="scope">
       <div id="layout" class="p-md -mt-xs gap-sm md:gap-lg">${button}</div>
       <div id="square" class="size-md"></div>
-      <div id="sized" class="w-3xl h-xl max-w-sm"></div>
+      <div id="sized" class="w-3xl h-xl max-w-lg"></div>
       <div id="offset-row"><div id="offset" style="position: relative" class="-top-xs -translate-y-xs"></div></div>
       <div id="siblings" class="space-y-sm"><div>First</div><div>Second</div></div>
       <table class="border-spacing-x-md"><tbody><tr><td>Cell</td></tr></tbody></table>
@@ -315,7 +319,7 @@ for (const source of ["precompiled CSS", "Tailwind 4"] as const) {
       content: source === "Tailwind 4"
         ? await buildConsumerCss([
             "p-md", "-mt-xs", "gap-sm", "md:gap-lg", "p-3xs",
-            "size-md", "w-3xl", "h-xl", "max-w-sm", "-top-xs", "-translate-y-xs", "space-y-sm",
+            "size-md", "w-3xl", "h-xl", "max-w-lg", "-top-xs", "-translate-y-xs", "space-y-sm",
             "border-spacing-x-md",
           ], true)
         : readFileSync("dist/styles.css", "utf8"),
@@ -329,7 +333,7 @@ for (const source of ["precompiled CSS", "Tailwind 4"] as const) {
     const square = page.locator("#square");
     await expect(square).toHaveCSS("width", "16px");
     await expect(square).toHaveCSS("height", "16px");
-    await expect(page.locator("#sized")).toHaveCSS("width", "12px");
+    await expect(page.locator("#sized")).toHaveCSS("width", "24px");
     await expect(page.locator("#sized")).toHaveCSS("height", "32px");
     await expect(page.locator("#offset")).toHaveCSS("top", "-8px");
     const offset = await page.locator("#offset").evaluate((element) =>
@@ -483,7 +487,6 @@ test("Tailwind 4 consumers get token utilities from one CSS import", async ({
   await page.locator("#scope").evaluate((element) => {
     element.setAttribute("style", `
       --primary: 120 100% 25%;
-      --space-4: 28px;
       --spacing-unit: 6px;
       --radius: 12px;
       --border-width: 3px;
@@ -495,10 +498,11 @@ test("Tailwind 4 consumers get token utilities from one CSS import", async ({
   await expect(panel).toHaveCSS("border-width", "3px");
   await expect(panel).toHaveCSS("border-radius", "12px");
   for (const property of ["padding", "margin", "gap"]) {
-    await expect(panel).toHaveCSS(property, "28px");
+    await expect(panel).toHaveCSS(property, "24px");
   }
   await expect(page.locator("#ring")).toHaveCSS("--tw-ring-offset-width", "3px");
   await expect(page.locator("#ring")).toHaveCSS("box-shadow", /0px 0px 0px 7px/);
+  await expect(page.locator("#fraction")).toHaveCSS("padding", "3px");
   await expect(page.locator("#dynamic")).toHaveCSS("padding", "42px");
 });
 
@@ -533,7 +537,7 @@ test("tokens.css still supplies ordinary CSS variables without Tailwind", async 
   page,
 }) => {
   await page.setContent(
-    '<!doctype html><div id="plain" style="color: hsl(var(--primary)); padding: var(--space-4); font-family: var(--font-sans)">Plain CSS tokens</div>'
+    '<!doctype html><div id="plain" style="color: hsl(var(--primary)); padding: var(--space-md); font-family: var(--font-sans)">Plain CSS tokens</div>'
   );
   await page.addStyleTag({ content: readFileSync("dist/tokens.css", "utf8") });
   await expect(page.locator("#plain")).toHaveCSS("color", "rgb(23, 84, 207)");
@@ -1014,6 +1018,26 @@ test("popover cycles focus and allows outside interaction only in non-modal mode
   await expect(close).toBeFocused();
   await close.click();
   await expect(page.getByRole("button", { name: "Review changes" })).toBeFocused();
+});
+
+test("popover enter animation follows the named offset", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/iframe.html?id=components-popover--default&viewMode=story");
+  await page.addStyleTag({
+    content: ':root { --space-xs: 12px; } [role="dialog"] { animation-duration: 5s !important; }',
+  });
+  await page.getByRole("button", { name: "Edit dimensions" }).click();
+  const content = page.getByRole("dialog", { name: "Dimensions" });
+  await expect(content).toHaveAttribute("data-side", "bottom");
+  await expect.poll(() => content.evaluate((element) => {
+    const enter = element.getAnimations().find(
+      (animation) => animation instanceof CSSAnimation && animation.animationName === "enter"
+    );
+    if (!enter) return null;
+    enter.pause();
+    enter.currentTime = 0;
+    return new DOMMatrixReadOnly(getComputedStyle(element).transform).m42;
+  })).toBe(-12);
 });
 
 test("popover supports a custom anchor and reduced motion", async ({ page }) => {

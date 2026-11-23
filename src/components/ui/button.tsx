@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "comal-ui inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border text-sm font-medium [&:not([aria-pressed])]:transition-all active:[&:not([aria-haspopup]):not([aria-pressed])]:translate-y-px motion-reduce:active:[&:not([aria-haspopup]):not([aria-pressed])]:transform-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-disabled [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "comal-ui inline-flex items-center justify-center gap-xs whitespace-nowrap rounded-md border text-sm font-medium [&:not([aria-pressed])]:transition-all active:[&:not([aria-haspopup]):not([aria-pressed])]:translate-y-px motion-reduce:active:[&:not([aria-haspopup]):not([aria-pressed])]:transform-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-disabled [&_svg]:pointer-events-none [&_svg]:size-md [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -22,10 +22,10 @@ const buttonVariants = cva(
         link: "border-transparent text-action underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
-        icon: "h-9 w-9",
+        default: "h-xl px-md py-xs",
+        sm: "h-xl rounded-md px-sm text-xs",
+        lg: "h-2xl rounded-md px-xl",
+        icon: "size-xl",
       },
     },
     defaultVariants: {
