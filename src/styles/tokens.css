@@ -28,6 +28,15 @@
   --font-weight-bold: 600;
   --line-height: 1.5;
   --spacing-unit: 0.25rem;
+  --space-3xs: calc(var(--spacing-unit) * 0.5);
+  --space-2xs: calc(var(--spacing-unit) * 1);
+  --space-xs: calc(var(--spacing-unit) * 2);
+  --space-sm: calc(var(--spacing-unit) * 3);
+  --space-md: calc(var(--spacing-unit) * 4);
+  --space-lg: calc(var(--spacing-unit) * 6);
+  --space-xl: calc(var(--spacing-unit) * 8);
+  --space-2xl: calc(var(--spacing-unit) * 12);
+  --space-3xl: calc(var(--spacing-unit) * 16);
   --space-0: calc(var(--spacing-unit) * 0);
   --space-0-5: calc(var(--spacing-unit) * 0.5);
   --space-1: calc(var(--spacing-unit) * 1);

@@ -2,6 +2,7 @@ import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
 import animate from "tailwindcss-animate";
 import plugin from "tailwindcss/plugin";
+import { namedSpacingSteps, namedSpacingUtilities } from "./src/styles/spacing";
 import { colorUtilities, roleColors, theme, typographyUtilities } from "./src/styles/tailwind-theme";
 
 const spacing = Object.fromEntries(
@@ -15,17 +16,30 @@ const spacing = Object.fromEntries(
       : value,
   ])
 );
+const namedSpacing = Object.fromEntries(
+  namedSpacingSteps.map((step) => [step, `var(--space-${step})`])
+);
 export default {
   content: ["./src/components/ui/**/*.{ts,tsx}"],
   // Derive the public color utilities from the same mapping as the theme.
-  safelist: [...Object.keys(typographyUtilities), ...colorUtilities.flatMap((utility) =>
-    ["", "hover:", "focus:", "focus-visible:"].map(
-      (state) => `${state}${utility}`
-    )
-  )],
+  safelist: [
+    ...namedSpacingUtilities.flatMap((utility) =>
+      namedSpacingSteps.flatMap((step) => utility.startsWith("m")
+        ? [`${utility}-${step}`, `-${utility}-${step}`]
+        : [`${utility}-${step}`])
+    ),
+    ...Object.keys(typographyUtilities),
+    ...colorUtilities.flatMap((utility) =>
+      ["", "hover:", "focus:", "focus-visible:"].map((state) => `${state}${utility}`)
+    ),
+  ],
   darkMode: ["class", '[data-color-scheme="dark"]'],
   corePlugins: { preflight: false },
-  theme: { ...theme, spacing },
+  theme: {
+    ...theme,
+    spacing,
+    extend: { ...theme.extend, padding: namedSpacing, margin: namedSpacing, gap: namedSpacing },
+  },
   plugins: [
     animate,
     plugin(({ addComponents, matchUtilities }) => {

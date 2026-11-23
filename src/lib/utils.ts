@@ -1,9 +1,13 @@
 import { clsx, type ClassValue } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
+import { namedSpacingSteps, namedSpacingUtilities } from "../styles/spacing";
 
 const twMerge = extendTailwindMerge<"typography">({
   extend: {
     classGroups: {
+      ...Object.fromEntries(
+        namedSpacingUtilities.map((utility) => [utility, [{ [utility]: namedSpacingSteps }]])
+      ),
       "bg-color": [{ surface: ["primary", "secondary", "tertiary", "raised", "inverse"] }],
       typography: [{ text: ["display", "title", "body", "label", "caption", "eyebrow"] }],
     },

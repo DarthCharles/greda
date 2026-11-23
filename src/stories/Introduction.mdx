@@ -174,9 +174,9 @@ return (
 unmarked descendant with a base-color override alone does not rebind inherited
 roles; mark the theme boundary with `data-theme`.
 
-Spacing has a separate scope rule: derived steps are computed where they are
-declared. Override a named step such as `--space-4` on a subtree; changing only
-`--spacing-unit` there does not recalculate inherited steps.
+Spacing steps are computed where they are declared. To adjust a subtree, override
+the step it uses, such as `--space-md` for `gap-md` or `--space-4` for `gap-4`.
+Changing only `--spacing-unit` on that subtree does not recalculate inherited steps.
 
 </details>
 

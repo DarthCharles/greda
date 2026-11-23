@@ -296,6 +296,42 @@ test("spacing overrides update component padding", async ({ page }) => {
   await expect(button).toHaveCSS("padding-left", "28px");
 });
 
+for (const source of ["precompiled CSS", "Tailwind 4"] as const) {
+  test(`named spacing utilities work with ${source}`, async ({ page }) => {
+    const { Button } = await import(new URL("../dist/index.js", import.meta.url).href);
+    const button = renderToStaticMarkup(
+      createElement(Button, { className: "p-3xs" }, "Continue")
+    );
+    await page.setViewportSize({ width: 640, height: 800 });
+    await page.setContent(`<!doctype html><div id="scope">
+      <div id="layout" class="p-md -mt-xs gap-sm md:gap-lg">${button}</div>
+    </div>`);
+    await page.addStyleTag({
+      content: source === "Tailwind 4"
+        ? await buildConsumerCss(["p-md", "-mt-xs", "gap-sm", "md:gap-lg", "p-3xs"], true)
+        : readFileSync("dist/styles.css", "utf8"),
+    });
+
+    const layout = page.locator("#layout");
+    await expect(layout).toHaveCSS("padding", "16px");
+    await expect(layout).toHaveCSS("margin-top", "-8px");
+    await expect(layout).toHaveCSS("gap", "12px");
+    await expect(page.getByRole("button", { name: "Continue" })).toHaveCSS("padding", "2px");
+
+    await page.locator("#scope").evaluate((element) => {
+      element.style.setProperty("--space-md", "20px");
+      element.style.setProperty("--space-sm", "10px");
+    });
+    await expect(layout).toHaveCSS("padding", "20px");
+    await expect(layout).toHaveCSS("gap", "10px");
+
+    if (source === "Tailwind 4") {
+      await page.setViewportSize({ width: 900, height: 800 });
+      await expect(layout).toHaveCSS("gap", "24px");
+    }
+  });
+}
+
 test("package CSS preserves unrelated layered consumer utilities", async ({
   page,
 }) => {

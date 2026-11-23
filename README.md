@@ -174,7 +174,7 @@ theme so Tailwind can generate utilities without a preset or manual mappings:
 ```
 
 ```tsx
-<div className="bg-primary p-4 text-primary-foreground hover:bg-primary-hover">
+<div className="bg-primary p-md text-primary-foreground hover:bg-primary-hover">
   Your content
 </div>
 ```
@@ -321,11 +321,6 @@ rather than the matching action color. Use `text-action` / `border-action`
 for action colors. Existing component tokens remain as derived variables;
 Greda owns their assignments. Tooltip uses inverse surface/text roles.
 
-Spacing tokens such as `--space-4` are shared distances for padding, margin, and
-gap. Use them directly in your own CSS when needed; layout rules are optional
-examples, not theme setup. If you only need tokens, import
-`@darthcharles/greda/tokens.css` instead of `styles.css`.
-
 Set `data-color-scheme="dark"` on `<html>` for the base dark palette. Brand
 overrides need matching dark colors. Apply themes to `<html>` so portaled
 content inherits them; scoped themes use the content component's `container` prop.
@@ -334,6 +329,25 @@ The [introduction guide](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/
 covers fonts, dark mode, and scoped portals. Browse the
 [interactive token catalog](https://elegant-hotteok-cbb834.netlify.app/?path=/story/design-tokens--overview)
 or read the defaults in [tokens.css](src/styles/tokens.css).
+
+## Spacing
+
+Use `3xs`, `2xs`, `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, and `3xl` for padding,
+margin, and gaps. The precompiled `styles.css` includes utilities such as
+`p-3xs`, `px-md`, `mt-lg`, `-mt-xs`, and `gap-sm`. With the Tailwind 4 token
+import, you can generate responsive variants such as `md:gap-lg`.
+
+```tsx
+<div className="grid p-md gap-sm">Your content</div>
+```
+
+Both CSS exports include the custom properties. In plain CSS, use
+`gap: var(--space-sm)` or override `--space-sm` on a wrapper to change that
+named step for its descendants. The defaults use `rem` and range from 2px to
+64px at a 16px root font size. Existing components use numeric tokens such as
+`--space-4`, which you can override independently. See the
+[spacing catalog](https://elegant-hotteok-cbb834.netlify.app/?path=/story/design-tokens--spacing)
+for the full scale.
 
 ## Development
 

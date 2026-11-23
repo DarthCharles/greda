@@ -44,7 +44,7 @@ export function createTailwindTheme(tokens) {
   aliases.set("--spacing", "var(--spacing-unit)");
   const source = postcss.parse(tokens);
   source.walkDecls(/^--space-/, (declaration) => {
-    const step = declaration.prop.slice("--space-".length).replace("-", ".");
+    const step = declaration.prop.slice("--space-".length).replace(/(\d)-(\d)/, "$1.$2");
     aliases.set(
       `--spacing-${step.replace(".", "\\.")}`,
       `var(${declaration.prop})`
