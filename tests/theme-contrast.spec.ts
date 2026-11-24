@@ -49,7 +49,7 @@ async function measureColors(locator: Locator) {
   return samples;
 }
 
-for (const theme of ["base", "comal", "cobalto", "matrix", "la-viuda"] as const) {
+for (const theme of ["base", "comal", "cobalto", "matrix", "la-viuda", "workbench"] as const) {
   for (const consumer of ["package", "tailwind4"] as const) {
     for (const scheme of ["light", "dark"] as const) {
       test(`theme contrast: ${theme} ${scheme} with ${consumer}`, async ({ page }) => {
@@ -71,17 +71,23 @@ for (const theme of ["base", "comal", "cobalto", "matrix", "la-viuda"] as const)
             variant: "ghost", ...textAttributes, ...{ "data-feedback": "" },
           }, "Context action")
         ));
+        const syntax = theme === "workbench" ? ["keyword", "type"].map((role) =>
+          `<p style="color: hsl(var(--workbench-syntax-${role}))" data-contrast="text">Syntax ${role}</p>`
+        ).join("") : "";
         const markup = surfaces.map((surface) => `<section class="comal-ui ${surface} text-primary" style="padding: 16px">
           ${textRoles.map((role) => `<p class="${role}" data-contrast="text">${role}</p>`).join("")}
+          ${syntax}
           ${controls}
         </section>`).join("");
-        await page.setContent(`<!doctype html><html lang="en" data-theme="${theme}" data-color-scheme="${scheme}"><body>${markup}<section class="comal-ui surface-inverse text-inverse" data-contrast="text">Inverse text</section></body></html>`);
+        const schemeAttribute = theme === "workbench" && scheme === "dark" ? "" : ` data-color-scheme="${scheme}"`;
+        await page.setContent(`<!doctype html><html lang="en" data-theme="${theme}"${schemeAttribute}><body>${markup}<section class="comal-ui surface-inverse text-inverse" data-contrast="text">Inverse text</section></body></html>`);
         const candidates = await page.locator("body").evaluate((body) =>
           [...new Set([...body.querySelectorAll("*")].flatMap((element) => [...element.classList]))]
         );
         await page.addStyleTag({ content: consumer === "tailwind4"
           ? await buildConsumerCss(candidates, true, theme === "base" ? undefined : theme)
           : `${readFileSync("dist/styles.css", "utf8")}\n${theme === "base" ? "" : readFileSync(`dist/themes/${theme}.css`, "utf8")}` });
+        await expect(page.locator("html")).toHaveCSS("color-scheme", scheme);
         // Assert settled default/hover states without sampling transition frames.
         await page.addStyleTag({ content: "*, *::before, *::after { transition: none !important; animation: none !important; }" });
         await page.mouse.move(0, 0);

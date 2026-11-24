@@ -18,6 +18,7 @@ import "../src/styles/themes/comal.css";
 import "../src/styles/themes/cobalto.css";
 import "../src/styles/themes/matrix.css";
 import "../src/styles/themes/la-viuda.css";
+import "../src/styles/themes/workbench.css";
 import "./preview.css";
 
 function Theme({
@@ -33,7 +34,14 @@ function Theme({
     document.documentElement.dataset.theme = theme;
     document.documentElement.dataset.colorScheme = scheme;
   }, [theme, scheme]);
-  return <div className="catalog-canvas">{children}</div>;
+  return (
+    <div className="catalog-canvas">
+      {theme === "workbench" && (
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Source+Code+Pro:wght@400;500&display=swap" />
+      )}
+      {children}
+    </div>
+  );
 }
 const preview: Preview = {
   tags: ["autodocs"],
@@ -42,7 +50,7 @@ const preview: Preview = {
       description: "Consumer token overrides",
       toolbar: {
         icon: "paintbrush",
-        items: ["base", "comal", "cobalto", "matrix", "la-viuda"],
+        items: ["base", "comal", "cobalto", "matrix", "la-viuda", "workbench"],
         dynamicTitle: true,
       },
     },

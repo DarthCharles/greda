@@ -11,7 +11,7 @@ npm run storybook
 ```
 
 Storybook runs at **http://localhost:6006** with component examples, automatic
-prop documentation, an axe panel, and Base, Comal, Cobalto, Matrix, and La Viuda themes with light/dark toolbar options.
+prop documentation, an axe panel, and theme and color scheme toolbar options.
 
 ### Validation
 

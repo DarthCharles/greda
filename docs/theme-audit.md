@@ -2,8 +2,8 @@
 
 Run this audit when changing palettes, semantic role assignments, component
 states, CSS imports, or portal theming. It covers Base, Comal, Cobalto, Matrix,
-and La Viuda in light and dark schemes. Add future themes to the contrast matrix
-and the existing portal/recipe checks when introducing them.
+La Viuda, and Workbench in light and dark schemes. Add future themes to the
+contrast matrix and the existing portal/recipe checks when introducing them.
 
 ## Repeat the audit
 
@@ -43,7 +43,7 @@ complete audit again after source changes that affect other contracts.
 
 ## Automated coverage
 
-The contrast matrix has 20 cases: five themes × two schemes × two CSS consumers
+The contrast matrix has 24 cases: six themes × two schemes × two CSS consumers
 (published package CSS and Tailwind 4 with component styles in a components
 layer). It checks real computed styles and composites translucent fills over
 their ancestors. Canvas resolves browser CSS colors, including the modern color

@@ -12,6 +12,7 @@ export default {
       "../src/stories/Cobalto.stories.tsx",
       "../src/stories/Matrix.stories.tsx",
       "../src/stories/LaViuda.stories.tsx",
+      "../src/stories/Workbench.stories.tsx",
     ],
   },
 } satisfies Config;

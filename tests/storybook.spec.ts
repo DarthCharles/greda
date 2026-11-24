@@ -634,36 +634,31 @@ test("exported variant helpers include the standalone component baseline", async
   }
 });
 
-test("scoped Comal palettes set the native color scheme independently of the document", async ({
-  page,
-}) => {
-  for (const [outer, inner] of [
-    ["dark", "light"],
-    ["light", "dark"],
-  ]) {
-    await page.setContent(
-      `<!doctype html><div id="scoped-theme" data-theme="comal" data-color-scheme="${inner}"><input aria-label="Native field" /></div>`
-    );
-    await page.evaluate((scheme) => {
-      document.documentElement.dataset.colorScheme = scheme;
-    }, outer);
-    await page.addStyleTag({
-      content: readFileSync("dist/styles.css", "utf8"),
-    });
-    await page.addStyleTag({
-      content: readFileSync("dist/themes/comal.css", "utf8"),
-    });
-    await expect(page.locator("html")).toHaveCSS("color-scheme", outer);
-    await expect(page.locator("#scoped-theme")).toHaveCSS(
-      "color-scheme",
-      inner
-    );
-    await expect(page.getByRole("textbox", { name: "Native field" })).toHaveCSS(
-      "color-scheme",
-      inner
-    );
-  }
-});
+for (const theme of ["comal", "workbench"]) {
+  test(`scoped ${theme} palettes set the native color scheme independently of the document`, async ({ page }) => {
+    for (const [outer, inner] of [
+      ["dark", "light"],
+      ["light", "dark"],
+    ]) {
+      const schemeAttribute = theme === "workbench" && inner === "dark" ? "" : ` data-color-scheme="${inner}"`;
+      await page.setContent(
+        `<!doctype html><div id="scoped-theme" data-theme="${theme}"${schemeAttribute}><input aria-label="Native field" /></div>`
+      );
+      await page.evaluate((scheme) => {
+        document.documentElement.dataset.colorScheme = scheme;
+      }, outer);
+      await page.addStyleTag({
+        content: readFileSync("dist/styles.css", "utf8"),
+      });
+      await page.addStyleTag({
+        content: readFileSync(`dist/themes/${theme}.css`, "utf8"),
+      });
+      await expect(page.locator("html")).toHaveCSS("color-scheme", outer);
+      await expect(page.locator("#scoped-theme")).toHaveCSS("color-scheme", inner);
+      await expect(page.getByRole("textbox", { name: "Native field" })).toHaveCSS("color-scheme", inner);
+    }
+  });
+}
 
 for (const layered of [false, true]) {
   test(`category color roles stay independent in ${layered ? "layered components" : "standalone utilities"}`, async ({ page }) => {
@@ -877,6 +872,7 @@ for (const recipe of [
   { theme: "comal", link: "Explore the workshop", target: "#comal-session", width: "1100px" },
   { theme: "matrix", link: "Explore the protocol", target: "#matrix-protocol", width: "1100px" },
   { theme: "la-viuda", link: "Shop the harvest", target: "#la-viuda-ranch", width: "1100px" },
+  { theme: "workbench", link: "Screening details", target: "#workbench-screening-details", width: "920px" },
 ] as const) {
   for (const scheme of ["light", "dark"]) {
     for (const consumer of ["storybook", "tailwind4"]) {

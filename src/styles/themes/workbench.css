@@ -1,0 +1,67 @@
+/* IDE syntax palette. Import after Greda styles or tokens. */
+:where([data-theme="workbench"]) {
+  --base-white: 42 44% 97%;
+  --base-black: 216 33% 13%;
+  --base-gray-50: 40 34% 94%;
+  --base-gray-100: 216 23% 92%;
+  --base-gray-200: 215 17% 43%;
+  --base-gray-300: 216 18% 40%;
+  --base-gray-500: 216 18% 33%;
+  --base-gray-600: 216 22% 30%;
+  --base-gray-800: 214 28% 27%;
+  --base-gray-900: 214.286 31.111% 17.647%;
+  --base-primary: 34 91% 26%;
+  --base-primary-hover: 32 92% 21%;
+  --base-secondary: 268 28% 91%;
+  --base-tertiary: 39 46% 91%;
+  --base-accent: 215 27% 87%;
+  --base-destructive: 0 66% 35%;
+  --font-sans: "Poppins", system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --workbench-font-code: "Source Code Pro", ui-monospace, Menlo, Consolas, monospace;
+  --workbench-syntax-keyword: 20 79% 29%;
+  --workbench-syntax-type: 277 42% 34%;
+  --type-display-size: clamp(2.125rem, 5.6vw, 4.5rem);
+  --type-display-weight: 500;
+  --type-display-tracking: -0.04em;
+  --type-title-size: clamp(1.25rem, 3vw, 1.75rem);
+  --type-title-weight: 500;
+  --type-body-leading: 1.7;
+  --radius: 0.5rem;
+  --radius-sm: 0.25rem;
+  --radius-lg: 0.75rem;
+  --focus-offset: 3px;
+}
+
+:where([data-theme="workbench"]:not([data-color-scheme]), [data-theme="workbench"][data-color-scheme="dark"]) {
+  --base-white: 215 45% 96%;
+  --base-primary: 36.575 100% 71.373%;
+  --base-primary-hover: 36.585 100% 83.922%;
+  --base-secondary: 249 23% 27%;
+  --base-tertiary: 217 27% 22%;
+  --base-accent: 214 25% 31%;
+  --base-gray-300: 215 29% 78%;
+  --base-gray-600: 214 22% 65%;
+  --base-destructive: 4 87% 82%;
+  --workbench-syntax-keyword: 27 78% 72%;
+  --workbench-syntax-type: 276 66% 82%;
+}
+
+/* An explicit dark scheme already gets these role assignments from Greda. */
+:where([data-theme="workbench"]:not([data-color-scheme])) {
+  color-scheme: dark;
+  --surface-primary: var(--base-gray-900);
+  --surface-secondary: var(--base-gray-800);
+  --surface-raised: var(--base-gray-800);
+  --surface-inverse: var(--base-white);
+  --text-primary: var(--base-white);
+  --text-secondary: var(--base-gray-300);
+  --text-muted: var(--base-gray-300);
+  --text-inverse: var(--base-black);
+  --border-primary: var(--base-gray-600);
+  --border-secondary: var(--base-gray-800);
+  --border-inverse: var(--base-gray-200);
+  --primary-foreground: var(--base-black);
+  --destructive-foreground: var(--base-black);
+  --overlay: var(--base-black) / 0.7;
+}

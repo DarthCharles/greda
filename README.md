@@ -265,6 +265,14 @@ also supports custom font overrides and falls back to Arial/Helvetica. Select
 with produce and ranch goods, product photography, a sample basket, font setup,
 and Tailwind 4 integration.
 
+Workbench draws on IDE syntax highlighting with slate surfaces, amber actions,
+orange keywords, and violet type accents. Import
+`@darthcharles/greda/themes/workbench.css` after the package stylesheet and set
+`data-theme="workbench"` for dark mode. Add `data-color-scheme="light"` to
+switch to light mode. Load Poppins and Source Code Pro in your application to
+match the [Workbench cinema program recipe](src/stories/Workbench.mdx), which
+groups Cards, Badges, and Buttons to show available and sold-out screenings.
+
 Customization is optional. To change the default theme, import your own
 `theme.css` after the package stylesheet and override the base colors or other
 tokens you need.

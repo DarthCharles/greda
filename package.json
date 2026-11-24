@@ -39,7 +39,8 @@
     "./themes/cobalto.css": "./dist/themes/cobalto.css",
     "./themes/comal.css": "./dist/themes/comal.css",
     "./themes/matrix.css": "./dist/themes/matrix.css",
-    "./themes/la-viuda.css": "./dist/themes/la-viuda.css"
+    "./themes/la-viuda.css": "./dist/themes/la-viuda.css",
+    "./themes/workbench.css": "./dist/themes/workbench.css"
   },
   "sideEffects": [
     "**/*.css"

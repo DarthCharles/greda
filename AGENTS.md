@@ -22,7 +22,7 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
 | `src/styles/tailwind-theme.ts` | Shared token mappings for package CSS and Tailwind 4 consumers |
 | `scripts/tailwind-theme.mjs` | Generating Tailwind 4 theme directives for `tokens.css` |
 | `src/stories/` | Examples, documentation, and token catalog |
-| `src/styles/themes/` | Optional exported brand themes (Comal, Cobalto, Matrix, and La Viuda) |
+| `src/styles/themes/` | Optional exported brand themes (Comal, Cobalto, Matrix, La Viuda, and Workbench) |
 | `.storybook/` | Configuration, catalog styles, and example font loading |
 | `src/components/behavior.test.tsx` | Interaction tests with Testing Library |
 | `tests/storybook.spec.ts` | Browser, axe, theme, and package CSS tests |
@@ -76,7 +76,7 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
   including hover, focus, and focus-visible variants. Complete typography roles
   are also shipped through the shared mapping; keep their class merging and
   Tailwind 4 utilities in sync. Storybook additionally scans
-  the Comal, Cobalto, Matrix, and La Viuda recipe stories through the explicit `@config` in
+  the theme recipe stories through the explicit `@config` in
   `.storybook/styles.css`, using the shared PostCSS transforms.
   Other catalog-only styles belong in Storybook CSS; a class used only in a story is not guaranteed to appear in the
   published CSS.
@@ -110,6 +110,10 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
 
 - Write all examples, recipe content, and documentation in English. Preserve
   public theme names and identifiers.
+- Keep theme recipes small, illustrative Storybook compositions. Group Greda
+  components that naturally belong together and show how the theme styles
+  them in context. Static example content is sufficient. Include interaction
+  only when it helps demonstrate a themed component or state.
 - Keep recipe documentation consistent: a theme-focused overview, Install the
   theme and fonts, Compose the page, Responsive layout and interaction, and
   Scoped themes. Describe colors, typography, shape, and visual emphasis in the

@@ -25,8 +25,9 @@ through the public exports. Tailwind configuration is not required. Applications
 own page layout, font loading, and application content.
 
 Storybook is the component documentation and demonstration catalog. Theme recipes
-show fictional compositions to explain library usage; they do not define Greda
-as a shop, workshop, terminal application, or other example business.
+show how a group of Greda components looks together under one theme. Fictional
+content provides context, and interactions are optional when they help
+demonstrate a themed component or state.
 
 ## Capabilities and Constraints
 
@@ -48,7 +49,7 @@ as a shop, workshop, terminal application, or other example business.
 - `README.md`: installation, public usage, integration, and theming guidance.
 - `src/components/ui/` and `src/index.ts`: components and public exports.
 - `src/styles/tokens.css`: token source of truth.
-- `src/styles/themes/`: optional Comal, Cobalto, Matrix, and La Viuda themes.
+- `src/styles/themes/`: optional Comal, Cobalto, Matrix, La Viuda, and Workbench themes.
 - `src/stories/`: component examples, usage guides, token catalog, and recipes.
 - `src/components/behavior.test.tsx` and `tests/`: behavior, browser,
   accessibility, and consumer integration coverage.

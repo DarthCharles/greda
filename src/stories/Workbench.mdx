@@ -1,0 +1,79 @@
+import { Canvas, Meta, Source } from "@storybook/addon-docs/blocks";
+import * as RecipeStories from "./Workbench.stories";
+import recipeSource from "./Workbench.stories.tsx?raw";
+
+<Meta of={RecipeStories} name="Composition recipe" />
+
+# Workbench
+
+Workbench draws on the way an IDE makes code easy to scan. Syntax colors
+distinguish keywords, function names, and return types. The default dark palette
+pairs slate-blue surfaces with amber actions, orange keywords, and violet type
+names. The light palette uses paper-toned surfaces and deeper syntax colors.
+Poppins carries the prose, Source Code Pro sets off code and numeric details, and
+modestly rounded controls frame interactive elements.
+
+Choose **workbench** and **dark** in the toolbar to preview the default palette,
+or choose **light** to see the alternate palette.
+
+## Install the theme and fonts
+
+Import the compiled component stylesheet, followed by the optional theme:
+
+```tsx
+import "@darthcharles/greda/styles.css";
+import "@darthcharles/greda/themes/workbench.css";
+```
+
+Set the theme on the document or a wrapper. Workbench defaults to dark:
+
+```html
+<html data-theme="workbench">
+```
+
+Add `data-color-scheme="light"` to opt into light. Set
+`data-color-scheme="dark"` explicitly if your application uses Tailwind's
+`dark:` variant, which matches the scheme attribute.
+
+Load Poppins (400–600) and Source Code Pro (400–500) in your application to
+match the example. The theme font stacks fall back to system sans and monospace.
+Use `--font-sans`, `--font-heading`, and `--workbench-font-code` to choose
+different families. Apply `surface-primary`, `text-primary`, and `font-sans`
+to your page shell to give it the same colors and typography as the components.
+
+## Compose the page
+
+This fictional cinema program groups a Card, Badge, and Button for each
+screening. The first Card pairs an amber primary action with a violet format
+Badge. The second uses a secondary Badge to show that the screening is sold
+out and a disabled Button to show the unavailable action. Source Code Pro
+sets the screening times.
+
+With Tailwind 4 configured, use these imports in your CSS entry point:
+
+```css
+@import "tailwindcss";
+@import "@darthcharles/greda/styles.css" layer(components);
+@import "@darthcharles/greda/tokens.css";
+@import "@darthcharles/greda/themes/workbench.css";
+```
+
+Copy the JSX into an application file scanned by Tailwind and import
+the Card parts, Badge, and Button from `@darthcharles/greda`.
+
+<Canvas of={RecipeStories.Default} />
+<Source code={recipeSource} language="tsx" />
+
+## Responsive layout and interaction
+
+The cards sit side by side on wider screens and stack on smaller screens.
+The first Button uses `asChild` to preserve anchor semantics. Tab to
+**Screening details** and press Enter to focus the note below the cards.
+The sold-out badge conveys availability independently of the disabled Button.
+
+## Scoped themes
+
+Set `data-theme="workbench"` on the wrapper and add an explicit scheme there
+when you want to override the default. For DialogContent, SelectContent, and
+TooltipContent in a scoped theme, pass an element inside the wrapper as
+`container` so the portal inherits the palette.

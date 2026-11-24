@@ -16,3 +16,4 @@ await copyFile("src/styles/themes/cobalto.css", "dist/themes/cobalto.css");
 await copyFile("src/styles/themes/comal.css", "dist/themes/comal.css");
 await copyFile("src/styles/themes/matrix.css", "dist/themes/matrix.css");
 await copyFile("src/styles/themes/la-viuda.css", "dist/themes/la-viuda.css");
+await copyFile("src/styles/themes/workbench.css", "dist/themes/workbench.css");
