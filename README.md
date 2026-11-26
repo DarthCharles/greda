@@ -117,6 +117,18 @@ or `open` and `onOpenChange` for controlled state. Compose the trigger with
 See the [Collapsible reference](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/components-collapsible--docs)
 for keyboard interaction, composition, and disabled states.
 
+## Drawer
+
+Use `Drawer` for a swipe-dismissible panel that opens from a viewport edge.
+It opens from the bottom by default. Compose
+`DrawerTrigger`, `DrawerContent`, `DrawerTitle`, and a visible `DrawerClose`
+control. Add `DrawerDescription` when introductory text helps. Wrap the header
+in `DrawerHandle` to enable swipe-to-dismiss. Pass a scoped theme element to
+`DrawerContent` through `container`.
+
+See the [Drawer reference](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/components-drawer--docs)
+for keyboard interaction, sizing, and themed examples.
+
 ## Form fields
 
 `Input`, `Textarea`, `SelectTrigger`, `ComboboxInput`, `Checkbox`, and
@@ -361,7 +373,7 @@ the scale, use an explicit pixel value such as `width: 288px` in CSS or
 use `rem` and range from 2px to 64px at a 16px root font size.
 
 Use `max-w-lg` for a width cap of `--space-lg` (24px by default). Customize
-Dialog’s width through `--dialog-width`.
+the maximum width of Dialog and Drawer through `--dialog-width`.
 
 **Migrating numeric spacing tokens.** Both CSS exports now use the named scale.
 Replace numeric variable references and overrides with the named step the

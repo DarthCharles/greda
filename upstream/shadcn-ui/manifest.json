@@ -118,6 +118,16 @@
         "@radix-ui/react-collapsible"
       ],
       "retrieved": "2026-11-22T02:44:16.997Z"
+    },
+    {
+      "name": "drawer",
+      "url": "https://ui.shadcn.com/r/styles/new-york/drawer.json",
+      "sha256": "a9646b005468dff64500ab370ec72756852066c078986df7b6d81b1f7038b37f",
+      "dependencies": [
+        "vaul",
+        "@radix-ui/react-dialog"
+      ],
+      "retrieved": "2026-11-26T04:09:09.521Z"
     }
   ]
 }

@@ -192,6 +192,100 @@ test("dialog fits a mobile viewport", async ({ page }) => {
   await expect(page.getByRole("dialog")).toHaveCSS("max-width", "280px");
 });
 
+test("drawer scrolls on a short viewport and inherits scoped tokens with published CSS", async ({ page }) => {
+  await page.setViewportSize({ width: 280, height: 250 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/iframe.html?id=components-drawer--scoped-theme&viewMode=story");
+  await page.evaluate(() => document.querySelectorAll('link[rel="stylesheet"], style').forEach((element) => element.remove()));
+  await page.addStyleTag({ content: readFileSync("dist/styles.css", "utf8") });
+  await page.addStyleTag({ content: readFileSync("dist/themes/comal.css", "utf8") });
+  const trigger = page.getByRole("button", { name: "Pickup details" });
+  await trigger.click();
+  const drawer = page.getByRole("dialog", { name: "Pickup details" });
+  await expect(drawer).toBeVisible();
+  await expect(drawer).toHaveCSS("background-color", "rgb(39, 32, 27)");
+  await expect(drawer).toHaveCSS("border-top-left-radius", "24px");
+  await expect(drawer).toHaveCSS("animation-name", "none");
+  const bounds = await drawer.boundingBox();
+  expect(bounds).toMatchObject({ x: 0, width: 280 });
+  expect(bounds!.y).toBeGreaterThan(0);
+  expect(bounds!.y + bounds!.height).toBe(250);
+  const scrollRegion = drawer.getByRole("region", { name: "Pickup instructions" });
+  const { clientHeight, scrollHeight } = await scrollRegion.evaluate((element) => ({
+    clientHeight: element.clientHeight, scrollHeight: element.scrollHeight,
+  }));
+  expect(clientHeight).toBeGreaterThan(0);
+  expect(scrollHeight).toBeGreaterThan(clientHeight);
+  await expect(scrollRegion).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect.poll(() => scrollRegion.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+  const results = await new AxeBuilder({ page })
+    .include('[role="dialog"]')
+    .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+    .analyze();
+  expect(results.violations).toEqual([]);
+  await drawer.getByRole("button", { name: "Done" }).click();
+  await expect(drawer).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await trigger.click();
+  await page.locator('[data-slot="drawer-overlay"]').click({ position: { x: 4, y: 4 } });
+  await expect(drawer).toBeHidden();
+});
+
+test("clicking a drawer close button inside the swipe area dismisses the drawer", async ({ page }) => {
+  await page.goto("/iframe.html?id=components-drawer--right&viewMode=story");
+  const trigger = page.getByRole("button", { name: "Delivery window" });
+  await trigger.click();
+  const drawer = page.getByRole("dialog", { name: "Delivery window" });
+  const swipeArea = drawer.locator('[data-slot="drawer-handle"]');
+  await swipeArea.getByRole("button", { name: "Close delivery window" }).click();
+  await expect(drawer).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
+
+test("swiping the drawer header moves the panel and closes it after a completed swipe", async ({ page }) => {
+  await page.goto("/iframe.html?id=components-drawer--right&viewMode=story");
+  const trigger = page.getByRole("button", { name: "Delivery window" });
+  await trigger.click();
+  const drawer = page.getByRole("dialog", { name: "Delivery window" });
+  await expect.poll(async () => {
+    const bounds = await drawer.boundingBox();
+    return bounds && Math.round(bounds.x + bounds.width);
+  }).toBe(1100);
+  await expect(drawer).toHaveCSS("height", "800px");
+
+  const swipeArea = drawer.locator('[data-slot="drawer-handle"]');
+  const bounds = await swipeArea.getByRole("heading", { name: "Delivery window" }).boundingBox();
+  const x = bounds!.x + bounds!.width / 2;
+  const y = bounds!.y + bounds!.height / 2;
+  const touch = await page.context().newCDPSession(page);
+  for (const { offset, finish } of [
+    { offset: 40, finish: "touchEnd" },
+    { offset: 120, finish: "touchCancel" },
+  ] as const) {
+    await touch.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] });
+    await touch.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: x + offset, y }] });
+    await expect.poll(async () => {
+      const bounds = await drawer.boundingBox();
+      return bounds && Math.round(bounds.x + bounds.width);
+    }).toBe(1100 + offset);
+    await touch.send("Input.dispatchTouchEvent", { type: finish, touchPoints: [] });
+    await expect.poll(async () => {
+      const bounds = await drawer.boundingBox();
+      return bounds && Math.round(bounds.x + bounds.width);
+    }).toBe(1100);
+  }
+
+  await touch.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] });
+  for (const offset of [20, 60, 120, 180]) {
+    await touch.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: x + offset, y }] });
+  }
+  await touch.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+
+  await expect(drawer).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
+
 test("button moves down on press, excludes popup triggers, and respects reduced motion", async ({
   page,
 }) => {

@@ -13,6 +13,9 @@ Tailwind 3.4. Radix dependencies remain because they are used by those shadcn
 components. The upstream Toast is maintained here as the explicit primitive API
 requested for the initial component set.
 
+Drawer adapts New York's composition and uses Radix Dialog for modal behavior.
+Its swipe handle uses browser Pointer Events.
+
 Local adaptations: relative imports; shared semantic color utilities; a scoped CSS baseline;
 consumer token mapping; optional portal containers; button loading, 1px press feedback from the current Nova style, and a default
 non-submit type; viewport bounds on dialogs and popovers; popover root positioning options,

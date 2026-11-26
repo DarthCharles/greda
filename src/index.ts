@@ -5,6 +5,7 @@ export * from "./components/ui/label";
 export * from "./components/ui/select";
 export * from "./components/ui/combobox";
 export * from "./components/ui/dialog";
+export * from "./components/ui/drawer";
 export * from "./components/ui/card";
 export * from "./components/ui/badge";
 export * from "./components/ui/checkbox";

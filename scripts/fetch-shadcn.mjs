@@ -8,6 +8,7 @@ const componentNames = [
   "label",
   "select",
   "dialog",
+  "drawer",
   "card",
   "badge",
   "checkbox",

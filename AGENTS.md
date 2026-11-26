@@ -48,6 +48,18 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
 
 ## Components and public API
 
+- Before editing for a new component, check `components.json` and the matching
+  shadcn/ui snapshot and manifest entry in `upstream/shadcn-ui/`. If its snapshot
+  is missing, open the official New York registry item and its usage docs before
+  choosing a primitive. Use the source and documented behavior to identify the
+  public API, interaction, and dependencies. A similar local component is a
+  reference for Greda conventions.
+- In your first update after that review, name the upstream source, the primitive
+  it uses, and any Greda adaptations that would change its behavior. Prefer the
+  upstream implementation adapted to Greda's tokens, composition, and React
+  support. If matching upstream requires a new runtime dependency, explain what
+  it provides and verify its React 18 and 19 support before deciding. If the
+  upstream item is unavailable, say so and identify the source you can use.
 - Follow the shadcn/Radix composition model. Reuse their primitives for focus,
   keyboard interaction, and accessible states before implementing custom behavior.
 - Preserve native props, events, `aria-*`/`data-*` attributes, and refs. Use

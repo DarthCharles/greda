@@ -19,6 +19,12 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerClose,
   Tabs,
   TabsList,
   TabsTrigger,
@@ -257,6 +263,42 @@ describe("accessible component behavior", () => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
     );
     expect(trigger).toHaveFocus();
+  });
+
+  it("opens a controlled drawer with the keyboard and restores focus on dismissal", async () => {
+    const user = userEvent.setup();
+    const contentRef = createRef<HTMLDivElement>();
+    function ControlledDrawer() {
+      const [open, setOpen] = useState(false);
+      return (
+        <Drawer open={open} onOpenChange={setOpen}>
+          <DrawerTrigger asChild><Button>Open schedule</Button></DrawerTrigger>
+          <DrawerContent ref={contentRef}>
+            <DrawerTitle>Schedule</DrawerTitle>
+            <DrawerDescription>Review the pickup window.</DrawerDescription>
+            <Button>Change date</Button>
+            <DrawerClose asChild><Button>Done</Button></DrawerClose>
+          </DrawerContent>
+        </Drawer>
+      );
+    }
+
+    render(<ControlledDrawer />);
+    const trigger = screen.getByRole("button", { name: "Open schedule" });
+    await user.tab();
+    expect(trigger).toHaveFocus();
+    await user.keyboard("{Enter}");
+    const drawer = screen.getByRole("dialog", { name: "Schedule" });
+    expect(contentRef.current).toBe(drawer);
+    expect(drawer).toHaveAccessibleDescription("Review the pickup window.");
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Change date" })).toHaveFocus()
+    );
+    await user.tab({ shift: true });
+    expect(screen.getByRole("button", { name: "Done" })).toHaveFocus();
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    await waitFor(() => expect(trigger).toHaveFocus());
   });
 
   it("changes tabs with arrow keys while skipping disabled triggers", async () => {
