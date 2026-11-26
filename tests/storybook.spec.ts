@@ -156,7 +156,7 @@ for (const theme of ["base", "comal", "cobalto", "matrix", "la-viuda"]) {
           ? scheme === "dark" ? "rgb(143, 179, 255)" : "rgb(7, 61, 181)"
           : theme === "comal"
           ? scheme === "dark"
-            ? "rgb(221, 166, 108)"
+            ? "rgb(236, 156, 121)"
             : "rgb(133, 58, 25)"
           : scheme === "dark"
           ? "rgb(131, 176, 248)"
@@ -695,20 +695,20 @@ for (const layered of [false, true]) {
           await page.addStyleTag({ content: comal });
           const dark = scheme === "dark";
           const surface = theme === "comal"
-            ? dark ? "rgb(30, 25, 21)" : "rgb(245, 240, 235)"
+            ? dark ? "rgb(39, 32, 27)" : "rgb(245, 240, 235)"
             : dark ? "rgb(16, 20, 30)" : "rgb(255, 255, 255)";
           const text = theme === "comal"
-            ? dark ? "rgb(239, 233, 225)" : "rgb(49, 40, 33)"
+            ? dark ? "rgb(245, 240, 235)" : "rgb(49, 40, 33)"
             : dark ? "rgb(255, 255, 255)" : "rgb(15, 23, 41)";
           const border = theme === "comal"
-            ? dark ? "rgb(163, 141, 123)" : "rgb(113, 99, 86)"
+            ? dark ? "rgb(138, 122, 106)" : "rgb(113, 99, 86)"
             : dark ? "rgb(135, 145, 166)" : "rgb(108, 121, 147)";
           const roles = page.locator("#roles");
           await expect(roles).toHaveCSS("background-color", surface);
           await expect(roles).toHaveCSS("color", text);
           await expect(roles).toHaveCSS("border-color", border);
           const tertiary = theme === "comal"
-            ? dark ? "rgb(57, 70, 47)" : "rgb(206, 216, 196)"
+            ? dark ? "rgb(69, 83, 55)" : "rgb(206, 216, 196)"
             : dark ? "rgb(28, 41, 64)" : "rgb(239, 246, 255)";
           await expect(page.locator("#tertiary")).toHaveCSS("background-color", tertiary);
           await expect(page.locator("#tertiary")).toHaveCSS("color", text);
@@ -728,7 +728,7 @@ for (const layered of [false, true]) {
           expect(accent).not.toBe(secondary);
           await expect(page.locator("#scoped-tertiary")).toHaveCSS("background-color", "rgb(0, 128, 0)");
           const action = theme === "comal"
-            ? dark ? "rgb(221, 166, 108)" : "rgb(133, 58, 25)"
+            ? dark ? "rgb(236, 156, 121)" : "rgb(133, 58, 25)"
             : dark ? "rgb(131, 176, 248)" : "rgb(23, 84, 207)";
           await expect(page.locator("#brand")).toHaveCSS("background-color", action);
           await expect(page.locator("#component")).toHaveCSS("background-color", action);
@@ -856,9 +856,9 @@ test("Comal's public CSS import preserves readable primary and hover states with
   for (const scheme of ["light", "dark"]) {
     await page.mouse.move(1000, 700);
     await page.locator("section").evaluate((element, value) => { element.dataset.colorScheme = value; }, scheme);
-    await expect(button).toHaveCSS("background-color", scheme === "light" ? "rgb(133, 58, 25)" : "rgb(221, 166, 108)");
+    await expect(button).toHaveCSS("background-color", scheme === "light" ? "rgb(133, 58, 25)" : "rgb(236, 156, 121)");
     await button.hover();
-    await expect(button).toHaveCSS("background-color", scheme === "light" ? "rgb(120, 52, 23)" : "rgb(237, 190, 138)");
+    await expect(button).toHaveCSS("background-color", scheme === "light" ? "rgb(120, 52, 23)" : "rgb(242, 182, 156)");
     const results = await new AxeBuilder({ page })
       .include("section")
       .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
@@ -1066,7 +1066,7 @@ test("popover inherits scoped portal tokens and fits a narrow viewport using pub
   });
   await trigger.click();
   const content = page.getByRole("dialog", { name: "Scoped details" });
-  await expect(content).toHaveCSS("background-color", "rgb(51, 42, 36)");
+  await expect(content).toHaveCSS("background-color", "rgb(53, 45, 39)");
   await expect(content).toHaveCSS("z-index", "60");
   await expect(content).toHaveAttribute("data-side", "top");
   await expect(content).toBeVisible();

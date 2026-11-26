@@ -1,5 +1,4 @@
-/* Optional Comal theme: Mexican glazed earthenware, cream slip, and fired clay.
-   Override generic base colors; Greda owns semantic role assignments. */
+/* Optional Comal theme: Mexican glazed earthenware, cream slip, and fired clay. */
 :where([data-theme="comal"]) {
   --base-white: 32 32% 94%;
   --base-black: 26 20% 16%;
@@ -24,15 +23,25 @@
   --radius-lg: 1.5rem;
 }
 
-/* Complementary warm charcoal and copper palette. Set both attributes on one boundary. */
+/* Warm charcoal and peach clay palette. Set both attributes on one boundary. */
 :where([data-theme="comal"][data-color-scheme="dark"]) {
-  --base-white: 32 30% 91%;
-  --base-primary: 30.79646 62.43094% 64.50980%;
-  --base-primary-hover: 31.51515 73.33333% 73.52941%;
-  --base-secondary: 28 18% 20%;
-  --base-tertiary: 95.17241 19.20530% 23%;
-  --base-accent: 22 30% 23%;
-  --base-gray-300: 30 18% 72%;
-  --base-gray-600: 28 18% 56%;
-  --base-destructive: 7.174 79.31% 77.255%;
+  --base-white: 32 32% 94%;
+  --base-black: 26 20% 16%;
+  --base-gray-50: 32 38% 97%;
+  --base-gray-100: 32 26% 88%;
+  --base-gray-200: 30 14% 39%;
+  --base-gray-300: 32 19% 74%;
+  --base-gray-500: 30 16% 61%;
+  --base-gray-600: 30 13% 48%;
+  --base-gray-800: 26 16% 18%;
+  --base-gray-900: 26 18% 13%;
+  --base-primary: 18 75% 70%;
+  --base-primary-hover: 18 77% 78%;
+  --base-secondary: 27 18% 25%;
+  --base-tertiary: 90 20% 27%;
+  --base-accent: 20 28% 23%;
+  --base-destructive: 7 76% 83%;
+
+  /* The lighter clay meets text contrast on the olive tertiary surface. */
+  --text-action: var(--base-primary-hover);
 }

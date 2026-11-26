@@ -237,7 +237,8 @@ element. Inspired by Mexican cazuelas de barro, it uses warm ivory backgrounds,
 near-white raised surfaces, tan stone supporting surfaces and borders, warm
 charcoal text, terracotta actions, pale sage tertiary panels, and warm tan secondary controls,
 with clay-tinted interaction fills and rounded corners. Dark mode pairs warm charcoal
-surfaces with copper actions. Its standard text roles and field borders support the primary, secondary,
+surfaces with cream text, peach-clay actions, and olive tertiary surfaces. Its
+standard text roles and field borders support the primary, secondary,
 raised, tertiary, accent, and secondary-control surfaces in both color schemes.
 Badge backgrounds stay stable on hover; buttons retain their hover feedback.
 Its font stacks reference DM Sans and Fraunces; load those fonts in your application or
