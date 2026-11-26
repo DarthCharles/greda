@@ -1,5 +1,18 @@
 # @darthcharles/greda
 
+## 2.2.0
+
+### Minor Changes
+
+- 6ef76d5: Add a Drawer with swipe-to-dismiss, four opening directions,
+  accessible dialog behavior, and support for scoped themes.
+
+### Patch Changes
+
+- 64f2d23: Refresh Comal's dark palette with warm charcoal surfaces, cream text, peach-clay
+  actions, and olive tertiary surfaces. Use lighter clay for action text to keep
+  it readable on the olive surface.
+
 ## 2.1.0
 
 ### Minor Changes
