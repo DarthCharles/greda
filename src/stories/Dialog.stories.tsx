@@ -36,7 +36,7 @@ export const Default: Story = {
         <DialogTitle>Edit profile</DialogTitle>
         <DialogDescription>Update your public display name.</DialogDescription>
         <div className="catalog-stack">
-          <div className="catalog-field">
+          <div className="catalog-field catalog-field-fluid">
             <Label htmlFor="profile-name">Name</Label>
             <Input id="profile-name" defaultValue="Alex" />
           </div>

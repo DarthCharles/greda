@@ -54,7 +54,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => (
-    <Collapsible {...args} className="catalog-stack">
+    <Collapsible {...args} className="catalog-stack catalog-form-stack">
       <CollapsibleTrigger asChild>
         <Button variant="outline">Delivery instructions</Button>
       </CollapsibleTrigger>
@@ -96,7 +96,7 @@ export const Controlled: Story = {
   render: function ControlledExample() {
     const [open, setOpen] = useState(false);
     return (
-      <Collapsible open={open} onOpenChange={setOpen} className="catalog-stack">
+      <Collapsible open={open} onOpenChange={setOpen} className="catalog-stack catalog-form-stack">
         <CollapsibleTrigger asChild>
           <Button variant="outline">Gift options</Button>
         </CollapsibleTrigger>

@@ -22,7 +22,13 @@ body {
   display: grid;
   min-width: 0;
   gap: 0.5rem;
+}
+.catalog-field,
+.catalog-form-stack {
   max-width: 24rem;
+}
+.catalog-field-fluid {
+  max-width: none;
 }
 .catalog-error {
   color: hsl(var(--destructive));
