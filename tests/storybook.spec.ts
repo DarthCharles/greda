@@ -1,12 +1,37 @@
 import { test, expect } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFileSync } from "node:fs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { build } from "vite";
 import { buildConsumerCss } from "./tailwind-consumer";
 
 const index = JSON.parse(readFileSync("storybook-static/index.json", "utf8"));
 const stories = Object.values(index.entries) as { id: string; type: string }[];
+
+async function mountScopedPortals(page: Page) {
+  const bundle = await build({
+    configFile: false,
+    define: { "process.env.NODE_ENV": JSON.stringify("production") },
+    logLevel: "error",
+    build: {
+      lib: {
+        entry: "tests/fixtures/scoped-portals.tsx",
+        name: "ScopedPortalsFixture",
+        formats: ["iife"],
+      },
+      write: false,
+    },
+  });
+  if (!Array.isArray(bundle)) throw new Error("Expected a browser fixture bundle.");
+  const script = bundle[0]?.output.find((output) => output.type === "chunk");
+  if (!script) throw new Error("Missing browser fixture script.");
+  await page.setContent("<!doctype html><html lang='en'><title>Scoped portals</title><body></body></html>");
+  await page.addStyleTag({ content: readFileSync("dist/styles.css", "utf8") });
+  await page.addStyleTag({ content: readFileSync("dist/themes/comal.css", "utf8") });
+  await page.addScriptTag({ content: script.code });
+}
 
 test("collapsible keyboard toggling keeps closed fields out of the tab order", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -195,10 +220,7 @@ test("dialog fits a mobile viewport", async ({ page }) => {
 test("drawer scrolls on a short viewport and inherits scoped tokens with published CSS", async ({ page }) => {
   await page.setViewportSize({ width: 280, height: 250 });
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/iframe.html?id=components-drawer--scoped-theme&viewMode=story");
-  await page.evaluate(() => document.querySelectorAll('link[rel="stylesheet"], style').forEach((element) => element.remove()));
-  await page.addStyleTag({ content: readFileSync("dist/styles.css", "utf8") });
-  await page.addStyleTag({ content: readFileSync("dist/themes/comal.css", "utf8") });
+  await mountScopedPortals(page);
   const trigger = page.getByRole("button", { name: "Pickup details" });
   await trigger.click();
   const drawer = page.getByRole("dialog", { name: "Pickup details" });
@@ -1147,11 +1169,7 @@ test("popover supports a custom anchor and reduced motion", async ({ page }) => 
 
 test("popover inherits scoped portal tokens and fits a narrow viewport using published CSS", async ({ page }) => {
   await page.setViewportSize({ width: 280, height: 320 });
-  await page.goto("/iframe.html?id=components-popover--scoped-theme&viewMode=story");
-  // Replace catalog CSS with the package CSS to exercise shipped utilities.
-  await page.evaluate(() => document.querySelectorAll('link[rel="stylesheet"], style').forEach((element) => element.remove()));
-  await page.addStyleTag({ content: readFileSync("dist/styles.css", "utf8") });
-  await page.addStyleTag({ content: readFileSync("dist/themes/comal.css", "utf8") });
+  await mountScopedPortals(page);
   const trigger = page.getByRole("button", { name: "Scoped details", exact: true });
   await trigger.evaluate((element) => {
     element.style.position = "fixed";

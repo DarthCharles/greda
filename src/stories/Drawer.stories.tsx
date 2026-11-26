@@ -1,4 +1,3 @@
-import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Button,
@@ -59,7 +58,7 @@ const meta = {
       description: {
         component: `Open a panel from a viewport edge to show details or related actions. Always include DrawerTitle and a visible DrawerClose control. Add DrawerDescription for introductory text. When omitting it, pass \`aria-describedby={undefined}\` to DrawerContent.
 
-Press Enter or Space on the trigger to open the drawer. In modal mode, Tab and Shift+Tab stay inside it. Wrap the drawer header in DrawerHandle to make it a swipe area. Swipe toward the opening edge, press Escape, or press the backdrop to dismiss the drawer. Closing returns focus to the trigger. Use DrawerTrigger and DrawerClose with Button through asChild for button variants, sizes, and disabled states.`,
+Press Enter or Space on the trigger to open the drawer. In modal mode, Tab and Shift+Tab stay inside it. Wrap the drawer header in DrawerHandle to make it a swipe area. Swipe toward the opening edge, press Escape, or press the backdrop to dismiss the drawer. Closing returns focus to the trigger. Use DrawerTrigger and DrawerClose with Button through asChild for button variants, sizes, and disabled states. For long content, use a named, keyboard-focusable scroll region with \`min-height: 0\` and \`overflow-y: auto\` to keep the footer visible.`,
       },
     },
   },
@@ -87,49 +86,6 @@ export const Default: Story = {
       </DrawerContent>
     </Drawer>
   ),
-};
-
-export const ScopedTheme: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: `This drawer inherits Comal dark from its local wrapper. Pass the wrapper element to DrawerContent through its container prop. A top or bottom drawer spans narrow screens and caps its width at \`--dialog-width\`.
-
-Give long content its own named, keyboard-focusable scroll region to keep the footer visible. Set \`min-height: 0\` and \`overflow-y: auto\` on the region. Dragging starts only on DrawerHandle, so the scroll region works with native touch scrolling.`,
-      },
-    },
-  },
-  render: function ScopedThemeExample() {
-    const [container, setContainer] = useState<HTMLDivElement | null>(null);
-    return (
-      <div data-theme="comal" data-color-scheme="dark" ref={setContainer}>
-        <Drawer>
-          <DrawerTrigger asChild><Button>Pickup details</Button></DrawerTrigger>
-          <DrawerContent container={container}>
-            <DrawerHandle>
-              <DrawerHeader>
-                <DrawerTitle>Pickup details</DrawerTitle>
-                <DrawerDescription>Your order will be ready on Saturday.</DrawerDescription>
-              </DrawerHeader>
-            </DrawerHandle>
-            <div
-              className="catalog-stack"
-              role="region"
-              aria-label="Pickup instructions"
-              tabIndex={0}
-              style={{ minHeight: 0, overflowY: "auto", overscrollBehavior: "contain" }}
-            >
-              <p className="comal-ui">Collect your order from the service desk between 10 am and 2 pm.</p>
-              <p className="comal-ui">Bring your confirmation email so the team can find your items.</p>
-            </div>
-            <DrawerFooter>
-              <DrawerClose asChild><Button>Done</Button></DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
-      </div>
-    );
-  },
 };
 
 export const Right: Story = {

@@ -152,6 +152,9 @@ Tailwind. Preserve the declared compatibility with React 18 and 19.
 
 ### Component documentation patterns
 
+- Keep scoped-theme usage in the shared introduction and theme recipe guides.
+  Do not add dedicated scoped-theme stories. Use browser test fixtures to
+  verify theme inheritance for portaled components.
 - Use the shared autodocs page in `.storybook/preview.tsx`: introduction, default
   example, component props, then named examples. Do not introduce a component-specific
   docs layout when the shared page covers the component.

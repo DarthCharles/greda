@@ -90,20 +90,3 @@ export const Disabled: Story = {
     </Popover>
   ),
 };
-
-export const ScopedTheme: Story = {
-  render: function ScopedThemeExample() {
-    const [container, setContainer] = useState<HTMLDivElement | null>(null);
-    return (
-      <div data-theme="comal" data-color-scheme="dark" ref={setContainer}>
-        <Popover placement="bottom-start">
-          <PopoverTrigger asChild><Button>Scoped details</Button></PopoverTrigger>
-          <PopoverContent container={container} aria-label="Scoped details">
-            <p>This portal inherits the local Comal dark theme.</p>
-            <PopoverClose asChild><Button>Close scoped details</Button></PopoverClose>
-          </PopoverContent>
-        </Popover>
-      </div>
-    );
-  },
-};
