@@ -1,5 +1,11 @@
 # @darthcharles/greda
 
+## 3.1.0
+
+### Minor Changes
+
+- f2d179f: Restore the optional `DrawerHandle` for swipe dismissal. Render it without children to show a visible grip. Set `nativeBackdrop` on `DrawerContent` or `DialogContent` to opt into an HTML dialog’s modal scrim for installed iOS web apps.
+
 ## 3.0.0
 
 ### Major Changes
