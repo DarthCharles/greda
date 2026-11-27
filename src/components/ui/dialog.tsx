@@ -6,8 +6,16 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 
 import { cn } from "../../lib/utils";
+import { NativeDialogContent, supportsNativeDialog } from "./internal/native-dialog";
 
-const Dialog = DialogPrimitive.Root;
+const DialogModalContext = React.createContext(true);
+
+const Dialog = ({ modal = true, ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) => (
+  <DialogModalContext.Provider value={modal}>
+    <DialogPrimitive.Root modal={modal} {...props} />
+  </DialogModalContext.Provider>
+);
+Dialog.displayName = "Dialog";
 
 const DialogTrigger = DialogPrimitive.Trigger;
 
@@ -37,31 +45,38 @@ export type DialogContentProps = React.ComponentPropsWithoutRef<
   container?: React.ComponentPropsWithoutRef<
     typeof DialogPrimitive.Portal
   >["container"];
+  nativeBackdrop?: boolean;
 };
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ className, container, children, ...props }, ref) => (
-  <DialogPortal container={container}>
-    <DialogOverlay />
-    <DialogPrimitive.Content
-      ref={ref}
-      className={cn(
-        "comal-ui",
-        "fixed left-[50%] top-[50%] z-overlay grid text-primary w-[calc(100%-2rem)] max-w-[var(--dialog-width)] max-h-[calc(100dvh-2rem)] overflow-y-auto translate-x-[-50%] translate-y-[-50%] gap-md border surface-primary p-lg shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
-        className
-      )}
-      {...props}
-    >
-      {children}
-      <DialogPrimitive.Close className="comal-ui absolute right-md top-md rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted">
-        <X className="size-md" />
-        <span className="sr-only">Close</span>
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Content>
-  </DialogPortal>
-));
+>(({ className, container, children, nativeBackdrop, ...props }, ref) => {
+  const modal = React.useContext(DialogModalContext);
+  const isNative = nativeBackdrop && modal && supportsNativeDialog(container);
+  const Content = isNative ? NativeDialogContent : DialogPrimitive.Content;
+
+  return (
+    <DialogPortal container={container}>
+      <DialogOverlay className={isNative ? "invisible" : undefined} />
+      <Content
+        ref={ref}
+        className={cn(
+          "comal-ui",
+          "fixed left-[50%] top-[50%] z-overlay grid text-primary w-[calc(100%-2rem)] max-w-[var(--dialog-width)] max-h-[calc(100dvh-2rem)] overflow-y-auto translate-x-[-50%] translate-y-[-50%] gap-md border surface-primary p-lg shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+          className
+        )}
+        {...props}
+      >
+        {children}
+        <DialogPrimitive.Close className="comal-ui absolute right-md top-md rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted">
+          <X className="size-md" />
+          <span className="sr-only">Close</span>
+        </DialogPrimitive.Close>
+      </Content>
+    </DialogPortal>
+  );
+});
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({

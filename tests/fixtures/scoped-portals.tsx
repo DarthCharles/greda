@@ -22,7 +22,7 @@ function ScopedPortals() {
     <div data-theme="comal" data-color-scheme="dark" ref={setContainer}>
       <Drawer>
         <DrawerTrigger asChild><Button>Pickup details</Button></DrawerTrigger>
-        <DrawerContent container={container}>
+        <DrawerContent container={container} nativeBackdrop>
           <DrawerHeader>
             <DrawerTitle>Pickup details</DrawerTitle>
             <DrawerDescription>Your order will be ready on Saturday.</DrawerDescription>

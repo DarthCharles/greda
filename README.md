@@ -123,8 +123,14 @@ Use `Drawer` for a panel that opens from a viewport edge.
 It opens from the bottom by default. Compose
 `DrawerTrigger`, `DrawerContent`, `DrawerTitle`, and a visible `DrawerClose`
 control. Add `DrawerDescription` when introductory text helps. Use the Close
-button, Escape, or a tap on the backdrop to dismiss the drawer. Pass a scoped
-theme element to `DrawerContent` through `container`.
+button, Escape, or a tap on the backdrop to dismiss the drawer. Add
+`<DrawerHandle />` for a visible swipe-to-dismiss grip. Pass a scoped theme
+element to `DrawerContent` through `container`.
+
+For an installed iOS web app, set `nativeBackdrop` on `DrawerContent` or
+`DialogContent` to use an HTML dialog’s `::backdrop` for the modal scrim.
+Pass the native dialog element to any nested portaled overlays through their
+`container` prop. Find it with `contentRef.current?.closest("dialog")`.
 
 See the [Drawer reference](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/components-drawer--docs)
 for keyboard interaction, sizing, and themed examples.

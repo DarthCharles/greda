@@ -218,18 +218,43 @@ test("dialog fits a mobile viewport", async ({ page }) => {
   await expect(page.getByRole("dialog")).toHaveCSS("max-width", "280px");
 });
 
-test("drawer scrolls on a short viewport and inherits scoped tokens with published CSS", async ({ page }) => {
+test("the native dialog names the modal and keeps keyboard focus inside it", async ({ page }) => {
+  await page.goto("/iframe.html?id=components-dialog--native-backdrop&viewMode=story");
+  const trigger = page.getByRole("button", { name: "Edit profile" });
+  await trigger.click();
+  const dialog = page.getByRole("dialog", { name: "Edit profile" });
+  await expect(page.locator("dialog:modal")).toHaveAccessibleName("Edit profile");
+  await expect(dialog).toHaveAccessibleDescription("Update your public display name.");
+  const input = dialog.getByRole("textbox", { name: "Name" });
+  await expect(input).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await expect(dialog.getByRole("button", { name: "Close" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await trigger.click();
+  await dialog.getByRole("button", { name: "Done" }).click();
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
+  await expect(trigger).toBeFocused();
+});
+
+test("drawer scrolls on a short viewport and themes its native backdrop with published CSS", async ({ page }) => {
   await page.setViewportSize({ width: 280, height: 250 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await mountScopedPortals(page);
   const trigger = page.getByRole("button", { name: "Pickup details" });
   await trigger.click();
   const drawer = page.getByRole("dialog", { name: "Pickup details" });
+  const panel = drawer.locator("[data-drawer-content]");
   await expect(drawer).toBeVisible();
-  await expect(drawer).toHaveCSS("background-color", "rgb(39, 32, 27)");
-  await expect(drawer).toHaveCSS("border-top-left-radius", "24px");
-  await expect(drawer).toHaveCSS("animation-name", "none");
-  const bounds = await drawer.boundingBox();
+  expect(await drawer.evaluate((element) =>
+    getComputedStyle(element, "::backdrop").backgroundColor
+  )).toBe("rgba(49, 40, 33, 0.7)");
+  await expect(panel).toHaveCSS("background-color", "rgb(39, 32, 27)");
+  await expect(panel).toHaveCSS("border-top-left-radius", "24px");
+  await expect(panel).toHaveCSS("animation-name", "none");
+  const bounds = await panel.boundingBox();
   expect(bounds).toMatchObject({ x: 0, width: 280 });
   expect(bounds!.y).toBeGreaterThan(0);
   expect(bounds!.y + bounds!.height).toBe(250);
@@ -243,7 +268,7 @@ test("drawer scrolls on a short viewport and inherits scoped tokens with publish
   await page.keyboard.press("ArrowDown");
   await expect.poll(() => scrollRegion.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
   const results = await new AxeBuilder({ page })
-    .include('[role="dialog"]')
+    .include('dialog[data-slot="native-dialog"]')
     .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
     .analyze();
   expect(results.violations).toEqual([]);
@@ -251,8 +276,13 @@ test("drawer scrolls on a short viewport and inherits scoped tokens with publish
   await expect(drawer).toBeHidden();
   await expect(trigger).toBeFocused();
   await trigger.click();
-  await page.locator('[data-slot="drawer-overlay"]').click({ position: { x: 4, y: 4 } });
+  await drawer.click({ position: { x: 4, y: 4 } });
   await expect(drawer).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await trigger.click();
+  await page.keyboard.press("Escape");
+  await expect(drawer).toBeHidden();
+  await expect(trigger).toBeFocused();
 });
 
 test("the right drawer opens at the viewport edge and closes from its header button", async ({ page }) => {
@@ -280,6 +310,39 @@ test.describe("touch-only input", () => {
     await trigger.tap();
     const drawer = page.getByRole("dialog", { name: "Delivery window" });
     await drawer.getByRole("button", { name: "Close" }).tap();
+    await expect(drawer).toBeHidden();
+    await expect(trigger).toBeFocused();
+  });
+
+  test("the bottom drawer follows touch at the grip and dismisses on a completed swipe", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/iframe.html?id=components-drawer--native-backdrop&viewMode=story");
+    const trigger = page.getByRole("button", { name: "Delivery window" });
+    await trigger.tap();
+    const drawer = page.getByRole("dialog", { name: "Delivery window" });
+    const panel = drawer.locator("[data-drawer-content]");
+    const handle = drawer.locator('[data-slot="drawer-handle"]');
+    await expect(handle).toBeVisible();
+    await expect.poll(() => panel.evaluate((element) => Math.round(element.getBoundingClientRect().bottom))).toBe(844);
+    const bounds = (await handle.boundingBox())!;
+    const x = bounds.x + bounds.width / 2;
+    const y = bounds.y + bounds.height / 2;
+    const touch = await page.context().newCDPSession(page);
+
+    for (const { distance, finish } of [
+      { distance: 16, finish: "touchEnd" },
+      { distance: 120, finish: "touchCancel" },
+      { distance: 120, finish: "touchEnd" },
+    ] as const) {
+      await touch.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] });
+      await touch.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x, y: y + distance }] });
+      await expect.poll(() => panel.evaluate((element) => Math.round(element.getBoundingClientRect().bottom))).toBe(844 + distance);
+      await touch.send("Input.dispatchTouchEvent", { type: finish, touchPoints: [] });
+      if (distance === 16 || finish === "touchCancel") {
+        await expect.poll(() => panel.evaluate((element) => Math.round(element.getBoundingClientRect().bottom))).toBe(844);
+      }
+    }
+
     await expect(drawer).toBeHidden();
     await expect(trigger).toBeFocused();
   });
