@@ -124,7 +124,6 @@ for (const name of [
   "DrawerTrigger",
   "DrawerContent",
   "DrawerClose",
-  "DrawerHandle",
   "DrawerHeader",
   "DrawerFooter",
   "DrawerTitle",

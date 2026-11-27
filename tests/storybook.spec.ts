@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { build } from "vite";
+import { Button } from "../src";
 import { buildConsumerCss } from "./tailwind-consumer";
 
 const index = JSON.parse(readFileSync("storybook-static/index.json", "utf8"));
@@ -254,18 +255,7 @@ test("drawer scrolls on a short viewport and inherits scoped tokens with publish
   await expect(drawer).toBeHidden();
 });
 
-test("clicking a drawer close button inside the swipe area dismisses the drawer", async ({ page }) => {
-  await page.goto("/iframe.html?id=components-drawer--right&viewMode=story");
-  const trigger = page.getByRole("button", { name: "Delivery window" });
-  await trigger.click();
-  const drawer = page.getByRole("dialog", { name: "Delivery window" });
-  const swipeArea = drawer.locator('[data-slot="drawer-handle"]');
-  await swipeArea.getByRole("button", { name: "Close delivery window" }).click();
-  await expect(drawer).toBeHidden();
-  await expect(trigger).toBeFocused();
-});
-
-test("swiping the drawer header moves the panel and closes it after a completed swipe", async ({ page }) => {
+test("the right drawer opens at the viewport edge and closes from its header button", async ({ page }) => {
   await page.goto("/iframe.html?id=components-drawer--right&viewMode=story");
   const trigger = page.getByRole("button", { name: "Delivery window" });
   await trigger.click();
@@ -275,37 +265,45 @@ test("swiping the drawer header moves the panel and closes it after a completed 
     return bounds && Math.round(bounds.x + bounds.width);
   }).toBe(1100);
   await expect(drawer).toHaveCSS("height", "800px");
-
-  const swipeArea = drawer.locator('[data-slot="drawer-handle"]');
-  const bounds = await swipeArea.getByRole("heading", { name: "Delivery window" }).boundingBox();
-  const x = bounds!.x + bounds!.width / 2;
-  const y = bounds!.y + bounds!.height / 2;
-  const touch = await page.context().newCDPSession(page);
-  for (const { offset, finish } of [
-    { offset: 40, finish: "touchEnd" },
-    { offset: 120, finish: "touchCancel" },
-  ] as const) {
-    await touch.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] });
-    await touch.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: x + offset, y }] });
-    await expect.poll(async () => {
-      const bounds = await drawer.boundingBox();
-      return bounds && Math.round(bounds.x + bounds.width);
-    }).toBe(1100 + offset);
-    await touch.send("Input.dispatchTouchEvent", { type: finish, touchPoints: [] });
-    await expect.poll(async () => {
-      const bounds = await drawer.boundingBox();
-      return bounds && Math.round(bounds.x + bounds.width);
-    }).toBe(1100);
-  }
-
-  await touch.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] });
-  for (const offset of [20, 60, 120, 180]) {
-    await touch.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: x + offset, y }] });
-  }
-  await touch.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-
+  await drawer.getByRole("button", { name: "Close delivery window" }).click();
   await expect(drawer).toBeHidden();
   await expect(trigger).toBeFocused();
+});
+
+test.describe("touch-only input", () => {
+  test.use({ hasTouch: true, isMobile: true });
+
+  test("the bottom drawer closes by touch and restores focus to its trigger", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/iframe.html?id=components-drawer--default&viewMode=story");
+    const trigger = page.getByRole("button", { name: "Delivery window" });
+    await trigger.tap();
+    const drawer = page.getByRole("dialog", { name: "Delivery window" });
+    await drawer.getByRole("button", { name: "Close" }).tap();
+    await expect(drawer).toBeHidden();
+    await expect(trigger).toBeFocused();
+  });
+
+  test("a hovered ghost button keeps its default color while keyboard focus is visible", async ({ page }) => {
+    await page.setContent(renderToStaticMarkup(createElement(Button, { variant: "ghost" }, "My meal")));
+    await page.addStyleTag({ content: readFileSync("dist/styles.css", "utf8") });
+    const row = page.getByRole("button", { name: "My meal" });
+    expect(await page.evaluate(() => matchMedia("(hover: none)").matches)).toBe(true);
+
+    // Emulate Safari's synthesized hover while keeping the touch-only media query.
+    const devtools = await page.context().newCDPSession(page);
+    await devtools.send("DOM.enable");
+    await devtools.send("CSS.enable");
+    const { root } = await devtools.send("DOM.getDocument");
+    const { nodeId } = await devtools.send("DOM.querySelector", { nodeId: root.nodeId, selector: "button" });
+    await devtools.send("CSS.forcePseudoState", { nodeId, forcedPseudoClasses: ["hover"] });
+    await page.addStyleTag({ content: "button:hover { --test-hover: active; }" });
+    expect(await row.evaluate((element) => getComputedStyle(element).getPropertyValue("--test-hover").trim())).toBe("active");
+    await expect(row).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await page.keyboard.press("Tab");
+    await expect(row).toBeFocused();
+    await expect(row).not.toHaveCSS("box-shadow", "none");
+  });
 });
 
 test("button moves down on press, excludes popup triggers, and respects reduced motion", async ({

@@ -47,6 +47,7 @@ export default {
     ),
   ],
   darkMode: ["class", '[data-color-scheme="dark"]'],
+  future: { hoverOnlyWhenSupported: true },
   corePlugins: { preflight: false },
   theme: {
     ...theme,

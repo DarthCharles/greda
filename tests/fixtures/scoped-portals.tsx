@@ -7,7 +7,6 @@ import {
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
-  DrawerHandle,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -24,12 +23,10 @@ function ScopedPortals() {
       <Drawer>
         <DrawerTrigger asChild><Button>Pickup details</Button></DrawerTrigger>
         <DrawerContent container={container}>
-          <DrawerHandle>
-            <DrawerHeader>
-              <DrawerTitle>Pickup details</DrawerTitle>
-              <DrawerDescription>Your order will be ready on Saturday.</DrawerDescription>
-            </DrawerHeader>
-          </DrawerHandle>
+          <DrawerHeader>
+            <DrawerTitle>Pickup details</DrawerTitle>
+            <DrawerDescription>Your order will be ready on Saturday.</DrawerDescription>
+          </DrawerHeader>
           <div
             role="region"
             aria-label="Pickup instructions"

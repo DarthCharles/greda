@@ -119,12 +119,12 @@ for keyboard interaction, composition, and disabled states.
 
 ## Drawer
 
-Use `Drawer` for a swipe-dismissible panel that opens from a viewport edge.
+Use `Drawer` for a panel that opens from a viewport edge.
 It opens from the bottom by default. Compose
 `DrawerTrigger`, `DrawerContent`, `DrawerTitle`, and a visible `DrawerClose`
-control. Add `DrawerDescription` when introductory text helps. Wrap the header
-in `DrawerHandle` to enable swipe-to-dismiss. Pass a scoped theme element to
-`DrawerContent` through `container`.
+control. Add `DrawerDescription` when introductory text helps. Use the Close
+button, Escape, or a tap on the backdrop to dismiss the drawer. Pass a scoped
+theme element to `DrawerContent` through `container`.
 
 See the [Drawer reference](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/components-drawer--docs)
 for keyboard interaction, sizing, and themed examples.
@@ -328,8 +328,10 @@ pale sage (`#ced8c4`) in Comal, with darker counterparts in dark mode.
 Override `--base-tertiary` to customize this surface independently of accent
 backgrounds and hover states.
 
-`styles.css` includes role utilities and hover/focus variants; the Tailwind 4
-import also generates responsive and opacity variants. Start with Storybook's
+`styles.css` includes role utilities and hover/focus variants. Precompiled hover
+utilities apply when the primary pointer is fine and supports hover. Keyboard
+focus styles work independently. The Tailwind 4 import also generates
+responsive and opacity variants. Start with Storybook's
 **Design Tokens → Overview**. **Base colors** shows the palette you customize,
 with brand/state colors first and neutrals second. **Color roles** combines
 surface, text, and border assignments with live examples. Other foundations
