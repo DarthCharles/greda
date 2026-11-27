@@ -1,5 +1,18 @@
 # @darthcharles/greda
 
+## 3.0.0
+
+### Major Changes
+
+- 4025910: Remove swipe dismissal and the `DrawerHandle` export. Remove standalone grips
+  and replace any `DrawerHandle` wrappers with a `DrawerHeader` or a plain
+  `div`. Include a visible `DrawerClose` control with an accessible name.
+
+### Patch Changes
+
+- 4025910: Apply precompiled hover styles only when the primary pointer supports fine hover,
+  so touch-only devices keep their default appearance.
+
 ## 2.2.0
 
 ### Minor Changes
