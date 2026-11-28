@@ -1360,11 +1360,12 @@ for (const environment of ["iOS browser tab", "iOS standalone", "iPadOS standalo
         await expect(popupScope.getByRole("listbox")).toHaveCount(0);
         await input.click();
         await expect(input).toHaveAttribute("aria-expanded", "true");
-        await expect(popupScope.getByRole("listbox")).toBeVisible();
+        await popupScope.getByRole("option", { name: "Paper" }).hover();
         await page.keyboard.press("Escape");
         await expect(popupScope.getByRole("listbox")).toHaveCount(0);
         await expect(modal).toBeVisible();
-        await page.keyboard.press("Escape");
+        await expect(input).toBeFocused();
+        await modal.getByRole("button", { name: "Close" }).click();
         await expect(modal).toHaveCount(0);
         await expect(trigger).toBeFocused();
       }
