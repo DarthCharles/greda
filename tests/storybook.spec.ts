@@ -1319,6 +1319,59 @@ test("combobox nested in a dialog dismisses its popup before the dialog", async 
   await expect(trigger).toBeFocused();
 });
 
+for (const environment of ["iOS browser tab", "iOS standalone", "iPadOS standalone", "desktop standalone"] as const) {
+  test(`Dialog and Drawer resolve the backdrop and keep combobox options clickable in ${environment}`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.addInitScript((mode) => {
+      const isPhone = mode.startsWith("iOS");
+      const isTablet = mode === "iPadOS standalone";
+      Object.defineProperties(navigator, {
+        userAgent: { value: isPhone ? "Mozilla/5.0 (iPhone)" : "Mozilla/5.0 (Macintosh)" },
+        platform: { value: isPhone ? "iPhone" : "MacIntel" },
+        maxTouchPoints: { value: isTablet ? 5 : 0 },
+        standalone: { value: mode === "iOS standalone" },
+      });
+      const matchMedia = window.matchMedia.bind(window);
+      window.matchMedia = (query) => {
+        const result = matchMedia(query);
+        if (query === "(display-mode: standalone)") {
+          Object.defineProperty(result, "matches", { value: mode.endsWith("standalone") });
+        }
+        return result;
+      };
+    }, environment);
+    await page.goto("/iframe.html?id=components-combobox--native-backdrop-debug&viewMode=story");
+    const backdrop = page.getByRole("combobox", { name: "Backdrop mode" });
+    const automaticNative = environment === "iOS standalone" || environment === "iPadOS standalone";
+
+    for (const [mode, native] of [["automatic", automaticNative], [automaticNative ? "fixed" : "native", !automaticNative]] as const) {
+      await backdrop.selectOption(mode);
+      for (const kind of ["dialog", "drawer"]) {
+        const trigger = page.getByRole("button", { name: `Open ${kind}` });
+        await trigger.click();
+        const modal = page.getByRole("dialog", { name: `Edit material in ${kind}` });
+        await expect(page.locator("dialog:modal")).toHaveCount(native ? 1 : 0);
+        const input = modal.getByRole("combobox", { name: "Material" });
+        await input.fill("pa");
+        const popupScope = native ? modal : page;
+        await popupScope.getByRole("option", { name: "Paper" }).click();
+        await expect(input).toHaveValue("Paper");
+        await expect(input).toBeFocused();
+        await expect(popupScope.getByRole("listbox")).toHaveCount(0);
+        await input.click();
+        await expect(input).toHaveAttribute("aria-expanded", "true");
+        await expect(popupScope.getByRole("listbox")).toBeVisible();
+        await page.keyboard.press("Escape");
+        await expect(popupScope.getByRole("listbox")).toHaveCount(0);
+        await expect(modal).toBeVisible();
+        await page.keyboard.press("Escape");
+        await expect(modal).toHaveCount(0);
+        await expect(trigger).toBeFocused();
+      }
+    }
+  });
+}
+
 for (const consumer of ["compiled", "tailwind4"]) {
   test(`La Viuda keeps scoped surfaces and actions readable with ${consumer} CSS`, async ({ page }) => {
     const api = await import(new URL("../dist/index.js", import.meta.url).href);

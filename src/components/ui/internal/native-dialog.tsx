@@ -3,13 +3,23 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Slot } from "@radix-ui/react-slot";
+import { OverlayContainerContext } from "./overlay-container";
 
-export function supportsNativeDialog(container?: Node | null) {
+export function shouldUseNativeDialog(nativeBackdrop?: boolean, container?: Node | null) {
+  if (nativeBackdrop === false) return false;
   if (container && !container.isConnected) return false;
   const view = container?.ownerDocument?.defaultView ??
     (typeof window === "undefined" ? undefined : window);
-  return typeof view?.HTMLDialogElement?.prototype.showModal === "function" &&
-    "inert" in view.HTMLElement.prototype;
+  if (typeof view?.HTMLDialogElement?.prototype.showModal !== "function" ||
+    !("inert" in view.HTMLElement.prototype)) return false;
+  if (nativeBackdrop === true) return true;
+
+  const { navigator } = view;
+  if ("standalone" in navigator && navigator.standalone === true) return true;
+  // iPadOS can present a desktop user agent.
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  return isIOS && view.matchMedia?.("(display-mode: standalone)").matches === true;
 }
 
 function showModal(element: HTMLDialogElement | null) {
@@ -37,10 +47,15 @@ const NativePanel = React.forwardRef<HTMLDivElement, NativePanelProps>(
   }, ref) => {
     const Panel = asChild ? Slot : "div";
     const closeRef = React.useRef<HTMLButtonElement>(null);
+    const [shell, setShell] = React.useState<HTMLDialogElement | null>(null);
+    const shellRef = React.useCallback((element: HTMLDialogElement | null) => {
+      showModal(element);
+      setShell(element);
+    }, []);
 
     return (
       <dialog
-        ref={showModal}
+        ref={shellRef}
         role={role === "alertdialog" ? role : undefined}
         aria-label={label}
         aria-labelledby={labelledBy}
@@ -70,7 +85,9 @@ const NativePanel = React.forwardRef<HTMLDivElement, NativePanelProps>(
           });
         }}
       >
-        <Panel {...props} ref={ref} />
+        <OverlayContainerContext.Provider value={shell}>
+          <Panel {...props} ref={ref} />
+        </OverlayContainerContext.Provider>
         <DialogPrimitive.Close ref={closeRef} hidden />
       </dialog>
     );

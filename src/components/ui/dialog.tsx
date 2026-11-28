@@ -6,7 +6,8 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 
 import { cn } from "../../lib/utils";
-import { NativeDialogContent, supportsNativeDialog } from "./internal/native-dialog";
+import { NativeDialogContent, shouldUseNativeDialog } from "./internal/native-dialog";
+import { useOverlayContainer } from "./internal/overlay-container";
 
 const DialogModalContext = React.createContext(true);
 
@@ -53,11 +54,13 @@ const DialogContent = React.forwardRef<
   DialogContentProps
 >(({ className, container, children, nativeBackdrop, ...props }, ref) => {
   const modal = React.useContext(DialogModalContext);
-  const isNative = nativeBackdrop && modal && supportsNativeDialog(container);
+  const portalContainer = useOverlayContainer(container);
+  if (portalContainer === null) return null;
+  const isNative = modal && shouldUseNativeDialog(nativeBackdrop, portalContainer);
   const Content = isNative ? NativeDialogContent : DialogPrimitive.Content;
 
   return (
-    <DialogPortal container={container}>
+    <DialogPortal container={portalContainer}>
       <DialogOverlay className={isNative ? "invisible" : undefined} />
       <Content
         ref={ref}

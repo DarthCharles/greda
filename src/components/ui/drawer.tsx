@@ -6,7 +6,8 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 import { cn } from "../../lib/utils";
 import { DialogDescription, DialogOverlay, DialogTitle } from "./dialog";
-import { NativeDialogContent, supportsNativeDialog } from "./internal/native-dialog";
+import { NativeDialogContent, shouldUseNativeDialog } from "./internal/native-dialog";
+import { useOverlayContainer } from "./internal/overlay-container";
 
 const swipeDirections = {
   bottom: { axis: "y", sign: 1 },
@@ -80,7 +81,9 @@ const DrawerContent = React.forwardRef<
   DrawerContentProps
 >(({ className, container, nativeBackdrop, onOpenAutoFocus, ...props }, ref) => {
   const { direction, autoFocus, modal } = useDrawer();
-  const isNative = nativeBackdrop && modal && supportsNativeDialog(container);
+  const portalContainer = useOverlayContainer(container);
+  if (portalContainer === null) return null;
+  const isNative = modal && shouldUseNativeDialog(nativeBackdrop, portalContainer);
   const Content = isNative ? NativeDialogContent : DialogPrimitive.Content;
 
   const content = (
@@ -105,7 +108,7 @@ const DrawerContent = React.forwardRef<
   );
 
   return (
-    <DrawerPortal container={container}>
+    <DrawerPortal container={portalContainer}>
       <DrawerOverlay data-slot="drawer-overlay" className={isNative ? "invisible" : undefined} />
       {content}
     </DrawerPortal>

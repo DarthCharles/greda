@@ -1,7 +1,9 @@
+import { useId, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Combobox, ComboboxInput, ComboboxContent, Label, Button,
   Dialog, DialogTrigger, DialogContent, DialogTitle,
+  Drawer, DrawerTrigger, DrawerContent, DrawerTitle, DrawerClose,
   type ComboboxOption,
 } from "../index";
 
@@ -153,4 +155,70 @@ export const InsideDialog: Story = {
       </DialogContent>
     </Dialog>
   ),
+};
+
+function NativeBackdropDebugExample() {
+  const [backdrop, setBackdrop] = useState("native");
+  const backdropId = useId();
+  const nativeBackdrop = backdrop === "automatic" ? undefined : backdrop === "native";
+
+  return (
+    <div className="catalog-stack">
+      <p className="catalog-muted">
+        Open either panel, type “pa” in the Material field, and select Paper.
+        Close the panel to switch backdrop modes and try again.
+      </p>
+      <div className="catalog-row">
+        <Label htmlFor={backdropId}>Backdrop mode</Label>
+        <select id={backdropId} value={backdrop} onChange={(event) => setBackdrop(event.target.value)}>
+          <option value="automatic">Automatic</option>
+          <option value="native">Native</option>
+          <option value="fixed">Fixed</option>
+        </select>
+      </div>
+      <div className="catalog-row">
+        <DebugModal kind="Dialog" nativeBackdrop={nativeBackdrop} />
+        <DebugModal kind="Drawer" nativeBackdrop={nativeBackdrop} />
+      </div>
+    </div>
+  );
+}
+
+function DebugModal({ kind, nativeBackdrop }: {
+  kind: "Dialog" | "Drawer";
+  nativeBackdrop?: boolean;
+}) {
+  const inputId = useId();
+  const [Root, Trigger, Content, Title] = kind === "Dialog"
+    ? [Dialog, DialogTrigger, DialogContent, DialogTitle]
+    : [Drawer, DrawerTrigger, DrawerContent, DrawerTitle];
+
+  return (
+    <Root>
+      <Trigger asChild><Button variant="outline">Open {kind.toLowerCase()}</Button></Trigger>
+      <Content nativeBackdrop={nativeBackdrop} aria-describedby={undefined}>
+        <Title>Edit material in {kind.toLowerCase()}</Title>
+        <div className="catalog-field">
+          <Label htmlFor={inputId}>Material</Label>
+          <Combobox options={materials}>
+            <ComboboxInput id={inputId} placeholder="Choose a material" />
+            <ComboboxContent />
+          </Combobox>
+        </div>
+        {kind === "Drawer" && <DrawerClose asChild><Button variant="outline">Close</Button></DrawerClose>}
+      </Content>
+    </Root>
+  );
+}
+
+export const NativeBackdropDebug: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: "Compare automatic, native, and fixed backdrops for a nested combobox. In native mode, the options portal into the dialog and stay clickable.",
+      },
+    },
+  },
+  render: () => <NativeBackdropDebugExample />,
 };

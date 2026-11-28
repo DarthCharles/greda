@@ -5,6 +5,7 @@ import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 
 import { cn } from "../../lib/utils";
+import { useOverlayContainer } from "./internal/overlay-container";
 
 const PopoverAnchor = PopoverPrimitive.Anchor;
 
@@ -63,8 +64,8 @@ const PopoverContent = React.forwardRef<
   React.useEffect(() => {
     setRefContainer(containerRef?.current ?? null);
   }, [containerRef]);
-  if (containerRef && !refContainer) return null;
-  const portalContainer = container && "current" in container ? refContainer : container;
+  const portalContainer = useOverlayContainer(container && "current" in container ? refContainer : container);
+  if (portalContainer === null || (containerRef && !refContainer)) return null;
   return (
     <PopoverPrimitive.Portal container={portalContainer} forceMount={forceMount}>
       <PopoverPrimitive.Content

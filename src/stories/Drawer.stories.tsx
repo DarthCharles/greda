@@ -70,7 +70,7 @@ type Story = StoryObj<typeof meta>;
 
 function renderBottomDrawer(
   { children: _children, ...args }: DrawerProps,
-  nativeBackdrop = false
+  nativeBackdrop?: boolean
 ) {
   return (
     <Drawer key={String(args.defaultOpen)} {...args}>
@@ -99,7 +99,7 @@ export const NativeBackdrop: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Set nativeBackdrop on DrawerContent to use the browser’s backdrop for a modal drawer in an installed iOS web app. For a nested portaled overlay, pass the native dialog element as its container. Find it with contentRef.current?.closest('dialog').",
+        story: "Standalone iOS and iPadOS web apps use the native backdrop automatically. This example sets nativeBackdrop to true to show it in a regular browser tab. Set it to false to use the fixed backdrop. Nested Greda overlays stay inside the native dialog.",
       },
     },
   },

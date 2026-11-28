@@ -6,6 +6,7 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 
 import { cn } from "../../lib/utils";
+import { useOverlayContainer } from "./internal/overlay-container";
 
 const Select = SelectPrimitive.Root;
 
@@ -82,35 +83,39 @@ export type SelectContentProps = React.ComponentPropsWithoutRef<
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   SelectContentProps
->(({ className, container, children, position = "popper", ...props }, ref) => (
-  <SelectPrimitive.Portal container={container}>
-    <SelectPrimitive.Content
-      ref={ref}
-      className={cn(
-        "comal-ui",
-        "relative z-popover max-h-[--radix-select-content-available-height] min-w-[128px] overflow-y-auto overflow-x-hidden rounded-md border surface-raised text-primary shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-xs data-[side=left]:slide-in-from-right-xs data-[side=right]:slide-in-from-left-xs data-[side=top]:slide-in-from-bottom-xs origin-[--radix-select-content-transform-origin]",
-        position === "popper" &&
-          "data-[side=bottom]:translate-y-2xs data-[side=left]:-translate-x-2xs data-[side=right]:translate-x-2xs data-[side=top]:-translate-y-2xs",
-        className
-      )}
-      position={position}
-      {...props}
-    >
-      <SelectScrollUpButton />
-      <SelectPrimitive.Viewport
+>(({ className, container, children, position = "popper", ...props }, ref) => {
+  const portalContainer = useOverlayContainer(container);
+  if (portalContainer === null) return null;
+  return (
+    <SelectPrimitive.Portal container={portalContainer}>
+      <SelectPrimitive.Content
+        ref={ref}
         className={cn(
           "comal-ui",
-          "p-2xs",
+          "relative z-popover max-h-[--radix-select-content-available-height] min-w-[128px] overflow-y-auto overflow-x-hidden rounded-md border surface-raised text-primary shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-xs data-[side=left]:slide-in-from-right-xs data-[side=right]:slide-in-from-left-xs data-[side=top]:slide-in-from-bottom-xs origin-[--radix-select-content-transform-origin]",
           position === "popper" &&
-            "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+            "data-[side=bottom]:translate-y-2xs data-[side=left]:-translate-x-2xs data-[side=right]:translate-x-2xs data-[side=top]:-translate-y-2xs",
+          className
         )}
+        position={position}
+        {...props}
       >
-        {children}
-      </SelectPrimitive.Viewport>
-      <SelectScrollDownButton />
-    </SelectPrimitive.Content>
-  </SelectPrimitive.Portal>
-));
+        <SelectScrollUpButton />
+        <SelectPrimitive.Viewport
+          className={cn(
+            "comal-ui",
+            "p-2xs",
+            position === "popper" &&
+              "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+          )}
+        >
+          {children}
+        </SelectPrimitive.Viewport>
+        <SelectScrollDownButton />
+      </SelectPrimitive.Content>
+    </SelectPrimitive.Portal>
+  );
+});
 SelectContent.displayName = SelectPrimitive.Content.displayName;
 
 const SelectLabel = React.forwardRef<

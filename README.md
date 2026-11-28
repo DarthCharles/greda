@@ -127,10 +127,13 @@ button, Escape, or a tap on the backdrop to dismiss the drawer. Add
 `<DrawerHandle />` for a visible swipe-to-dismiss grip. Pass a scoped theme
 element to `DrawerContent` through `container`.
 
-For an installed iOS web app, set `nativeBackdrop` on `DrawerContent` or
-`DialogContent` to use an HTML dialog’s `::backdrop` for the modal scrim.
-Pass the native dialog element to any nested portaled overlays through their
-`container` prop. Find it with `contentRef.current?.closest("dialog")`.
+Modal `DrawerContent` and `DialogContent` use an HTML dialog’s `::backdrop` by
+default when launched as a standalone iOS or iPadOS web app. Regular browser
+tabs use the fixed backdrop by default. Set `nativeBackdrop={true}` to opt in
+on any supported browser or `nativeBackdrop={false}` to use the fixed backdrop.
+Greda overlays nested in a native modal portal into the dialog automatically.
+To choose a custom `container` for a nested overlay, use an element inside that
+dialog.
 
 See the [Drawer reference](https://elegant-hotteok-cbb834.netlify.app/?path=/docs/components-drawer--docs)
 for keyboard interaction, sizing, and themed examples.

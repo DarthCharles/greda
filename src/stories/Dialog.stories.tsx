@@ -26,7 +26,7 @@ const meta = {
 } satisfies Meta<typeof Dialog>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-function renderProfileDialog(nativeBackdrop = false) {
+function renderProfileDialog(nativeBackdrop?: boolean) {
   const Fields = nativeBackdrop ? "form" : "div";
 
   return (
@@ -61,7 +61,7 @@ export const NativeBackdrop: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Set nativeBackdrop on DialogContent to use an HTML dialog’s backdrop in an installed iOS web app. For a nested portaled overlay, pass the native dialog element as its container. Find it with contentRef.current?.closest('dialog').",
+        story: "Standalone iOS and iPadOS web apps use the native backdrop automatically. This example sets nativeBackdrop to true to show it in a regular browser tab. Set it to false to use the fixed backdrop. Nested Greda overlays stay inside the native dialog.",
       },
     },
   },
