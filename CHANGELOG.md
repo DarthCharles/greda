@@ -1,5 +1,11 @@
 # @darthcharles/greda
 
+## 3.1.1
+
+### Patch Changes
+
+- 8999e0b: Use native backdrops by default for supported modal Dialog and Drawer instances launched in standalone mode on iOS and iPadOS. Regular browser tabs still default to the fixed backdrop. Set `nativeBackdrop` to `true` or `false` to override the default. Nested Greda overlays portal into the native dialog so they can render above the panel.
+
 ## 3.1.0
 
 ### Minor Changes
